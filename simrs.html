@@ -1,0 +1,2811 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIM RS Terintegrasi - Satu Sehat SDMK & Apotek</title>
+    <!-- Font Awesome 6 (gratis) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+
+    <style>
+        /* ===== RESET & GLOBAL ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #0b6e4f;
+            --primary-light: #0d8b63;
+            --primary-dark: #08543b;
+            --primary-bg: #e8f5ef;
+            --secondary: #1a3a5c;
+            --accent: #e67e22;
+            --danger: #c0392b;
+            --warning: #f39c12;
+            --success: #27ae60;
+            --info: #2980b9;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.10);
+            --transition: 0.25s ease;
+        }
+        html {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        body {
+            background: var(--gray-50);
+            color: var(--gray-800);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        button {
+            cursor: pointer;
+            font-family: inherit;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 270px;
+            min-height: 100vh;
+            background: var(--secondary);
+            color: #fff;
+            padding: 20px 0 30px;
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            z-index: 100;
+            transition: transform var(--transition);
+        }
+        .sidebar-brand {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 16px;
+        }
+        .sidebar-brand h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-brand h1 i {
+            color: var(--accent);
+            font-size: 24px;
+        }
+        .sidebar-brand small {
+            display: block;
+            font-size: 11px;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+        .sidebar-section {
+            padding: 0 16px 8px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            opacity: 0.5;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 0 12px;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background var(--transition), color var(--transition);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .sidebar-nav a i {
+            width: 20px;
+            font-size: 16px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+        .sidebar-nav a:hover i {
+            color: #fff;
+        }
+        .sidebar-nav a.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(11, 110, 79, 0.35);
+        }
+        .sidebar-nav a.active i {
+            color: #fff;
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 16px 24px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 12px;
+            opacity: 0.5;
+            text-align: center;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            flex: 1;
+            padding: 24px 32px 40px;
+            min-width: 0;
+            overflow-x: hidden;
+        }
+
+        /* ===== TOP BAR ===== */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .topbar-left h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        .topbar-left p {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .topbar-right .search-box {
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 220px;
+            transition: border var(--transition);
+        }
+        .topbar-right .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(11, 110, 79, 0.12);
+        }
+        .topbar-right .search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            width: 100%;
+            color: var(--gray-700);
+        }
+        .topbar-right .search-box i {
+            color: var(--gray-400);
+        }
+        .topbar-right .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--primary-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 16px;
+            border: 2px solid #fff;
+            box-shadow: var(--shadow);
+        }
+
+        /* ===== CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-100);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .stat-card .label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-top: 6px;
+        }
+        .stat-card .change {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .stat-card .change.up {
+            color: var(--success);
+        }
+        .stat-card .change.down {
+            color: var(--danger);
+        }
+        .stat-card .icon {
+            font-size: 22px;
+            opacity: 0.2;
+            float: right;
+            color: var(--primary);
+        }
+
+        /* ===== PANEL / CARD ===== */
+        .panel {
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-100);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .panel-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .panel-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .panel-header h3 i {
+            color: var(--primary);
+        }
+        .panel-header .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .panel-body {
+            padding: 20px 24px;
+        }
+        .panel-body .empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-400);
+        }
+        .panel-body .empty i {
+            font-size: 40px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        /* ===== TABLES ===== */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        table th {
+            text-align: left;
+            padding: 12px 14px;
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-600);
+            border-bottom: 2px solid var(--gray-200);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+        table tr:hover td {
+            background: var(--gray-50);
+        }
+        .badge-status {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .badge-status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .badge-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .badge-status.completed {
+            background: #cce5ff;
+            color: #004085;
+        }
+        .badge-status.expired {
+            background: #f5c6cb;
+            color: #721c24;
+        }
+        .badge-status.low {
+            background: #fdebd0;
+            color: #a04000;
+        }
+        .badge-status.ok {
+            background: #d5f5e3;
+            color: #1a7a3a;
+        }
+        .btn-icon {
+            background: transparent;
+            border: none;
+            color: var(--gray-400);
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background var(--transition), color var(--transition);
+            font-size: 14px;
+        }
+        .btn-icon:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        .btn-icon.danger:hover {
+            color: var(--danger);
+            background: #fde8e8;
+        }
+        .btn-icon.primary:hover {
+            color: var(--primary);
+            background: var(--primary-bg);
+        }
+        .btn-sm {
+            padding: 5px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            transition: all var(--transition);
+        }
+        .btn-sm.primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-sm.primary:hover {
+            background: var(--primary-dark);
+        }
+        .btn-sm.outline {
+            background: transparent;
+            border: 1px solid var(--gray-300);
+            color: var(--gray-600);
+        }
+        .btn-sm.outline:hover {
+            background: var(--gray-100);
+        }
+        .btn-sm.danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-sm.danger:hover {
+            background: #a93226;
+        }
+        .btn-sm.success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-sm.success:hover {
+            background: #1e8449;
+        }
+        .btn-sm.warning {
+            background: var(--warning);
+            color: #fff;
+        }
+        .btn-sm.warning:hover {
+            background: #d68910;
+        }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 4px;
+        }
+        .form-group label .req {
+            color: var(--danger);
+        }
+        .form-control {
+            width: 100%;
+            padding: 9px 14px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            transition: border var(--transition), box-shadow var(--transition);
+            font-family: inherit;
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(11, 110, 79, 0.12);
+        }
+        .form-control::placeholder {
+            color: var(--gray-400);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-row.three {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal {
+            background: #fff;
+            border-radius: var(--radius);
+            max-width: 640px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: modalFade 0.25s ease;
+        }
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .modal-header .close {
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: var(--gray-400);
+            transition: color var(--transition);
+        }
+        .modal-header .close:hover {
+            color: var(--gray-700);
+        }
+        .modal-body {
+            padding: 24px;
+        }
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* ===== INTEGRATION BANNER ===== */
+        .integration-banner {
+            background: linear-gradient(135deg, var(--secondary), var(--primary-dark));
+            color: #fff;
+            border-radius: var(--radius);
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .integration-banner .left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .integration-banner .left i {
+            font-size: 28px;
+            opacity: 0.8;
+        }
+        .integration-banner .left div h4 {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .integration-banner .left div p {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        .integration-banner .right .btn-sm {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .integration-banner .right .btn-sm:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid var(--gray-200);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tabs button {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--gray-500);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all var(--transition);
+        }
+        .tabs button:hover {
+            color: var(--gray-700);
+        }
+        .tabs button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== CHART WRAP ===== */
+        .chart-container {
+            position: relative;
+            height: 220px;
+            max-width: 100%;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 230px;
+                padding: 16px 0 20px;
+            }
+            .main {
+                padding: 20px 20px 30px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-row.three {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                width: 280px;
+                height: 100vh;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                padding: 16px;
+            }
+            .topbar-left h2 {
+                font-size: 18px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .topbar-right .search-box {
+                min-width: 140px;
+            }
+            .modal {
+                max-width: 100%;
+                margin: 10px;
+            }
+            .integration-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .hamburger {
+                display: block !important;
+            }
+        }
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-700);
+            padding: 4px;
+        }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 99;
+        }
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* Utility */
+        .text-muted {
+            color: var(--gray-500);
+        }
+        .text-primary {
+            color: var(--primary);
+        }
+        .fw-600 {
+            font-weight: 600;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-center {
+            align-items: center;
+        }
+        .flex-between {
+            justify-content: space-between;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .w-100 {
+            width: 100%;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <h1><i class="fas fa-heartbeat"></i> SIM RS</h1>
+            <small>Terintegrasi • Satu Sehat</small>
+        </div>
+
+        <div class="sidebar-section">Navigasi Utama</div>
+        <nav class="sidebar-nav">
+            <a href="#" class="active" data-page="dashboard"><i class="fas fa-th-large"></i> Dashboard</a>
+        </nav>
+
+        <div class="sidebar-section">SDMK — Satu Sehat</div>
+        <nav class="sidebar-nav">
+            <a href="#" data-page="sdmk-tenaga"><i class="fas fa-user-md"></i> Tenaga Kesehatan</a>
+            <a href="#" data-page="sdmk-sertifikasi"><i class="fas fa-certificate"></i> Sertifikasi</a>
+            <a href="#" data-page="sdmk-penugasan"><i class="fas fa-briefcase"></i> Penugasan</a>
+            <a href="#" data-page="sdmk-jadwal"><i class="fas fa-calendar-alt"></i> Jadwal Kerja</a>
+            <a href="#" data-page="sdmk-pelatihan"><i class="fas fa-graduation-cap"></i> Pelatihan</a>
+        </nav>
+
+        <div class="sidebar-section">Manajemen Apotek</div>
+        <nav class="sidebar-nav">
+            <a href="#" data-page="apotek-obat"><i class="fas fa-capsules"></i> Obat <span class="badge">Stok</span></a>
+            <a href="#" data-page="apotek-resep"><i class="fas fa-prescription"></i> Resep</a>
+            <a href="#" data-page="apotek-pelayanan"><i class="fas fa-hand-holding-medical"></i> Pelayanan</a>
+            <a href="#" data-page="apotek-pemasok"><i class="fas fa-truck"></i> Pemasok</a>
+            <a href="#" data-page="apotek-kadaluarsa"><i class="fas fa-clock"></i> Kadaluarsa</a>
+        </nav>
+
+        <div class="sidebar-footer">SIM RS v2.0 • Data Lokal</div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <div class="main" id="mainContent">
+        <!-- Top Bar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+                <h2 id="pageTitle">Dashboard</h2>
+                <p id="pageSubtitle">Ringkasan sistem terintegrasi Satu Sehat SDMK & Apotek</p>
+            </div>
+            <div class="topbar-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cari data..." id="globalSearch" oninput="handleGlobalSearch(this.value)">
+                </div>
+                <div class="avatar">RS</div>
+            </div>
+        </div>
+
+        <!-- Integration Banner -->
+        <div class="integration-banner">
+            <div class="left">
+                <i class="fas fa-link"></i>
+                <div>
+                    <h4><i class="fas fa-check-circle" style="color:#7dcea0;"></i> Sistem Terintegrasi</h4>
+                    <p>SDMK ↔ Apotek • Data sinkron & alur kerja terhubung</p>
+                </div>
+            </div>
+            <div class="right">
+                <button class="btn-sm" onclick="showIntegrationStatus()"><i class="fas fa-sync-alt"></i> Status Integrasi</button>
+            </div>
+        </div>
+
+        <!-- ===== PAGE CONTENT ===== -->
+        <div id="pageContent">
+            <!-- akan di-render oleh JS -->
+        </div>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalContainer">
+            <div class="modal-header">
+                <h3 id="modalTitle">Form</h3>
+                <button class="close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- konten dinamis -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <button class="btn-sm outline" onclick="closeModal()">Batal</button>
+                <button class="btn-sm primary" id="modalSaveBtn" onclick="saveModal()">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  DATA STORE (Mock / LocalStorage)
+        // ================================================================
+        const STORE_KEY = 'simrs_data';
+
+        function getDefaultData() {
+            return {
+                // SDMK
+                tenaga: [
+                    { id: 't1', nama: 'dr. Andi Pratama', nip: '198203212010011001', jenis_kelamin: 'Laki-laki',
+                        spesialisasi: 'Spesialis Jantung', no_str: 'STR-001-2020', masa_berlaku_str: '2025-12-31',
+                        status: 'aktif', kontak: '08123456789', alamat: 'Jl. Merdeka No.12, Jakarta', tanggal_lahir: '1982-03-21',
+                        foto: '' },
+                    { id: 't2', nama: 'dr. Siti Rahayu', nip: '198507152012012002', jenis_kelamin: 'Perempuan',
+                        spesialisasi: 'Spesialis Anak', no_str: 'STR-002-2021', masa_berlaku_str: '2026-06-30',
+                        status: 'aktif', kontak: '08198765432', alamat: 'Jl. Sudirman No.45, Bandung', tanggal_lahir: '1985-07-15',
+                        foto: '' },
+                    { id: 't3', nama: 'dr. Budi Santoso', nip: '199001102014013003', jenis_kelamin: 'Laki-laki',
+                        spesialisasi: 'Spesialis Bedah', no_str: 'STR-003-2019', masa_berlaku_str: '2024-11-30',
+                        status: 'nonaktif', kontak: '08155566677', alamat: 'Jl. Diponegoro No.78, Surabaya',
+                        tanggal_lahir: '1990-01-10', foto: '' },
+                    { id: 't4', nama: 'dr. Maria Simanjuntak', nip: '198812202015014004', jenis_kelamin: 'Perempuan',
+                        spesialisasi: 'Spesialis Kandungan', no_str: 'STR-004-2022', masa_berlaku_str: '2027-03-15',
+                        status: 'aktif', kontak: '08122233344', alamat: 'Jl. Thamrin No.56, Medan', tanggal_lahir: '1988-12-20',
+                        foto: '' },
+                    { id: 't5', nama: 'dr. Rizki Fadillah', nip: '199503152018015005', jenis_kelamin: 'Laki-laki',
+                        spesialisasi: 'Spesialis Neurologi', no_str: 'STR-005-2023', masa_berlaku_str: '2028-01-20',
+                        status: 'aktif', kontak: '08177788899', alamat: 'Jl. Gatot Subroto No.23, Yogyakarta',
+                        tanggal_lahir: '1995-03-15', foto: '' },
+                ],
+                sertifikasi: [
+                    { id: 's1', tenaga_id: 't1', nama_sertifikasi: 'Basic Life Support', tanggal_terbit: '2023-01-10',
+                        tanggal_berakhir: '2025-01-10', penerbit: 'AHA' },
+                    { id: 's2', tenaga_id: 't1', nama_sertifikasi: 'Advanced Cardiac Life Support',
+                        tanggal_terbit: '2023-06-15', tanggal_berakhir: '2025-06-15', penerbit: 'AHA' },
+                    { id: 's3', tenaga_id: 't2', nama_sertifikasi: 'Pediatric Advanced Life Support',
+                        tanggal_terbit: '2023-03-20', tanggal_berakhir: '2025-03-20', penerbit: 'AHA' },
+                    { id: 's4', tenaga_id: 't4', nama_sertifikasi: 'Obstetric Emergency', tanggal_terbit: '2023-08-01',
+                        tanggal_berakhir: '2025-08-01', penerbit: 'FIGO' },
+                    { id: 's5', tenaga_id: 't5', nama_sertifikasi: 'Stroke Care', tanggal_terbit: '2023-11-05',
+                        tanggal_berakhir: '2025-11-05', penerbit: 'WSO' },
+                ],
+                penugasan: [
+                    { id: 'p1', tenaga_id: 't1', unit_kerja: 'Ruang Rawat Jantung', posisi: 'Kepala Ruangan',
+                        tanggal_mulai: '2022-01-01', tanggal_akhir: '', status: 'aktif' },
+                    { id: 'p2', tenaga_id: 't2', unit_kerja: 'Ruang Anak', posisi: 'Dokter Spesialis',
+                        tanggal_mulai: '2021-07-01', tanggal_akhir: '', status: 'aktif' },
+                    { id: 'p3', tenaga_id: 't3', unit_kerja: 'Ruang Bedah', posisi: 'Dokter Bedah', tanggal_mulai: '2020-03-01',
+                        tanggal_akhir: '2023-12-31', status: 'selesai' },
+                    { id: 'p4', tenaga_id: 't4', unit_kerja: 'Ruang Kandungan', posisi: 'Dokter Spesialis',
+                        tanggal_mulai: '2022-06-01', tanggal_akhir: '', status: 'aktif' },
+                    { id: 'p5', tenaga_id: 't5', unit_kerja: 'Ruang Neurologi', posisi: 'Dokter Spesialis',
+                        tanggal_mulai: '2023-02-01', tanggal_akhir: '', status: 'aktif' },
+                ],
+                jadwal: [
+                    { id: 'j1', tenaga_id: 't1', hari: 'Senin', jam_mulai: '08:00', jam_akhir: '16:00', shift: 'pagi' },
+                    { id: 'j2', tenaga_id: 't1', hari: 'Rabu', jam_mulai: '08:00', jam_akhir: '16:00', shift: 'pagi' },
+                    { id: 'j3', tenaga_id: 't1', hari: 'Jumat', jam_mulai: '08:00', jam_akhir: '16:00', shift: 'pagi' },
+                    { id: 'j4', tenaga_id: 't2', hari: 'Selasa', jam_mulai: '13:00', jam_akhir: '21:00', shift: 'sore' },
+                    { id: 'j5', tenaga_id: 't2', hari: 'Kamis', jam_mulai: '13:00', jam_akhir: '21:00', shift: 'sore' },
+                    { id: 'j6', tenaga_id: 't4', hari: 'Senin', jam_mulai: '08:00', jam_akhir: '16:00', shift: 'pagi' },
+                    { id: 'j7', tenaga_id: 't4', hari: 'Kamis', jam_mulai: '08:00', jam_akhir: '16:00', shift: 'pagi' },
+                    { id: 'j8', tenaga_id: 't5', hari: 'Selasa', jam_mulai: '08:00', jam_akhir: '16:00', shift: 'pagi' },
+                    { id: 'j9', tenaga_id: 't5', hari: 'Jumat', jam_mulai: '08:00', jam_akhir: '16:00', shift: 'pagi' },
+                ],
+                pelatihan: [
+                    { id: 'l1', tenaga_id: 't1', nama_pelatihan: 'Manajemen Rumah Sakit', tanggal_mulai: '2023-05-01',
+                        tanggal_akhir: '2023-05-15', sertifikat: 'MS-001' },
+                    { id: 'l2', tenaga_id: 't2', nama_pelatihan: 'Konseling Anak', tanggal_mulai: '2023-07-10',
+                        tanggal_akhir: '2023-07-20', sertifikat: 'CA-002' },
+                    { id: 'l3', tenaga_id: 't4', nama_pelatihan: 'Kesehatan Ibu dan Anak', tanggal_mulai: '2023-09-01',
+                        tanggal_akhir: '2023-09-10', sertifikat: 'MCH-003' },
+                    { id: 'l4', tenaga_id: 't5', nama_pelatihan: 'Neuroimaging', tanggal_mulai: '2023-11-01',
+                        tanggal_akhir: '2023-11-15', sertifikat: 'NI-004' },
+                ],
+                // APOTEK
+                obat: [
+                    { id: 'o1', nama: 'Paracetamol 500mg', kategori: 'Analgesik', produsen: 'Kimia Farma',
+                        satuan: 'Tablet', harga_beli: 500, harga_jual: 800, stok_minimal: 100, stok_maksimal: 500,
+                        deskripsi: 'Obat pereda nyeri dan demam' },
+                    { id: 'o2', nama: 'Amoxicillin 500mg', kategori: 'Antibiotik', produsen: 'Sanbe', satuan: 'Kapsul',
+                        harga_beli: 1200, harga_jual: 1800, stok_minimal: 80, stok_maksimal: 400,
+                        deskripsi: 'Antibiotik spektrum luas' },
+                    { id: 'o3', nama: 'Cetirizine 10mg', kategori: 'Antihistamin', produsen: 'Novell', satuan: 'Tablet',
+                        harga_beli: 300, harga_jual: 500, stok_minimal: 60, stok_maksimal: 300,
+                        deskripsi: 'Obat alergi' },
+                    { id: 'o4', nama: 'Omeprazole 20mg', kategori: 'Antasida', produsen: 'Kalbe', satuan: 'Kapsul',
+                        harga_beli: 800, harga_jual: 1200, stok_minimal: 50, stok_maksimal: 250,
+                        deskripsi: 'Obat maag dan asam lambung' },
+                    { id: 'o5', nama: 'Insulin Glargine', kategori: 'Antidiabetik', produsen: 'Sanofi', satuan: 'Vial',
+                        harga_beli: 45000, harga_jual: 55000, stok_minimal: 10, stok_maksimal: 50,
+                        deskripsi: 'Insulin kerja panjang' },
+                    { id: 'o6', nama: 'Salbutamol 2mg', kategori: 'Bronkodilator', produsen: 'Molex', satuan: 'Tablet',
+                        harga_beli: 400, harga_jual: 650, stok_minimal: 70, stok_maksimal: 350,
+                        deskripsi: 'Obat asma dan sesak nafas' },
+                ],
+                stok: [
+                    { id: 'st1', obat_id: 'o1', jumlah: 320, tanggal_masuk: '2026-01-15', tanggal_kadaluarsa: '2027-01-15',
+                        no_batch: 'B001', lokasi: 'Rak A1' },
+                    { id: 'st2', obat_id: 'o1', jumlah: 150, tanggal_masuk: '2026-02-01', tanggal_kadaluarsa: '2027-02-01',
+                        no_batch: 'B002', lokasi: 'Rak A2' },
+                    { id: 'st3', obat_id: 'o2', jumlah: 200, tanggal_masuk: '2026-01-20', tanggal_kadaluarsa: '2027-01-20',
+                        no_batch: 'B003', lokasi: 'Rak B1' },
+                    { id: 'st4', obat_id: 'o3', jumlah: 250, tanggal_masuk: '2026-01-25', tanggal_kadaluarsa: '2027-01-25',
+                        no_batch: 'B004', lokasi: 'Rak C1' },
+                    { id: 'st5', obat_id: 'o4', jumlah: 80, tanggal_masuk: '2026-02-05', tanggal_kadaluarsa: '2027-02-05',
+                        no_batch: 'B005', lokasi: 'Rak D1' },
+                    { id: 'st6', obat_id: 'o5', jumlah: 15, tanggal_masuk: '2026-01-10', tanggal_kadaluarsa: '2026-07-10',
+                        no_batch: 'B006', lokasi: 'Rak E1 (Kulkas)' },
+                    { id: 'st7', obat_id: 'o6', jumlah: 180, tanggal_masuk: '2026-02-10', tanggal_kadaluarsa: '2027-02-10',
+                        no_batch: 'B007', lokasi: 'Rak F1' },
+                ],
+                resep: [
+                    { id: 'r1', pasien: 'Ani Susanti', tanggal_resep: '2026-02-10', dokter: 'dr. Andi Pratama',
+                        obat_obat: [{ obat_id: 'o1', jumlah: 10 }, { obat_id: 'o3', jumlah: 5 }], status: 'selesai' },
+                    { id: 'r2', pasien: 'Bambang Wijaya', tanggal_resep: '2026-02-12', dokter: 'dr. Siti Rahayu',
+                        obat_obat: [{ obat_id: 'o2', jumlah: 14 }, { obat_id: 'o4', jumlah: 7 }], status: 'pending' },
+                    { id: 'r3', pasien: 'Cahya Lestari', tanggal_resep: '2026-02-14', dokter: 'dr. Maria Simanjuntak',
+                        obat_obat: [{ obat_id: 'o5', jumlah: 2 }], status: 'selesai' },
+                    { id: 'r4', pasien: 'Dedi Setiawan', tanggal_resep: '2026-02-15', dokter: 'dr. Rizki Fadillah',
+                        obat_obat: [{ obat_id: 'o6', jumlah: 20 }], status: 'pending' },
+                ],
+                pelayanan: [
+                    { id: 'pl1', resep_id: 'r1', tanggal_pelayanan: '2026-02-10', apoteker: 'apt. Dewi Lestari',
+                        metode_pembayaran: 'BPJS' },
+                    { id: 'pl2', resep_id: 'r3', tanggal_pelayanan: '2026-02-14', apoteker: 'apt. Fajar Nugroho',
+                        metode_pembayaran: 'Tunai' },
+                ],
+                pemasok: [
+                    { id: 'pm1', nama: 'PT Kimia Farma', kontak: '021-5551111', alamat: 'Jl. Industri No.1, Jakarta',
+                        telp: '021-5551111' },
+                    { id: 'pm2', nama: 'PT Sanbe Farma', kontak: '022-5552222', alamat: 'Jl. Raya Bandung No.45, Bandung',
+                        telp: '022-5552222' },
+                    { id: 'pm3', nama: 'PT Kalbe Farma', kontak: '021-5553333', alamat: 'Jl. Sudirman No.78, Jakarta',
+                        telp: '021-5553333' },
+                ]
+            };
+        }
+
+        function loadData() {
+            try {
+                const raw = localStorage.getItem(STORE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    // merge dengan default untuk memastikan semua key ada
+                    const def = getDefaultData();
+                    for (const key in def) {
+                        if (!parsed[key]) parsed[key] = def[key];
+                    }
+                    return parsed;
+                }
+            } catch (e) { console.warn('Load data error, pakai default', e); }
+            return getDefaultData();
+        }
+
+        function saveData(data) {
+            localStorage.setItem(STORE_KEY, JSON.stringify(data));
+        }
+
+        let dataStore = loadData();
+
+        function getStore() { return dataStore; }
+
+        function updateStore(newData) {
+            dataStore = newData;
+            saveData(dataStore);
+            renderCurrentPage();
+        }
+
+        // ================================================================
+        //  NAVIGATION
+        // ================================================================
+        let currentPage = 'dashboard';
+        let currentTab = null;
+
+        const pageTitles = {
+            dashboard: { title: 'Dashboard', subtitle: 'Ringkasan sistem terintegrasi Satu Sehat SDMK & Apotek' },
+            'sdmk-tenaga': { title: 'Tenaga Kesehatan', subtitle: 'Manajemen data tenaga kesehatan — Satu Sehat SDMK' },
+            'sdmk-sertifikasi': { title: 'Sertifikasi', subtitle: 'Sertifikasi dan lisensi tenaga kesehatan' },
+            'sdmk-penugasan': { title: 'Penugasan', subtitle: 'Penempatan dan penugasan tenaga kesehatan' },
+            'sdmk-jadwal': { title: 'Jadwal Kerja', subtitle: 'Jadwal shift dan tugas tenaga kesehatan' },
+            'sdmk-pelatihan': { title: 'Pelatihan', subtitle: 'Pelatihan dan pengembangan tenaga kesehatan' },
+            'apotek-obat': { title: 'Manajemen Obat', subtitle: 'Data obat, stok, dan harga' },
+            'apotek-resep': { title: 'Resep', subtitle: 'Resep pasien dan status pelayanan' },
+            'apotek-pelayanan': { title: 'Pelayanan Apotek', subtitle: 'Pelayanan resep dan dispensing' },
+            'apotek-pemasok': { title: 'Pemasok', subtitle: 'Manajemen pemasok obat' },
+            'apotek-kadaluarsa': { title: 'Kadaluarsa', subtitle: 'Monitoring obat mendekati kadaluarsa' },
+        };
+
+        document.querySelectorAll('.sidebar-nav a[data-page]').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.dataset.page;
+                navigateTo(page);
+            });
+        });
+
+        function navigateTo(page) {
+            currentPage = page;
+            document.querySelectorAll('.sidebar-nav a[data-page]').forEach(el => {
+                el.classList.toggle('active', el.dataset.page === page);
+            });
+            const info = pageTitles[page] || { title: page, subtitle: '' };
+            document.getElementById('pageTitle').textContent = info.title;
+            document.getElementById('pageSubtitle').textContent = info.subtitle;
+            // Tutup sidebar mobile
+            closeSidebar();
+            renderCurrentPage();
+        }
+
+        function renderCurrentPage() {
+            const container = document.getElementById('pageContent');
+            switch (currentPage) {
+                case 'dashboard':
+                    renderDashboard(container);
+                    break;
+                case 'sdmk-tenaga':
+                    renderTenaga(container);
+                    break;
+                case 'sdmk-sertifikasi':
+                    renderSertifikasi(container);
+                    break;
+                case 'sdmk-penugasan':
+                    renderPenugasan(container);
+                    break;
+                case 'sdmk-jadwal':
+                    renderJadwal(container);
+                    break;
+                case 'sdmk-pelatihan':
+                    renderPelatihan(container);
+                    break;
+                case 'apotek-obat':
+                    renderObat(container);
+                    break;
+                case 'apotek-resep':
+                    renderResep(container);
+                    break;
+                case 'apotek-pelayanan':
+                    renderPelayanan(container);
+                    break;
+                case 'apotek-pemasok':
+                    renderPemasok(container);
+                    break;
+                case 'apotek-kadaluarsa':
+                    renderKadaluarsa(container);
+                    break;
+                default:
+                    container.innerHTML = '<p>Halaman tidak ditemukan.</p>';
+            }
+        }
+
+        // ================================================================
+        //  SIDEBAR TOGGLE
+        // ================================================================
+        document.getElementById('hamburgerBtn').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('show');
+        });
+        document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('show');
+        }
+
+        // ================================================================
+        //  MODAL HELPERS
+        // ================================================================
+        let modalContext = {};
+
+        function openModal(title, bodyHTML, onSave) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = bodyHTML;
+            document.getElementById('modalOverlay').classList.add('show');
+            modalContext.onSave = onSave || function() {};
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('show');
+            modalContext = {};
+        }
+
+        function saveModal() {
+            if (modalContext.onSave) modalContext.onSave();
+        }
+
+        // ================================================================
+        //  GLOBAL SEARCH
+        // ================================================================
+        function handleGlobalSearch(value) {
+            // Implementasi sederhana: cari di semua data
+            const v = value.toLowerCase().trim();
+            if (!v) return;
+            // nanti bisa diintegrasikan
+        }
+
+        // ================================================================
+        //  INTEGRATION STATUS
+        // ================================================================
+        function showIntegrationStatus() {
+            const store = getStore();
+            const totalTenaga = store.tenaga.length;
+            const totalObat = store.obat.length;
+            const totalResep = store.resep.length;
+            const totalPelayanan = store.pelayanan.length;
+
+            const msg = `
+            <div style="padding:8px 0;">
+              <p><i class="fas fa-check-circle" style="color:var(--success);"></i> <strong>Status Integrasi Aktif</strong></p>
+              <hr style="margin:12px 0;border-color:var(--gray-200);">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><strong>SDMK</strong><br>Tenaga: ${totalTenaga}<br>Sertifikasi: ${store.sertifikasi.length}<br>Penugasan: ${store.penugasan.length}</div>
+                <div><strong>Apotek</strong><br>Obat: ${totalObat}<br>Resep: ${totalResep}<br>Pelayanan: ${totalPelayanan}</div>
+              </div>
+              <hr style="margin:12px 0;border-color:var(--gray-200);">
+              <p style="font-size:13px;color:var(--gray-500);">
+                <i class="fas fa-link"></i> Data tenaga kesehatan terhubung dengan penugasan dan jadwal.<br>
+                <i class="fas fa-prescription"></i> Resep terhubung dengan pelayanan apotek dan stok obat.
+              </p>
+            </div>
+          `;
+            openModal('Status Integrasi Sistem', msg, function() { closeModal(); });
+            // override footer
+            document.getElementById('modalFooter').innerHTML = `
+            <button class="btn-sm outline" onclick="closeModal()">Tutup</button>
+          `;
+            modalContext.onSave = function() { closeModal(); };
+        }
+
+        // ================================================================
+        //  DASHBOARD
+        // ================================================================
+        function renderDashboard(container) {
+            const store = getStore();
+            const totalTenaga = store.tenaga.length;
+            const aktifTenaga = store.tenaga.filter(t => t.status === 'aktif').length;
+            const totalObat = store.obat.length;
+            const totalResep = store.resep.length;
+            const totalPelayanan = store.pelayanan.length;
+
+            // Hitung stok rendah
+            const lowStock = store.obat.filter(o => {
+                const total = store.stok.filter(s => s.obat_id === o.id).reduce((sum, s) => sum + s.jumlah, 0);
+                return total < o.stok_minimal;
+            }).length;
+
+            // Resep pending
+            const pendingResep = store.resep.filter(r => r.status === 'pending').length;
+
+            // Kadaluarsa dekat (dalam 3 bulan)
+            const now = new Date();
+            const threeMonths = new Date(now);
+            threeMonths.setMonth(threeMonths.getMonth() + 3);
+            const expiring = store.stok.filter(s => {
+                const exp = new Date(s.tanggal_kadaluarsa);
+                return exp > now && exp <= threeMonths;
+            }).length;
+
+            container.innerHTML = `
+            <!-- Stats -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="label"><i class="fas fa-user-md"></i> Tenaga Kesehatan</div>
+                <div class="value">${totalTenaga}</div>
+                <div class="change up"><i class="fas fa-arrow-up"></i> ${aktifTenaga} aktif</div>
+              </div>
+              <div class="stat-card">
+                <div class="label"><i class="fas fa-capsules"></i> Obat</div>
+                <div class="value">${totalObat}</div>
+                <div class="change ${lowStock > 0 ? 'down' : 'up'}"><i class="fas fa-${lowStock > 0 ? 'exclamation-triangle' : 'check'}"></i> ${lowStock} stok rendah</div>
+              </div>
+              <div class="stat-card">
+                <div class="label"><i class="fas fa-prescription"></i> Resep</div>
+                <div class="value">${totalResep}</div>
+                <div class="change ${pendingResep > 0 ? 'down' : 'up'}"><i class="fas fa-clock"></i> ${pendingResep} pending</div>
+              </div>
+              <div class="stat-card">
+                <div class="label"><i class="fas fa-hand-holding-medical"></i> Pelayanan</div>
+                <div class="value">${totalPelayanan}</div>
+                <div class="change up"><i class="fas fa-check-circle"></i> Selesai</div>
+              </div>
+            </div>
+
+            <!-- Charts & Info -->
+            <div class="grid-2">
+              <div class="panel">
+                <div class="panel-header"><h3><i class="fas fa-chart-pie"></i> Tenaga per Spesialisasi</h3></div>
+                <div class="panel-body">
+                  <div class="chart-container"><canvas id="chartSpesialisasi"></canvas></div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="panel-header"><h3><i class="fas fa-chart-bar"></i> Stok Obat vs Minimal</h3></div>
+                <div class="panel-body">
+                  <div class="chart-container"><canvas id="chartStok"></canvas></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Integration Summary -->
+            <div class="panel">
+              <div class="panel-header"><h3><i class="fas fa-link"></i> Alur Integrasi Sistem</h3></div>
+              <div class="panel-body">
+                <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:space-around;padding:10px 0;">
+                  <div style="text-align:center;">
+                    <i class="fas fa-user-md" style="font-size:32px;color:var(--primary);"></i>
+                    <div style="font-weight:600;margin-top:4px;">SDMK</div>
+                    <div style="font-size:12px;color:var(--gray-500);">Tenaga • Sertifikasi • Penugasan</div>
+                  </div>
+                  <div style="display:flex;align-items:center;font-size:24px;color:var(--gray-300);"><i class="fas fa-arrow-right"></i></div>
+                  <div style="text-align:center;">
+                    <i class="fas fa-prescription" style="font-size:32px;color:var(--accent);"></i>
+                    <div style="font-weight:600;margin-top:4px;">Resep</div>
+                    <div style="font-size:12px;color:var(--gray-500);">Dokter → Obat</div>
+                  </div>
+                  <div style="display:flex;align-items:center;font-size:24px;color:var(--gray-300);"><i class="fas fa-arrow-right"></i></div>
+                  <div style="text-align:center;">
+                    <i class="fas fa-hand-holding-medical" style="font-size:32px;color:var(--success);"></i>
+                    <div style="font-weight:600;margin-top:4px;">Pelayanan</div>
+                    <div style="font-size:12px;color:var(--gray-500);">Apotek • Dispensing</div>
+                  </div>
+                  <div style="display:flex;align-items:center;font-size:24px;color:var(--gray-300);"><i class="fas fa-arrow-right"></i></div>
+                  <div style="text-align:center;">
+                    <i class="fas fa-capsules" style="font-size:32px;color:var(--info);"></i>
+                    <div style="font-weight:600;margin-top:4px;">Stok Obat</div>
+                    <div style="font-size:12px;color:var(--gray-500);">Pengurangan otomatis</div>
+                  </div>
+                </div>
+                <div style="text-align:center;margin-top:10px;font-size:13px;color:var(--gray-500);">
+                  <i class="fas fa-sync-alt"></i> Data tersinkronisasi antara SDMK dan Apotek secara real-time
+                </div>
+              </div>
+            </div>
+          `;
+
+            // Render charts setelah DOM siap
+            setTimeout(() => {
+                renderChartSpesialisasi(store);
+                renderChartStok(store);
+            }, 100);
+        }
+
+        function renderChartSpesialisasi(store) {
+            const canvas = document.getElementById('chartSpesialisasi');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const counts = {};
+            store.tenaga.forEach(t => {
+                const spec = t.spesialisasi || 'Lainnya';
+                counts[spec] = (counts[spec] || 0) + 1;
+            });
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{ data: Object.values(counts), backgroundColor: ['#0b6e4f', '#1a3a5c', '#e67e22',
+                            '#2980b9', '#8e44ad', '#27ae60'
+                        ] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function renderChartStok(store) {
+            const canvas = document.getElementById('chartStok');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const labels = store.obat.slice(0, 6).map(o => o.nama.length > 15 ? o.nama.slice(0, 15) + '...' : o.nama);
+            const stokTotal = store.obat.slice(0, 6).map(o => {
+                return store.stok.filter(s => s.obat_id === o.id).reduce((sum, s) => sum + s.jumlah, 0);
+            });
+            const minStok = store.obat.slice(0, 6).map(o => o.stok_minimal);
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Stok Saat Ini', data: stokTotal, backgroundColor: '#0b6e4f' },
+                        { label: 'Stok Minimal', data: minStok, backgroundColor: '#e67e22' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        // ================================================================
+        //  SDMK — TENAGA KESEHATAN
+        // ================================================================
+        function renderTenaga(container) {
+            const store = getStore();
+            let html = `
+            <div class="panel">
+              <div class="panel-header">
+                <h3><i class="fas fa-user-md"></i> Daftar Tenaga Kesehatan</h3>
+                <div class="actions">
+                  <button class="btn-sm primary" onclick="showFormTenaga()"><i class="fas fa-plus"></i> Tambah</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Nama</th><th>NIP</th><th>Spesialisasi</th><th>STR</th><th>Masa Berlaku</th><th>Status</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            store.tenaga.forEach(t => {
+                const statusClass = t.status === 'aktif' ? 'active' : 'inactive';
+                html += `
+              <tr>
+                <td><strong>${t.nama}</strong></td>
+                <td>${t.nip}</td>
+                <td>${t.spesialisasi || '-'}</td>
+                <td>${t.no_str || '-'}</td>
+                <td>${t.masa_berlaku_str || '-'}</td>
+                <td><span class="badge-status ${statusClass}">${t.status}</span></td>
+                <td>
+                  <button class="btn-icon primary" onclick="showFormTenaga('${t.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon danger" onclick="hapusTenaga('${t.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            `;
+            });
+            if (!store.tenaga.length) {
+                html += `<tr><td colspan="7" class="empty"><i class="fas fa-user-md"></i> Belum ada data tenaga</td></tr>`;
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+          `;
+            container.innerHTML = html;
+        }
+
+        function showFormTenaga(id = null) {
+            const store = getStore();
+            let t = id ? store.tenaga.find(x => x.id === id) : null;
+            const isEdit = !!t;
+            const title = isEdit ? 'Edit Tenaga Kesehatan' : 'Tambah Tenaga Kesehatan';
+            const body = `
+            <form id="formTenaga">
+              <input type="hidden" id="f_tenaga_id" value="${isEdit ? t.id : ''}">
+              <div class="form-group">
+                <label>Nama Lengkap <span class="req">*</span></label>
+                <input class="form-control" id="f_nama" value="${isEdit ? t.nama : ''}" placeholder="Nama lengkap">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>NIP <span class="req">*</span></label>
+                  <input class="form-control" id="f_nip" value="${isEdit ? t.nip : ''}" placeholder="NIP">
+                </div>
+                <div class="form-group">
+                  <label>Jenis Kelamin</label>
+                  <select class="form-control" id="f_jk">
+                    <option value="Laki-laki" ${isEdit && t.jenis_kelamin === 'Laki-laki' ? 'selected' : ''}>Laki-laki</option>
+                    <option value="Perempuan" ${isEdit && t.jenis_kelamin === 'Perempuan' ? 'selected' : ''}>Perempuan</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Spesialisasi</label>
+                <input class="form-control" id="f_spesialisasi" value="${isEdit ? t.spesialisasi : ''}" placeholder="Spesialisasi">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>No. STR</label>
+                  <input class="form-control" id="f_str" value="${isEdit ? t.no_str : ''}" placeholder="STR">
+                </div>
+                <div class="form-group">
+                  <label>Masa Berlaku STR</label>
+                  <input class="form-control" type="date" id="f_str_berlaku" value="${isEdit ? t.masa_berlaku_str : ''}">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Status</label>
+                <select class="form-control" id="f_status">
+                  <option value="aktif" ${isEdit && t.status === 'aktif' ? 'selected' : ''}>Aktif</option>
+                  <option value="nonaktif" ${isEdit && t.status === 'nonaktif' ? 'selected' : ''}>Nonaktif</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Kontak</label>
+                <input class="form-control" id="f_kontak" value="${isEdit ? t.kontak : ''}" placeholder="No. HP">
+              </div>
+              <div class="form-group">
+                <label>Alamat</label>
+                <input class="form-control" id="f_alamat" value="${isEdit ? t.alamat : ''}" placeholder="Alamat">
+              </div>
+              <div class="form-group">
+                <label>Tanggal Lahir</label>
+                <input class="form-control" type="date" id="f_tgl_lahir" value="${isEdit ? t.tanggal_lahir : ''}">
+              </div>
+            </form>
+          `;
+            openModal(title, body, function() {
+                const nama = document.getElementById('f_nama').value.trim();
+                const nip = document.getElementById('f_nip').value.trim();
+                if (!nama || !nip) { alert('Nama dan NIP wajib diisi!'); return; }
+                const data = {
+                    nama,
+                    nip,
+                    jenis_kelamin: document.getElementById('f_jk').value,
+                    spesialisasi: document.getElementById('f_spesialisasi').value.trim(),
+                    no_str: document.getElementById('f_str').value.trim(),
+                    masa_berlaku_str: document.getElementById('f_str_berlaku').value,
+                    status: document.getElementById('f_status').value,
+                    kontak: document.getElementById('f_kontak').value.trim(),
+                    alamat: document.getElementById('f_alamat').value.trim(),
+                    tanggal_lahir: document.getElementById('f_tgl_lahir').value,
+                    foto: ''
+                };
+                const store2 = getStore();
+                const existingId = document.getElementById('f_tenaga_id').value;
+                if (existingId) {
+                    const idx = store2.tenaga.findIndex(x => x.id === existingId);
+                    if (idx >= 0) store2.tenaga[idx] = { ...store2.tenaga[idx], ...data };
+                } else {
+                    data.id = 't' + Date.now();
+                    store2.tenaga.push(data);
+                }
+                updateStore(store2);
+                closeModal();
+            });
+        }
+
+        function hapusTenaga(id) {
+            if (!confirm('Hapus tenaga kesehatan ini?')) return;
+            const store2 = getStore();
+            store2.tenaga = store2.tenaga.filter(t => t.id !== id);
+            // Hapus juga data terkait
+            store2.sertifikasi = store2.sertifikasi.filter(s => s.tenaga_id !== id);
+            store2.penugasan = store2.penugasan.filter(p => p.tenaga_id !== id);
+            store2.jadwal = store2.jadwal.filter(j => j.tenaga_id !== id);
+            store2.pelatihan = store2.pelatihan.filter(l => l.tenaga_id !== id);
+            updateStore(store2);
+        }
+
+        // ================================================================
+        //  SDMK — SERTIFIKASI
+        // ================================================================
+        function renderSertifikasi(container) {
+            const store = getStore();
+            let html = `
+            <div class="panel">
+              <div class="panel-header">
+                <h3><i class="fas fa-certificate"></i> Daftar Sertifikasi</h3>
+                <div class="actions">
+                  <button class="btn-sm primary" onclick="showFormSertifikasi()"><i class="fas fa-plus"></i> Tambah</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Tenaga</th><th>Sertifikasi</th><th>Terbit</th><th>Berakhir</th><th>Penerbit</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            store.sertifikasi.forEach(s => {
+                const tenaga = store.tenaga.find(t => t.id === s.tenaga_id);
+                const namaTenaga = tenaga ? tenaga.nama : 'Tidak ditemukan';
+                html += `
+              <tr>
+                <td>${namaTenaga}</td>
+                <td><strong>${s.nama_sertifikasi}</strong></td>
+                <td>${s.tanggal_terbit}</td>
+                <td>${s.tanggal_berakhir}</td>
+                <td>${s.penerbit}</td>
+                <td>
+                  <button class="btn-icon primary" onclick="showFormSertifikasi('${s.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon danger" onclick="hapusSertifikasi('${s.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            `;
+            });
+            if (!store.sertifikasi.length) {
+                html +=
+                `<tr><td colspan="6" class="empty"><i class="fas fa-certificate"></i> Belum ada data sertifikasi</td></tr>`;
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+          `;
+            container.innerHTML = html;
+        }
+
+        function showFormSertifikasi(id = null) {
+            const store = getStore();
+            let s = id ? store.sertifikasi.find(x => x.id === id) : null;
+            const isEdit = !!s;
+            const title = isEdit ? 'Edit Sertifikasi' : 'Tambah Sertifikasi';
+            const tenagaOptions = store.tenaga.map(t =>
+                `<option value="${t.id}" ${isEdit && s.tenaga_id === t.id ? 'selected' : ''}>${t.nama}</option>`
+            ).join('');
+            const body = `
+            <form id="formSertifikasi">
+              <input type="hidden" id="f_sertifikasi_id" value="${isEdit ? s.id : ''}">
+              <div class="form-group">
+                <label>Tenaga Kesehatan <span class="req">*</span></label>
+                <select class="form-control" id="f_sertifikasi_tenaga_id">${tenagaOptions}</select>
+              </div>
+              <div class="form-group">
+                <label>Nama Sertifikasi <span class="req">*</span></label>
+                <input class="form-control" id="f_sertifikasi_nama" value="${isEdit ? s.nama_sertifikasi : ''}" placeholder="Nama sertifikasi">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Tanggal Terbit</label>
+                  <input class="form-control" type="date" id="f_sertifikasi_terbit" value="${isEdit ? s.tanggal_terbit : ''}">
+                </div>
+                <div class="form-group">
+                  <label>Tanggal Berakhir</label>
+                  <input class="form-control" type="date" id="f_sertifikasi_berakhir" value="${isEdit ? s.tanggal_berakhir : ''}">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Penerbit</label>
+                <input class="form-control" id="f_sertifikasi_penerbit" value="${isEdit ? s.penerbit : ''}" placeholder="Penerbit">
+              </div>
+            </form>
+          `;
+            openModal(title, body, function() {
+                const tenaga_id = document.getElementById('f_sertifikasi_tenaga_id').value;
+                const nama = document.getElementById('f_sertifikasi_nama').value.trim();
+                if (!tenaga_id || !nama) { alert('Tenaga dan nama sertifikasi wajib diisi!'); return; }
+                const data = {
+                    tenaga_id,
+                    nama_sertifikasi: nama,
+                    tanggal_terbit: document.getElementById('f_sertifikasi_terbit').value,
+                    tanggal_berakhir: document.getElementById('f_sertifikasi_berakhir').value,
+                    penerbit: document.getElementById('f_sertifikasi_penerbit').value.trim(),
+                };
+                const store2 = getStore();
+                const existingId = document.getElementById('f_sertifikasi_id').value;
+                if (existingId) {
+                    const idx = store2.sertifikasi.findIndex(x => x.id === existingId);
+                    if (idx >= 0) store2.sertifikasi[idx] = { ...store2.sertifikasi[idx], ...data };
+                } else {
+                    data.id = 's' + Date.now();
+                    store2.sertifikasi.push(data);
+                }
+                updateStore(store2);
+                closeModal();
+            });
+        }
+
+        function hapusSertifikasi(id) {
+            if (!confirm('Hapus sertifikasi ini?')) return;
+            const store2 = getStore();
+            store2.sertifikasi = store2.sertifikasi.filter(s => s.id !== id);
+            updateStore(store2);
+        }
+
+        // ================================================================
+        //  SDMK — PENUGASAN
+        // ================================================================
+        function renderPenugasan(container) {
+            const store = getStore();
+            let html = `
+            <div class="panel">
+              <div class="panel-header">
+                <h3><i class="fas fa-briefcase"></i> Daftar Penugasan</h3>
+                <div class="actions">
+                  <button class="btn-sm primary" onclick="showFormPenugasan()"><i class="fas fa-plus"></i> Tambah</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Tenaga</th><th>Unit Kerja</th><th>Posisi</th><th>Mulai</th><th>Selesai</th><th>Status</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            store.penugasan.forEach(p => {
+                const tenaga = store.tenaga.find(t => t.id === p.tenaga_id);
+                const namaTenaga = tenaga ? tenaga.nama : 'Tidak ditemukan';
+                const statusClass = p.status === 'aktif' ? 'active' : 'inactive';
+                html += `
+              <tr>
+                <td>${namaTenaga}</td>
+                <td>${p.unit_kerja}</td>
+                <td>${p.posisi}</td>
+                <td>${p.tanggal_mulai}</td>
+                <td>${p.tanggal_akhir || '-'}</td>
+                <td><span class="badge-status ${statusClass}">${p.status}</span></td>
+                <td>
+                  <button class="btn-icon primary" onclick="showFormPenugasan('${p.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon danger" onclick="hapusPenugasan('${p.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            `;
+            });
+            if (!store.penugasan.length) {
+                html +=
+                `<tr><td colspan="7" class="empty"><i class="fas fa-briefcase"></i> Belum ada data penugasan</td></tr>`;
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+          `;
+            container.innerHTML = html;
+        }
+
+        function showFormPenugasan(id = null) {
+            const store = getStore();
+            let p = id ? store.penugasan.find(x => x.id === id) : null;
+            const isEdit = !!p;
+            const title = isEdit ? 'Edit Penugasan' : 'Tambah Penugasan';
+            const tenagaOptions = store.tenaga.map(t =>
+                `<option value="${t.id}" ${isEdit && p.tenaga_id === t.id ? 'selected' : ''}>${t.nama}</option>`
+            ).join('');
+            const body = `
+            <form id="formPenugasan">
+              <input type="hidden" id="f_penugasan_id" value="${isEdit ? p.id : ''}">
+              <div class="form-group">
+                <label>Tenaga Kesehatan <span class="req">*</span></label>
+                <select class="form-control" id="f_penugasan_tenaga_id">${tenagaOptions}</select>
+              </div>
+              <div class="form-group">
+                <label>Unit Kerja <span class="req">*</span></label>
+                <input class="form-control" id="f_penugasan_unit" value="${isEdit ? p.unit_kerja : ''}" placeholder="Unit kerja">
+              </div>
+              <div class="form-group">
+                <label>Posisi <span class="req">*</span></label>
+                <input class="form-control" id="f_penugasan_posisi" value="${isEdit ? p.posisi : ''}" placeholder="Posisi">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Tanggal Mulai</label>
+                  <input class="form-control" type="date" id="f_penugasan_mulai" value="${isEdit ? p.tanggal_mulai : ''}">
+                </div>
+                <div class="form-group">
+                  <label>Tanggal Selesai</label>
+                  <input class="form-control" type="date" id="f_penugasan_selesai" value="${isEdit ? p.tanggal_akhir : ''}">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Status</label>
+                <select class="form-control" id="f_penugasan_status">
+                  <option value="aktif" ${isEdit && p.status === 'aktif' ? 'selected' : ''}>Aktif</option>
+                  <option value="selesai" ${isEdit && p.status === 'selesai' ? 'selected' : ''}>Selesai</option>
+                </select>
+              </div>
+            </form>
+          `;
+            openModal(title, body, function() {
+                const tenaga_id = document.getElementById('f_penugasan_tenaga_id').value;
+                const unit = document.getElementById('f_penugasan_unit').value.trim();
+                const posisi = document.getElementById('f_penugasan_posisi').value.trim();
+                if (!tenaga_id || !unit || !posisi) { alert('Tenaga, unit, dan posisi wajib diisi!'); return; }
+                const data = {
+                    tenaga_id,
+                    unit_kerja: unit,
+                    posisi: posisi,
+                    tanggal_mulai: document.getElementById('f_penugasan_mulai').value,
+                    tanggal_akhir: document.getElementById('f_penugasan_selesai').value,
+                    status: document.getElementById('f_penugasan_status').value,
+                };
+                const store2 = getStore();
+                const existingId = document.getElementById('f_penugasan_id').value;
+                if (existingId) {
+                    const idx = store2.penugasan.findIndex(x => x.id === existingId);
+                    if (idx >= 0) store2.penugasan[idx] = { ...store2.penugasan[idx], ...data };
+                } else {
+                    data.id = 'p' + Date.now();
+                    store2.penugasan.push(data);
+                }
+                updateStore(store2);
+                closeModal();
+            });
+        }
+
+        function hapusPenugasan(id) {
+            if (!confirm('Hapus penugasan ini?')) return;
+            const store2 = getStore();
+            store2.penugasan = store2.penugasan.filter(p => p.id !== id);
+            updateStore(store2);
+        }
+
+        // ================================================================
+        //  SDMK — JADWAL KERJA
+        // ================================================================
+        function renderJadwal(container) {
+            const store = getStore();
+            let html = `
+            <div class="panel">
+              <div class="panel-header">
+                <h3><i class="fas fa-calendar-alt"></i> Daftar Jadwal Kerja</h3>
+                <div class="actions">
+                  <button class="btn-sm primary" onclick="showFormJadwal()"><i class="fas fa-plus"></i> Tambah</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Tenaga</th><th>Hari</th><th>Jam Mulai</th><th>Jam Akhir</th><th>Shift</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            store.jadwal.forEach(j => {
+                const tenaga = store.tenaga.find(t => t.id === j.tenaga_id);
+                const namaTenaga = tenaga ? tenaga.nama : 'Tidak ditemukan';
+                html += `
+              <tr>
+                <td>${namaTenaga}</td>
+                <td><strong>${j.hari}</strong></td>
+                <td>${j.jam_mulai}</td>
+                <td>${j.jam_akhir}</td>
+                <td><span class="badge-status ${j.shift === 'pagi' ? 'active' : 'pending'}">${j.shift}</span></td>
+                <td>
+                  <button class="btn-icon primary" onclick="showFormJadwal('${j.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon danger" onclick="hapusJadwal('${j.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            `;
+            });
+            if (!store.jadwal.length) {
+                html +=
+                `<tr><td colspan="6" class="empty"><i class="fas fa-calendar-alt"></i> Belum ada data jadwal</td></tr>`;
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+          `;
+            container.innerHTML = html;
+        }
+
+        function showFormJadwal(id = null) {
+            const store = getStore();
+            let j = id ? store.jadwal.find(x => x.id === id) : null;
+            const isEdit = !!j;
+            const title = isEdit ? 'Edit Jadwal' : 'Tambah Jadwal';
+            const tenagaOptions = store.tenaga.map(t =>
+                `<option value="${t.id}" ${isEdit && j.tenaga_id === t.id ? 'selected' : ''}>${t.nama}</option>`
+            ).join('');
+            const hariOptions = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'].map(h =>
+                `<option value="${h}" ${isEdit && j.hari === h ? 'selected' : ''}>${h}</option>`
+            ).join('');
+            const body = `
+            <form id="formJadwal">
+              <input type="hidden" id="f_jadwal_id" value="${isEdit ? j.id : ''}">
+              <div class="form-group">
+                <label>Tenaga Kesehatan <span class="req">*</span></label>
+                <select class="form-control" id="f_jadwal_tenaga_id">${tenagaOptions}</select>
+              </div>
+              <div class="form-group">
+                <label>Hari <span class="req">*</span></label>
+                <select class="form-control" id="f_jadwal_hari">${hariOptions}</select>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Jam Mulai</label>
+                  <input class="form-control" type="time" id="f_jadwal_mulai" value="${isEdit ? j.jam_mulai : '08:00'}">
+                </div>
+                <div class="form-group">
+                  <label>Jam Akhir</label>
+                  <input class="form-control" type="time" id="f_jadwal_akhir" value="${isEdit ? j.jam_akhir : '16:00'}">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Shift</label>
+                <select class="form-control" id="f_jadwal_shift">
+                  <option value="pagi" ${isEdit && j.shift === 'pagi' ? 'selected' : ''}>Pagi</option>
+                  <option value="sore" ${isEdit && j.shift === 'sore' ? 'selected' : ''}>Sore</option>
+                  <option value="malam" ${isEdit && j.shift === 'malam' ? 'selected' : ''}>Malam</option>
+                </select>
+              </div>
+            </form>
+          `;
+            openModal(title, body, function() {
+                const tenaga_id = document.getElementById('f_jadwal_tenaga_id').value;
+                const hari = document.getElementById('f_jadwal_hari').value;
+                const mulai = document.getElementById('f_jadwal_mulai').value;
+                const akhir = document.getElementById('f_jadwal_akhir').value;
+                if (!tenaga_id || !hari || !mulai || !akhir) { alert('Semua field wajib diisi!'); return; }
+                const data = {
+                    tenaga_id,
+                    hari,
+                    jam_mulai: mulai,
+                    jam_akhir: akhir,
+                    shift: document.getElementById('f_jadwal_shift').value,
+                };
+                const store2 = getStore();
+                const existingId = document.getElementById('f_jadwal_id').value;
+                if (existingId) {
+                    const idx = store2.jadwal.findIndex(x => x.id === existingId);
+                    if (idx >= 0) store2.jadwal[idx] = { ...store2.jadwal[idx], ...data };
+                } else {
+                    data.id = 'j' + Date.now();
+                    store2.jadwal.push(data);
+                }
+                updateStore(store2);
+                closeModal();
+            });
+        }
+
+        function hapusJadwal(id) {
+            if (!confirm('Hapus jadwal ini?')) return;
+            const store2 = getStore();
+            store2.jadwal = store2.jadwal.filter(j => j.id !== id);
+            updateStore(store2);
+        }
+
+        // ================================================================
+        //  SDMK — PELATIHAN
+        // ================================================================
+        function renderPelatihan(container) {
+            const store = getStore();
+            let html = `
+            <div class="panel">
+              <div class="panel-header">
+                <h3><i class="fas fa-graduation-cap"></i> Daftar Pelatihan</h3>
+                <div class="actions">
+                  <button class="btn-sm primary" onclick="showFormPelatihan()"><i class="fas fa-plus"></i> Tambah</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Tenaga</th><th>Pelatihan</th><th>Mulai</th><th>Selesai</th><th>Sertifikat</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            store.pelatihan.forEach(l => {
+                const tenaga = store.tenaga.find(t => t.id === l.tenaga_id);
+                const namaTenaga = tenaga ? tenaga.nama : 'Tidak ditemukan';
+                html += `
+              <tr>
+                <td>${namaTenaga}</td>
+                <td><strong>${l.nama_pelatihan}</strong></td>
+                <td>${l.tanggal_mulai}</td>
+                <td>${l.tanggal_akhir}</td>
+                <td>${l.sertifikat || '-'}</td>
+                <td>
+                  <button class="btn-icon primary" onclick="showFormPelatihan('${l.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon danger" onclick="hapusPelatihan('${l.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            `;
+            });
+            if (!store.pelatihan.length) {
+                html +=
+                `<tr><td colspan="6" class="empty"><i class="fas fa-graduation-cap"></i> Belum ada data pelatihan</td></tr>`;
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+          `;
+            container.innerHTML = html;
+        }
+
+        function showFormPelatihan(id = null) {
+            const store = getStore();
+            let l = id ? store.pelatihan.find(x => x.id === id) : null;
+            const isEdit = !!l;
+            const title = isEdit ? 'Edit Pelatihan' : 'Tambah Pelatihan';
+            const tenagaOptions = store.tenaga.map(t =>
+                `<option value="${t.id}" ${isEdit && l.tenaga_id === t.id ? 'selected' : ''}>${t.nama}</option>`
+            ).join('');
+            const body = `
+            <form id="formPelatihan">
+              <input type="hidden" id="f_pelatihan_id" value="${isEdit ? l.id : ''}">
+              <div class="form-group">
+                <label>Tenaga Kesehatan <span class="req">*</span></label>
+                <select class="form-control" id="f_pelatihan_tenaga_id">${tenagaOptions}</select>
+              </div>
+              <div class="form-group">
+                <label>Nama Pelatihan <span class="req">*</span></label>
+                <input class="form-control" id="f_pelatihan_nama" value="${isEdit ? l.nama_pelatihan : ''}" placeholder="Nama pelatihan">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Tanggal Mulai</label>
+                  <input class="form-control" type="date" id="f_pelatihan_mulai" value="${isEdit ? l.tanggal_mulai : ''}">
+                </div>
+                <div class="form-group">
+                  <label>Tanggal Selesai</label>
+                  <input class="form-control" type="date" id="f_pelatihan_selesai" value="${isEdit ? l.tanggal_akhir : ''}">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Nomor Sertifikat</label>
+                <input class="form-control" id="f_pelatihan_sertifikat" value="${isEdit ? l.sertifikat : ''}" placeholder="No. sertifikat">
+              </div>
+            </form>
+          `;
+            openModal(title, body, function() {
+                const tenaga_id = document.getElementById('f_pelatihan_tenaga_id').value;
+                const nama = document.getElementById('f_pelatihan_nama').value.trim();
+                if (!tenaga_id || !nama) { alert('Tenaga dan nama pelatihan wajib diisi!'); return; }
+                const data = {
+                    tenaga_id,
+                    nama_pelatihan: nama,
+                    tanggal_mulai: document.getElementById('f_pelatihan_mulai').value,
+                    tanggal_akhir: document.getElementById('f_pelatihan_selesai').value,
+                    sertifikat: document.getElementById('f_pelatihan_sertifikat').value.trim(),
+                };
+                const store2 = getStore();
+                const existingId = document.getElementById('f_pelatihan_id').value;
+                if (existingId) {
+                    const idx = store2.pelatihan.findIndex(x => x.id === existingId);
+                    if (idx >= 0) store2.pelatihan[idx] = { ...store2.pelatihan[idx], ...data };
+                } else {
+                    data.id = 'l' + Date.now();
+                    store2.pelatihan.push(data);
+                }
+                updateStore(store2);
+                closeModal();
+            });
+        }
+
+        function hapusPelatihan(id) {
+            if (!confirm('Hapus pelatihan ini?')) return;
+            const store2 = getStore();
+            store2.pelatihan = store2.pelatihan.filter(l => l.id !== id);
+            updateStore(store2);
+        }
+
+        // ================================================================
+        //  APOTEK — OBAT
+        // ================================================================
+        function renderObat(container) {
+            const store = getStore();
+            let html = `
+            <div class="panel">
+              <div class="panel-header">
+                <h3><i class="fas fa-capsules"></i> Daftar Obat</h3>
+                <div class="actions">
+                  <button class="btn-sm primary" onclick="showFormObat()"><i class="fas fa-plus"></i> Tambah Obat</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Nama</th><th>Kategori</th><th>Produsen</th><th>Harga Jual</th><th>Stok Total</th><th>Minimal</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            store.obat.forEach(o => {
+                const totalStok = store.stok.filter(s => s.obat_id === o.id).reduce((sum, s) => sum + s.jumlah, 0);
+                const low = totalStok < o.stok_minimal;
+                html += `
+              <tr>
+                <td><strong>${o.nama}</strong></td>
+                <td>${o.kategori}</td>
+                <td>${o.produsen}</td>
+                <td>Rp ${o.harga_jual.toLocaleString()}</td>
+                <td><span class="badge-status ${low ? 'low' : 'ok'}">${totalStok}</span></td>
+                <td>${o.stok_minimal}</td>
+                <td>
+                  <button class="btn-icon primary" onclick="showFormObat('${o.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon danger" onclick="hapusObat('${o.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            `;
+            });
+            if (!store.obat.length) {
+                html += `<tr><td colspan="7" class="empty"><i class="fas fa-capsules"></i> Belum ada data obat</td></tr>`;
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+            <!-- Manajemen Stok -->
+            <div class="panel">
+              <div class="panel-header"><h3><i class="fas fa-warehouse"></i> Stok Obat</h3></div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Obat</th><th>Jumlah</th><th>Masuk</th><th>Kadaluarsa</th><th>Batch</th><th>Lokasi</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            store.stok.forEach(s => {
+                const obat = store.obat.find(o => o.id === s.obat_id);
+                const namaObat = obat ? obat.nama : 'Tidak ditemukan';
+                const exp = new Date(s.tanggal_kadaluarsa);
+                const now = new Date();
+                const nearExp = exp > now && exp <= new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000);
+                html += `
+              <tr>
+                <td>${namaObat}</td>
+                <td><span class="badge-status ${nearExp ? 'warning' : 'ok'}">${s.jumlah}</span></td>
+                <td>${s.tanggal_masuk}</td>
+                <td>${s.tanggal_kadaluarsa} ${nearExp ? '⚠️' : ''}</td>
+                <td>${s.no_batch}</td>
+                <td>${s.lokasi}</td>
+                <td>
+                  <button class="btn-icon primary" onclick="showFormStok('${s.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon danger" onclick="hapusStok('${s.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            `;
+            });
+            if (!store.stok.length) {
+                html += `<tr><td colspan="7" class="empty"><i class="fas fa-warehouse"></i> Belum ada data stok</td></tr>`;
+            }
+            html += `
+                    </tbody></table>
+                </div>
+                <div style="margin-top:12px;">
+                  <button class="btn-sm primary" onclick="showFormStok()"><i class="fas fa-plus"></i> Tambah Stok</button>
+                </div>
+              </div>
+            </div>
+          `;
+            container.innerHTML = html;
+        }
+
+        function showFormObat(id = null) {
+            const store = getStore();
+            let o = id ? store.obat.find(x => x.id === id) : null;
+            const isEdit = !!o;
+            const title = isEdit ? 'Edit Obat' : 'Tambah Obat';
+            const body = `
+            <form id="formObat">
+              <input type="hidden" id="f_obat_id" value="${isEdit ? o.id : ''}">
+              <div class="form-group">
+                <label>Nama Obat <span class="req">*</span></label>
+                <input class="form-control" id="f_obat_nama" value="${isEdit ? o.nama : ''}" placeholder="Nama obat">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Kategori</label>
+                  <input class="form-control" id="f_obat_kategori" value="${isEdit ? o.kategori : ''}" placeholder="Kategori">
+                </div>
+                <div class="form-group">
+                  <label>Produsen</label>
+                  <input class="form-control" id="f_obat_produsen" value="${isEdit ? o.produsen : ''}" placeholder="Produsen">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Satuan</label>
+                  <input class="form-control" id="f_obat_satuan" value="${isEdit ? o.satuan : ''}" placeholder="Satuan">
+                </div>
+                <div class="form-group">
+                  <label>Harga Beli</label>
+                  <input class="form-control" type="number" id="f_obat_beli" value="${isEdit ? o.harga_beli : ''}" placeholder="Harga beli">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Harga Jual</label>
+                  <input class="form-control" type="number" id="f_obat_jual" value="${isEdit ? o.harga_jual : ''}" placeholder="Harga jual">
+                </div>
+                <div class="form-group">
+                  <label>Stok Minimal</label>
+                  <input class="form-control" type="number" id="f_obat_min" value="${isEdit ? o.stok_minimal : ''}" placeholder="Stok minimal">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Stok Maksimal</label>
+                <input class="form-control" type="number" id="f_obat_max" value="${isEdit ? o.stok_maksimal : ''}" placeholder="Stok maksimal">
+              </div>
+              <div class="form-group">
+                <label>Deskripsi</label>
+                <textarea class="form-control" id="f_obat_deskripsi" rows="2" placeholder="Deskripsi">${isEdit ? o.deskripsi : ''}</textarea>
+              </div>
+            </form>
+          `;
+            openModal(title, body, function() {
+                const nama = document.getElementById('f_obat_nama').value.trim();
+                if (!nama) { alert('Nama obat wajib diisi!'); return; }
+                const data = {
+                    nama,
+                    kategori: document.getElementById('f_obat_kategori').value.trim(),
+                    produsen: document.getElementById('f_obat_produsen').value.trim(),
+                    satuan: document.getElementById('f_obat_satuan').value.trim(),
+                    harga_beli: parseInt(document.getElementById('f_obat_beli').value) || 0,
+                    harga_jual: parseInt(document.getElementById('f_obat_jual').value) || 0,
+                    stok_minimal: parseInt(document.getElementById('f_obat_min').value) || 0,
+                    stok_maksimal: parseInt(document.getElementById('f_obat_max').value) || 0,
+                    deskripsi: document.getElementById('f_obat_deskripsi').value.trim(),
+                };
+                const store2 = getStore();
+                const existingId = document.getElementById('f_obat_id').value;
+                if (existingId) {
+                    const idx = store2.obat.findIndex(x => x.id === existingId);
+                    if (idx >= 0) store2.obat[idx] = { ...store2.obat[idx], ...data };
+                } else {
+                    data.id = 'o' + Date.now();
+                    store2.obat.push(data);
+                }
+                updateStore(store2);
+                closeModal();
+            });
+        }
+
+        function hapusObat(id) {
+            if (!confirm('Hapus obat ini?')) return;
+            const store2 = getStore();
+            store2.obat = store2.obat.filter(o => o.id !== id);
+            store2.stok = store2.stok.filter(s => s.obat_id !== id);
+            updateStore(store2);
+        }
+
+        // ===== STOK FORM =====
+        function showFormStok(id = null) {
+            const store = getStore();
+            let s = id ? store.stok.find(x => x.id === id) : null;
+            const isEdit = !!s;
+            const title = isEdit ? 'Edit Stok' : 'Tambah Stok';
+            const obatOptions = store.obat.map(o =>
+                `<option value="${o.id}" ${isEdit && s.obat_id === o.id ? 'selected' : ''}>${o.nama}</option>`
+            ).join('');
+            const body = `
+            <form id="formStok">
+              <input type="hidden" id="f_stok_id" value="${isEdit ? s.id : ''}">
+              <div class="form-group">
+                <label>Obat <span class="req">*</span></label>
+                <select class="form-control" id="f_stok_obat_id">${obatOptions}</select>
+              </div>
+              <div class="form-group">
+                <label>Jumlah <span class="req">*</span></label>
+                <input class="form-control" type="number" id="f_stok_jumlah" value="${isEdit ? s.jumlah : ''}" placeholder="Jumlah">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Tanggal Masuk</label>
+                  <input class="form-control" type="date" id="f_stok_masuk" value="${isEdit ? s.tanggal_masuk : ''}">
+                </div>
+                <div class="form-group">
+                  <label>Tanggal Kadaluarsa</label>
+                  <input class="form-control" type="date" id="f_stok_kadaluarsa" value="${isEdit ? s.tanggal_kadaluarsa : ''}">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>No. Batch</label>
+                  <input class="form-control" id="f_stok_batch" value="${isEdit ? s.no_batch : ''}" placeholder="Batch">
+                </div>
+                <div class="form-group">
+                  <label>Lokasi</label>
+                  <input class="form-control" id="f_stok_lokasi" value="${isEdit ? s.lokasi : ''}" placeholder="Lokasi rak">
+                </div>
+              </div>
+            </form>
+          `;
+            openModal(title, body, function() {
+                const obat_id = document.getElementById('f_stok_obat_id').value;
+                const jumlah = parseInt(document.getElementById('f_stok_jumlah').value);
+                if (!obat_id || !jumlah || jumlah <= 0) { alert('Obat dan jumlah wajib diisi dengan benar!'); return; }
+                const data = {
+                    obat_id,
+                    jumlah,
+                    tanggal_masuk: document.getElementById('f_stok_masuk').value,
+                    tanggal_kadaluarsa: document.getElementById('f_stok_kadaluarsa').value,
+                    no_batch: document.getElementById('f_stok_batch').value.trim(),
+                    lokasi: document.getElementById('f_stok_lokasi').value.trim(),
+                };
+                const store2 = getStore();
+                const existingId = document.getElementById('f_stok_id').value;
+                if (existingId) {
+                    const idx = store2.stok.findIndex(x => x.id === existingId);
+                    if (idx >= 0) store2.stok[idx] = { ...store2.stok[idx], ...data };
+                } else {
+                    data.id = 'st' + Date.now();
+                    store2.stok.push(data);
+                }
+                updateStore(store2);
+                closeModal();
+            });
+        }
+
+        function hapusStok(id) {
+            if (!confirm('Hapus data stok ini?')) return;
+            const store2 = getStore();
+            store2.stok = store2.stok.filter(s => s.id !== id);
+            updateStore(store2);
+        }
+
+        // ================================================================
+        //  APOTEK — RESEP
+        // ================================================================
+        function renderResep(container) {
+            const store = getStore();
+            let html = `
+            <div class="panel">
+              <div class="panel-header">
+                <h3><i class="fas fa-prescription"></i> Daftar Resep</h3>
+                <div class="actions">
+                  <button class="btn-sm primary" onclick="showFormResep()"><i class="fas fa-plus"></i> Resep Baru</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Pasien</th><th>Tanggal</th><th>Dokter</th><th>Obat</th><th>Status</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            store.resep.forEach(r => {
+                const statusClass = r.status === 'selesai' ? 'completed' : 'pending';
+                const obatList = r.obat_obat.map(oo => {
+                    const obat = store.obat.find(o => o.id === oo.obat_id);
+                    return obat ? `${obat.nama} (${oo.jumlah})` : 'Tidak ditemukan';
+                }).join(', ');
+                html += `
+              <tr>
+                <td><strong>${r.pasien}</strong></td>
+                <td>${r.tanggal_resep}</td>
+                <td>${r.dokter}</td>
+                <td style="max-width:200px;font-size:12px;">${obatList}</td>
+                <td><span class="badge-status ${statusClass}">${r.status}</span></td>
+                <td>
+                  <button class="btn-icon primary" onclick="showFormResep('${r.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon danger" onclick="hapusResep('${r.id}')"><i class="fas fa-trash"></i></button>
+                  ${r.status === 'pending' ? `<button class="btn-icon success" onclick="prosesResep('${r.id}')"><i class="fas fa-check"></i></button>` : ''}
+                </td>
+              </tr>
+            `;
+            });
+            if (!store.resep.length) {
+                html += `<tr><td colspan="6" class="empty"><i class="fas fa-prescription"></i> Belum ada resep</td></tr>`;
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+          `;
+            container.innerHTML = html;
+        }
+
+        function showFormResep(id = null) {
+            const store = getStore();
+            let r = id ? store.resep.find(x => x.id === id) : null;
+            const isEdit = !!r;
+            const title = isEdit ? 'Edit Resep' : 'Tambah Resep';
+            // Daftar obat untuk dipilih
+            const obatCheckboxes = store.obat.map(o => {
+                const checked = isEdit && r.obat_obat.some(oo => oo.obat_id === o.id);
+                const qty = isEdit ? r.obat_obat.find(oo => oo.obat_id === o.id)?.jumlah || '' : '';
+                return `
+              <div style="display:flex;align-items:center;gap:12px;padding:4px 0;border-bottom:1px solid var(--gray-100);">
+                <label style="display:flex;align-items:center;gap:6px;flex:1;font-weight:400;">
+                  <input type="checkbox" class="resep-obat-check" value="${o.id}" ${checked ? 'checked' : ''}> ${o.nama}
+                </label>
+                <input type="number" class="resep-obat-qty form-control" style="width:80px;" placeholder="Jml" value="${qty}" ${checked ? '' : 'disabled'}>
+              </div>
+            `;
+            }).join('');
+
+            const body = `
+            <form id="formResep">
+              <input type="hidden" id="f_resep_id" value="${isEdit ? r.id : ''}">
+              <div class="form-group">
+                <label>Nama Pasien <span class="req">*</span></label>
+                <input class="form-control" id="f_resep_pasien" value="${isEdit ? r.pasien : ''}" placeholder="Nama pasien">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Tanggal Resep</label>
+                  <input class="form-control" type="date" id="f_resep_tanggal" value="${isEdit ? r.tanggal_resep : ''}">
+                </div>
+                <div class="form-group">
+                  <label>Dokter</label>
+                  <input class="form-control" id="f_resep_dokter" value="${isEdit ? r.dokter : ''}" placeholder="Nama dokter">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Pilih Obat & Jumlah</label>
+                <div style="background:var(--gray-50);padding:12px;border-radius:8px;max-height:180px;overflow-y:auto;">
+                  ${obatCheckboxes}
+                </div>
+                <small style="color:var(--gray-500);">Centang obat, lalu isi jumlah di sebelah kanan.</small>
+              </div>
+              <div class="form-group">
+                <label>Status</label>
+                <select class="form-control" id="f_resep_status">
+                  <option value="pending" ${isEdit && r.status === 'pending' ? 'selected' : ''}>Pending</option>
+                  <option value="selesai" ${isEdit && r.status === 'selesai' ? 'selected' : ''}>Selesai</option>
+                </select>
+              </div>
+            </form>
+          `;
+            openModal(title, body, function() {
+                const pasien = document.getElementById('f_resep_pasien').value.trim();
+                if (!pasien) { alert('Nama pasien wajib diisi!'); return; }
+                // Kumpulkan obat yang dipilih
+                const checkboxes = document.querySelectorAll('.resep-obat-check');
+                const obatObat = [];
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        const qtyInput = cb.closest('div').querySelector('.resep-obat-qty');
+                        const qty = parseInt(qtyInput.value) || 0;
+                        if (qty > 0) {
+                            obatObat.push({ obat_id: cb.value, jumlah: qty });
+                        }
+                    }
+                });
+                if (obatObat.length === 0) { alert('Pilih minimal 1 obat dengan jumlah > 0!'); return; }
+
+                const data = {
+                    pasien,
+                    tanggal_resep: document.getElementById('f_resep_tanggal').value,
+                    dokter: document.getElementById('f_resep_dokter').value.trim(),
+                    obat_obat: obatObat,
+                    status: document.getElementById('f_resep_status').value,
+                };
+                const store2 = getStore();
+                const existingId = document.getElementById('f_resep_id').value;
+                if (existingId) {
+                    const idx = store2.resep.findIndex(x => x.id === existingId);
+                    if (idx >= 0) store2.resep[idx] = { ...store2.resep[idx], ...data };
+                } else {
+                    data.id = 'r' + Date.now();
+                    store2.resep.push(data);
+                }
+                updateStore(store2);
+                closeModal();
+            });
+
+            // Enable/disable qty input saat checkbox berubah
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('resep-obat-check')) {
+                    const qtyInput = e.target.closest('div').querySelector('.resep-obat-qty');
+                    qtyInput.disabled = !e.target.checked;
+                    if (!e.target.checked) qtyInput.value = '';
+                }
+            });
+        }
+
+        function hapusResep(id) {
+            if (!confirm('Hapus resep ini?')) return;
+            const store2 = getStore();
+            store2.resep = store2.resep.filter(r => r.id !== id);
+            updateStore(store2);
+        }
+
+        function prosesResep(id) {
+            // Ubah status menjadi selesai dan kurangi stok
+            const store2 = getStore();
+            const idx = store2.resep.findIndex(r => r.id === id);
+            if (idx < 0) return;
+            const resep = store2.resep[idx];
+            if (resep.status === 'selesai') { alert('Resep sudah selesai.'); return; }
+
+            // Kurangi stok untuk setiap obat
+            let cukupStok = true;
+            for (const oo of resep.obat_obat) {
+                const totalStok = store2.stok.filter(s => s.obat_id === oo.obat_id).reduce((sum, s) => sum + s.jumlah, 0);
+                if (totalStok < oo.jumlah) {
+                    cukupStok = false;
+                    const obat = store2.obat.find(o => o.id === oo.obat_id);
+                    alert(`Stok ${obat ? obat.nama : 'obat'} tidak cukup! (${totalStok} tersedia, butuh ${oo.jumlah})`);
+                    break;
+                }
+            }
+            if (!cukupStok) return;
+
+            // Kurangi stok (ambil dari batch pertama)
+            for (const oo of resep.obat_obat) {
+                let sisa = oo.jumlah;
+                const stokItems = store2.stok.filter(s => s.obat_id === oo.obat_id).sort((a, b) => new Date(a
+                .tanggal_kadaluarsa) - new Date(b.tanggal_kadaluarsa));
+                for (const item of stokItems) {
+                    if (sisa <= 0) break;
+                    const ambil = Math.min(item.jumlah, sisa);
+                    item.jumlah -= ambil;
+                    sisa -= ambil;
+                }
+                // Hapus stok yang 0
+                store2.stok = store2.stok.filter(s => s.jumlah > 0);
+            }
+
+            // Ubah status
+            resep.status = 'selesai';
+
+            // Tambahkan ke pelayanan
+            store2.pelayanan.push({
+                id: 'pl' + Date.now(),
+                resep_id: resep.id,
+                tanggal_pelayanan: new Date().toISOString().slice(0, 10),
+                apoteker: 'apt. Sistem',
+                metode_pembayaran: 'BPJS'
+            });
+
+            updateStore(store2);
+            alert('Resep selesai diproses! Stok telah dikurangi.');
+        }
+
+        // ================================================================
+        //  APOTEK — PELAYANAN
+        // ================================================================
+        function renderPelayanan(container) {
+            const store = getStore();
+            let html = `
+            <div class="panel">
+              <div class="panel-header">
+                <h3><i class="fas fa-hand-holding-medical"></i> Daftar Pelayanan Apotek</h3>
+                <div class="actions">
+                  <button class="btn-sm primary" onclick="showFormPelayanan()"><i class="fas fa-plus"></i> Tambah</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Resep</th><th>Pasien</th><th>Tanggal</th><th>Apoteker</th><th>Metode Bayar</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            store.pelayanan.forEach(pl => {
+                const resep = store.resep.find(r => r.id === pl.resep_id);
+                const pasien = resep ? resep.pasien : 'Tidak ditemukan';
+                html += `
+              <tr>
+                <td>${pl.resep_id}</td>
+                <td><strong>${pasien}</strong></td>
+                <td>${pl.tanggal_pelayanan}</td>
+                <td>${pl.apoteker}</td>
+                <td>${pl.metode_pembayaran}</td>
+                <td>
+                  <button class="btn-icon primary" onclick="showFormPelayanan('${pl.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon danger" onclick="hapusPelayanan('${pl.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            `;
+            });
+            if (!store.pelayanan.length) {
+                html +=
+                `<tr><td colspan="6" class="empty"><i class="fas fa-hand-holding-medical"></i> Belum ada pelayanan</td></tr>`;
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+          `;
+            container.innerHTML = html;
+        }
+
+        function showFormPelayanan(id = null) {
+            const store = getStore();
+            let pl = id ? store.pelayanan.find(x => x.id === id) : null;
+            const isEdit = !!pl;
+            const title = isEdit ? 'Edit Pelayanan' : 'Tambah Pelayanan';
+            const resepOptions = store.resep.filter(r => r.status === 'selesai').map(r =>
+                `<option value="${r.id}" ${isEdit && pl.resep_id === r.id ? 'selected' : ''}>${r.pasien} (${r.id})</option>`
+            ).join('');
+            const body = `
+            <form id="formPelayanan">
+              <input type="hidden" id="f_pelayanan_id" value="${isEdit ? pl.id : ''}">
+              <div class="form-group">
+                <label>Resep <span class="req">*</span></label>
+                <select class="form-control" id="f_pelayanan_resep_id">${resepOptions || '<option value="">Belum ada resep selesai</option>'}</select>
+              </div>
+              <div class="form-group">
+                <label>Tanggal Pelayanan</label>
+                <input class="form-control" type="date" id="f_pelayanan_tanggal" value="${isEdit ? pl.tanggal_pelayanan : ''}">
+              </div>
+              <div class="form-group">
+                <label>Apoteker</label>
+                <input class="form-control" id="f_pelayanan_apoteker" value="${isEdit ? pl.apoteker : ''}" placeholder="Nama apoteker">
+              </div>
+              <div class="form-group">
+                <label>Metode Pembayaran</label>
+                <select class="form-control" id="f_pelayanan_metode">
+                  <option value="BPJS" ${isEdit && pl.metode_pembayaran === 'BPJS' ? 'selected' : ''}>BPJS</option>
+                  <option value="Tunai" ${isEdit && pl.metode_pembayaran === 'Tunai' ? 'selected' : ''}>Tunai</option>
+                  <option value="Asuransi" ${isEdit && pl.metode_pembayaran === 'Asuransi' ? 'selected' : ''}>Asuransi</option>
+                </select>
+              </div>
+            </form>
+          `;
+            openModal(title, body, function() {
+                const resep_id = document.getElementById('f_pelayanan_resep_id').value;
+                if (!resep_id) { alert('Pilih resep!'); return; }
+                const data = {
+                    resep_id,
+                    tanggal_pelayanan: document.getElementById('f_pelayanan_tanggal').value,
+                    apoteker: document.getElementById('f_pelayanan_apoteker').value.trim(),
+                    metode_pembayaran: document.getElementById('f_pelayanan_metode').value,
+                };
+                const store2 = getStore();
+                const existingId = document.getElementById('f_pelayanan_id').value;
+                if (existingId) {
+                    const idx = store2.pelayanan.findIndex(x => x.id === existingId);
+                    if (idx >= 0) store2.pelayanan[idx] = { ...store2.pelayanan[idx], ...data };
+                } else {
+                    data.id = 'pl' + Date.now();
+                    store2.pelayanan.push(data);
+                }
+                updateStore(store2);
+                closeModal();
+            });
+        }
+
+        function hapusPelayanan(id) {
+            if (!confirm('Hapus pelayanan ini?')) return;
+            const store2 = getStore();
+            store2.pelayanan = store2.pelayanan.filter(pl => pl.id !== id);
+            updateStore(store2);
+        }
+
+        // ================================================================
+        //  APOTEK — PEMASOK
+        // ================================================================
+        function renderPemasok(container) {
+            const store = getStore();
+            let html = `
+            <div class="panel">
+              <div class="panel-header">
+                <h3><i class="fas fa-truck"></i> Daftar Pemasok</h3>
+                <div class="actions">
+                  <button class="btn-sm primary" onclick="showFormPemasok()"><i class="fas fa-plus"></i> Tambah</button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Nama</th><th>Kontak</th><th>Telepon</th><th>Alamat</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            store.pemasok.forEach(pm => {
+                html += `
+              <tr>
+                <td><strong>${pm.nama}</strong></td>
+                <td>${pm.kontak}</td>
+                <td>${pm.telp}</td>
+                <td>${pm.alamat}</td>
+                <td>
+                  <button class="btn-icon primary" onclick="showFormPemasok('${pm.id}')"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon danger" onclick="hapusPemasok('${pm.id}')"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            `;
+            });
+            if (!store.pemasok.length) {
+                html += `<tr><td colspan="5" class="empty"><i class="fas fa-truck"></i> Belum ada data pemasok</td></tr>`;
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+          `;
+            container.innerHTML = html;
+        }
+
+        function showFormPemasok(id = null) {
+            const store = getStore();
+            let pm = id ? store.pemasok.find(x => x.id === id) : null;
+            const isEdit = !!pm;
+            const title = isEdit ? 'Edit Pemasok' : 'Tambah Pemasok';
+            const body = `
+            <form id="formPemasok">
+              <input type="hidden" id="f_pemasok_id" value="${isEdit ? pm.id : ''}">
+              <div class="form-group">
+                <label>Nama Pemasok <span class="req">*</span></label>
+                <input class="form-control" id="f_pemasok_nama" value="${isEdit ? pm.nama : ''}" placeholder="Nama pemasok">
+              </div>
+              <div class="form-group">
+                <label>Kontak</label>
+                <input class="form-control" id="f_pemasok_kontak" value="${isEdit ? pm.kontak : ''}" placeholder="Nama kontak">
+              </div>
+              <div class="form-group">
+                <label>Telepon</label>
+                <input class="form-control" id="f_pemasok_telp" value="${isEdit ? pm.telp : ''}" placeholder="No. telepon">
+              </div>
+              <div class="form-group">
+                <label>Alamat</label>
+                <input class="form-control" id="f_pemasok_alamat" value="${isEdit ? pm.alamat : ''}" placeholder="Alamat">
+              </div>
+            </form>
+          `;
+            openModal(title, body, function() {
+                const nama = document.getElementById('f_pemasok_nama').value.trim();
+                if (!nama) { alert('Nama pemasok wajib diisi!'); return; }
+                const data = {
+                    nama,
+                    kontak: document.getElementById('f_pemasok_kontak').value.trim(),
+                    telp: document.getElementById('f_pemasok_telp').value.trim(),
+                    alamat: document.getElementById('f_pemasok_alamat').value.trim(),
+                };
+                const store2 = getStore();
+                const existingId = document.getElementById('f_pemasok_id').value;
+                if (existingId) {
+                    const idx = store2.pemasok.findIndex(x => x.id === existingId);
+                    if (idx >= 0) store2.pemasok[idx] = { ...store2.pemasok[idx], ...data };
+                } else {
+                    data.id = 'pm' + Date.now();
+                    store2.pemasok.push(data);
+                }
+                updateStore(store2);
+                closeModal();
+            });
+        }
+
+        function hapusPemasok(id) {
+            if (!confirm('Hapus pemasok ini?')) return;
+            const store2 = getStore();
+            store2.pemasok = store2.pemasok.filter(pm => pm.id !== id);
+            updateStore(store2);
+        }
+
+        // ================================================================
+        //  APOTEK — KADALUARSA
+        // ================================================================
+        function renderKadaluarsa(container) {
+            const store = getStore();
+            const now = new Date();
+            const threeMonths = new Date(now);
+            threeMonths.setMonth(threeMonths.getMonth() + 3);
+
+            const expiring = store.stok.filter(s => {
+                const exp = new Date(s.tanggal_kadaluarsa);
+                return exp > now && exp <= threeMonths;
+            }).sort((a, b) => new Date(a.tanggal_kadaluarsa) - new Date(b.tanggal_kadaluarsa));
+
+            const expired = store.stok.filter(s => {
+                const exp = new Date(s.tanggal_kadaluarsa);
+                return exp < now;
+            });
+
+            let html = `
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="label"><i class="fas fa-clock"></i> Mendekati Kadaluarsa</div>
+                <div class="value">${expiring.length}</div>
+                <div class="change down"><i class="fas fa-exclamation-triangle"></i> Periksa segera</div>
+              </div>
+              <div class="stat-card">
+                <div class="label"><i class="fas fa-times-circle"></i> Telah Kadaluarsa</div>
+                <div class="value">${expired.length}</div>
+                <div class="change down"><i class="fas fa-exclamation-circle"></i> Harus dihapus</div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header"><h3><i class="fas fa-clock"></i> Obat Mendekati Kadaluarsa (≤ 3 bulan)</h3></div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Obat</th><th>Jumlah</th><th>Kadaluarsa</th><th>Batch</th><th>Lokasi</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            if (expiring.length === 0) {
+                html +=
+                    `<tr><td colspan="6" class="empty"><i class="fas fa-check-circle" style="color:var(--success);"></i> Tidak ada obat yang mendekati kadaluarsa</td></tr>`;
+            } else {
+                expiring.forEach(s => {
+                    const obat = store.obat.find(o => o.id === s.obat_id);
+                    const namaObat = obat ? obat.nama : 'Tidak ditemukan';
+                    const daysLeft = Math.ceil((new Date(s.tanggal_kadaluarsa) - now) / (1000 * 60 * 60 * 24));
+                    html += `
+                <tr>
+                  <td><strong>${namaObat}</strong></td>
+                  <td>${s.jumlah}</td>
+                  <td><span class="badge-status warning">${s.tanggal_kadaluarsa} (${daysLeft} hari)</span></td>
+                  <td>${s.no_batch}</td>
+                  <td>${s.lokasi}</td>
+                  <td>
+                    <button class="btn-icon danger" onclick="hapusStok('${s.id}')"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+              `;
+                });
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header"><h3><i class="fas fa-times-circle"></i> Obat Telah Kadaluarsa</h3></div>
+              <div class="panel-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Obat</th><th>Jumlah</th><th>Kadaluarsa</th><th>Batch</th><th>Lokasi</th><th>Aksi</th></tr></thead>
+                    <tbody>
+          `;
+            if (expired.length === 0) {
+                html +=
+                    `<tr><td colspan="6" class="empty"><i class="fas fa-check-circle" style="color:var(--success);"></i> Tidak ada obat kadaluarsa</td></tr>`;
+            } else {
+                expired.forEach(s => {
+                    const obat = store.obat.find(o => o.id === s.obat_id);
+                    const namaObat = obat ? obat.nama : 'Tidak ditemukan';
+                    html += `
+                <tr>
+                  <td><strong>${namaObat}</strong></td>
+                  <td>${s.jumlah}</td>
+                  <td><span class="badge-status expired">${s.tanggal_kadaluarsa}</span></td>
+                  <td>${s.no_batch}</td>
+                  <td>${s.lokasi}</td>
+                  <td>
+                    <button class="btn-icon danger" onclick="hapusStok('${s.id}')"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+              `;
+                });
+            }
+            html += `
+                    </tbody></table>
+                </div>
+              </div>
+            </div>
+          `;
+            container.innerHTML = html;
+        }
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+        navigateTo('dashboard');
+    </script>
+</body>
+</html>
