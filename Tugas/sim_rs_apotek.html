@@ -90,118 +90,156 @@
             </div>
 
             <div class="content-grid">
-                <!-- Data Table -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Antrean E-Resep (Rawat Jalan & Inap)</h3>
-                        <button class="btn btn-secondary"><i class="fa-solid fa-plus"></i> Input Resep Manual</button>
+                <!-- Queue Dashboard -->
+                <div class="card" style="background: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+                    <div class="card-header" style="border-bottom: none; padding-bottom: 0.5rem;">
+                        <h3 class="elegant-section-title"><i class="fa-solid fa-prescription-bottle-medical" style="color: var(--secondary);"></i> Live Antrean Resep</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn" style="background: var(--background); color: var(--text-muted); border: 1px solid var(--border);"><i class="fa-solid fa-filter"></i> Filter</button>
+                            <button class="btn btn-secondary"><i class="fa-solid fa-plus"></i> Resep Baru</button>
+                        </div>
                     </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>No. Resep / Waktu</th>
-                                    <th>Pasien / Dokter</th>
-                                    <th>Tipe Bayar</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 600; color: var(--secondary-dark);">RSP-2310-001</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">09:12 WIB</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">Tn. Budi Hartono</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">Dr. Andi Wijaya, Sp.PD</div>
-                                    </td>
-                                    <td>BPJS Kesehatan</td>
-                                    <td><span class="badge badge-warning">Penyiapan Obat</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--secondary-dark);">Proses</button></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 600; color: var(--secondary-dark);">RSP-2310-002</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">09:15 WIB</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">Ny. Siti Sarah</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">Drg. Budi Santoso</div>
-                                    </td>
-                                    <td>Umum Pribadi</td>
-                                    <td><span class="badge badge-danger">Menunggu Pembayaran</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--secondary-dark);">Proses</button></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 600; color: var(--secondary-dark);">RSP-2310-003</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">09:20 WIB</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">An. Kevin Pratama</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">Dr. Sarah, Sp.A</div>
-                                    </td>
-                                    <td>Asuransi Mandiri</td>
-                                    <td><span class="badge badge-info">Pengecekan Akhir</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--secondary-dark);">Proses</button></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 600; color: var(--secondary-dark);">RSP-2310-004</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">09:22 WIB</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">Tn. Agus Salim (Rawat Inap)</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">Dr. Ratna, Sp.JP</div>
-                                    </td>
-                                    <td>BPJS Kesehatan</td>
-                                    <td><span class="badge badge-success">Selesai / Diantar</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--text-muted);">Detail</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="queue-list" style="padding: 0.5rem 0;">
+                        
+                        <!-- Item 1: Penyiapan -->
+                        <div class="queue-card status-prep">
+                            <div class="queue-header">
+                                <div class="queue-patient-info">
+                                    <span style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);">Tn. Budi Hartono</span>
+                                    <span style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;"><i class="fa-regular fa-clock"></i> 09:12 WIB &bull; Dr. Andi Wijaya, Sp.PD</span>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-weight: 700; color: var(--secondary-dark); letter-spacing: 0.5px;">RSP-2310-001</div>
+                                    <span class="badge badge-warning" style="margin-top: 0.5rem; display: inline-block; box-shadow: 0 2px 4px rgba(245,158,11,0.1);">Penyiapan Obat</span>
+                                </div>
+                            </div>
+                            <div class="queue-steps">
+                                <div class="queue-step active" title="Penyiapan Obat"></div>
+                                <div class="queue-step" title="Pengecekan"></div>
+                                <div class="queue-step" title="Selesai"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Estimasi selesai: <span style="color: var(--warning); font-weight: 600;">10 menit</span></span>
+                                <button class="btn" style="background: #eff6ff; color: var(--primary); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;">Update Status</button>
+                            </div>
+                        </div>
+
+                        <!-- Item 2: Menunggu Pembayaran -->
+                        <div class="queue-card status-wait">
+                            <div class="queue-header">
+                                <div class="queue-patient-info">
+                                    <span style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);">Ny. Siti Sarah</span>
+                                    <span style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;"><i class="fa-regular fa-clock"></i> 09:15 WIB &bull; Drg. Budi Santoso</span>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-weight: 700; color: var(--secondary-dark); letter-spacing: 0.5px;">RSP-2310-002</div>
+                                    <span class="badge badge-danger" style="margin-top: 0.5rem; display: inline-block; box-shadow: 0 2px 4px rgba(239,68,68,0.1);">Menunggu Pembayaran</span>
+                                </div>
+                            </div>
+                            <div class="queue-steps">
+                                <div class="queue-step active" title="Penyiapan"></div>
+                                <div class="queue-step" title="Pengecekan"></div>
+                                <div class="queue-step" title="Selesai"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                                <span style="font-size: 0.8rem; color: var(--danger); font-weight: 500;">Tertunda (Umum Pribadi)</span>
+                                <button class="btn" style="background: #fee2e2; color: var(--danger); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;">Ke Kasir</button>
+                            </div>
+                        </div>
+
+                        <!-- Item 3: Pengecekan Akhir -->
+                        <div class="queue-card status-check">
+                            <div class="queue-header">
+                                <div class="queue-patient-info">
+                                    <span style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);">An. Kevin Pratama</span>
+                                    <span style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;"><i class="fa-regular fa-clock"></i> 09:20 WIB &bull; Dr. Sarah, Sp.A</span>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-weight: 700; color: var(--secondary-dark); letter-spacing: 0.5px;">RSP-2310-003</div>
+                                    <span class="badge badge-info" style="margin-top: 0.5rem; display: inline-block; box-shadow: 0 2px 4px rgba(59,130,246,0.1);">Pengecekan Akhir</span>
+                                </div>
+                            </div>
+                            <div class="queue-steps">
+                                <div class="queue-step active" title="Penyiapan"></div>
+                                <div class="queue-step active" title="Pengecekan"></div>
+                                <div class="queue-step" title="Selesai"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Diperiksa oleh: <span style="color: var(--primary); font-weight: 600;">Apt. Rina</span></span>
+                                <button class="btn" style="background: #dcfce7; color: var(--secondary-dark); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;">Selesaikan</button>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
 
                 <!-- Info Card -->
                 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Peringatan Inventori Obat</h3>
+                    <div class="card" style="background: linear-gradient(to bottom left, #ffffff, #f8fafc);">
+                        <div class="card-header" style="border-bottom: none; padding-bottom: 0.5rem;">
+                            <h3 class="elegant-section-title"><i class="fa-solid fa-boxes-stacked" style="color: var(--primary);"></i> Monitoring Stok</h3>
                         </div>
-                        <div style="display: flex; flex-direction: column; gap: 1rem;">
-                            <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; align-items: center;">
-                                <div style="font-size: 1.5rem; color: var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                                <div>
-                                    <div style="font-weight: 600; font-size: 0.9rem;">Paracetamol Infus 10mg/mL</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Sisa stok: 5 botol (Batas minimal: 20 botol)</div>
+                        
+                        <div class="stock-list">
+                            <!-- Stock Item 1 -->
+                            <div class="stock-item">
+                                <div class="stock-icon danger">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </div>
+                                <div class="stock-info">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">Paracetamol Infus</span>
+                                        <span style="font-weight: 700; color: var(--danger); background: #fee2e2; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">5 / 20</span>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Sisa stok kritis. Segera re-order.</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill danger" style="width: 25%;"></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; align-items: center;">
-                                <div style="font-size: 1.5rem; color: var(--warning);"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                                <div>
-                                    <div style="font-weight: 600; font-size: 0.9rem;">Amoxicillin Sirup Kering</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Batch X219 expire pada 12 Nov 2026 (120 botol)</div>
+
+                            <!-- Stock Item 2 -->
+                            <div class="stock-item">
+                                <div class="stock-icon warning">
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
+                                </div>
+                                <div class="stock-info">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">Amoxicillin Sirup</span>
+                                        <span style="font-weight: 700; color: var(--warning); background: #fef3c7; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">120 Btl</span>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Batch X219 expires <span style="color: var(--warning); font-weight: 600;">12 Nov 2026</span></div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill warning" style="width: 60%;"></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 1rem; align-items: center;">
-                                <div style="font-size: 1.5rem; color: var(--secondary);"><i class="fa-solid fa-box-open"></i></div>
-                                <div>
-                                    <div style="font-weight: 600; font-size: 0.9rem;">Penerimaan Barang: PBF Kimia Farma</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Menunggu verifikasi faktur pajak oleh gudang farmasi.</div>
+                            
+                            <!-- Stock Item 3 -->
+                            <div class="stock-item" style="margin-bottom: 0;">
+                                <div class="stock-icon success">
+                                    <i class="fa-solid fa-truck-ramp-box"></i>
+                                </div>
+                                <div class="stock-info">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">Lansoprazole 30mg</span>
+                                        <span style="font-weight: 700; color: var(--secondary-dark); background: #dcfce7; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">Inbound</span>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">PBF Kimia Farma - 500 Box</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill success" style="width: 100%;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card" style="background: linear-gradient(135deg, var(--surface), var(--background)); border: 1px solid var(--border);">
-                        <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Aksi Cepat</h3>
+                    <div class="card" style="background: linear-gradient(135deg, var(--surface), var(--background)); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-bolt" style="color: var(--warning);"></i> Aksi Cepat</h3>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-                            <button class="btn" style="background: #ecfdf5; color: var(--secondary-dark); border: 1px solid #a7f3d0;"><i class="fa-solid fa-barcode"></i> Scan Resep</button>
-                            <button class="btn" style="background: #eff6ff; color: var(--primary-dark); border: 1px solid #bfdbfe;"><i class="fa-solid fa-file-invoice-dollar"></i> Kasir</button>
-                            <button class="btn" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a; grid-column: span 2;"><i class="fa-solid fa-clipboard-list"></i> Buat Surat Pesanan (SP)</button>
+                            <button class="btn" style="background: #ecfdf5; color: var(--secondary-dark); border: 1px solid #a7f3d0; box-shadow: 0 2px 4px rgba(16,185,129,0.1); font-weight: 600;"><i class="fa-solid fa-barcode"></i> Scan Resep</button>
+                            <button class="btn" style="background: #eff6ff; color: var(--primary-dark); border: 1px solid #bfdbfe; box-shadow: 0 2px 4px rgba(0,86,179,0.1); font-weight: 600;"><i class="fa-solid fa-file-invoice-dollar"></i> Kasir</button>
+                            <button class="btn" style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a; grid-column: span 2; box-shadow: 0 2px 4px rgba(245,158,11,0.1); font-weight: 600;"><i class="fa-solid fa-clipboard-list"></i> Buat Surat Pesanan (SP)</button>
                         </div>
                     </div>
                 </div>
