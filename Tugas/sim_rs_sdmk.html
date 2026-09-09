@@ -191,6 +191,43 @@
             font-weight: 600;
         }
 
+        .sync-form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .sync-form .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .sync-form label {
+            display: block;
+            margin-bottom: 0.35rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .sync-form input,
+        .sync-form select {
+            width: 100%;
+            padding: 0.65rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-main);
+            background: var(--surface);
+            font: inherit;
+        }
+
+        .sync-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            grid-column: 1 / -1;
+            margin-top: 0.5rem;
+        }
+
         @media (max-width: 900px) {
             .profile-list {
                 grid-template-columns: 1fr;
@@ -199,6 +236,10 @@
 
         @media (max-width: 600px) {
             .profile-data {
+                grid-template-columns: 1fr;
+            }
+
+            .sync-form {
                 grid-template-columns: 1fr;
             }
         }
@@ -278,7 +319,7 @@
                 <div class="card" id="profil-tenaga-medis">
                     <div class="card-header">
                         <h3 class="card-title">Direktori Tenaga Medis (Sinkronisasi SATUSEHAT)</h3>
-                        <button class="btn btn-primary"><i class="fa-solid fa-rotate"></i> Sinkronisasi Data</button>
+                        <button class="btn btn-primary open-profile-sync-btn" type="button"><i class="fa-solid fa-rotate"></i> Sinkronisasi Data</button>
                     </div>
                     <div class="table-container">
                         <table>
@@ -288,51 +329,9 @@
                                     <th>Profesi</th>
                                     <th>No. STR</th>
                                     <th>Status SIP</th>
-                                    <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 600;">Dr. Andi Wijaya, Sp.PD</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">NIK: 3174XXXXXXXX0001</div>
-                                    </td>
-                                    <td>Dokter Spesialis Penyakit Dalam</td>
-                                    <td>11211002345678</td>
-                                    <td><span class="badge badge-success">Aktif</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--primary);" onclick="showProfile(0)">Detail</button></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 600;">Ns. Siti Aminah, S.Kep</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">NIK: 3271XXXXXXXX0005</div>
-                                    </td>
-                                    <td>Perawat</td>
-                                    <td>21111002345679</td>
-                                    <td><span class="badge badge-warning">Hampir Habis</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--primary);" onclick="showProfile(1)">Detail</button></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 600;">Drg. Budi Santoso</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">NIK: 3374XXXXXXXX0003</div>
-                                    </td>
-                                    <td>Dokter Gigi</td>
-                                    <td>12211002345680</td>
-                                    <td><span class="badge badge-success">Aktif</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--primary);" onclick="showProfile(2)">Detail</button></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 600;">Apt. Rina Marlina, S.Farm</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">NIK: 3471XXXXXXXX0002</div>
-                                    </td>
-                                    <td>Apoteker</td>
-                                    <td>31111002345681</td>
-                                    <td><span class="badge badge-danger">Kedaluwarsa</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--primary);" onclick="showProfile(3)">Detail</button></td>
-                                </tr>
-                            </tbody>
+                            <tbody id="dashboardMedicalTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -383,7 +382,7 @@
                     <h1>Profil Tenaga Medis</h1>
                     <p>Data lengkap tenaga medis yang terdaftar di Rumah Sakit</p>
                 </div>
-                <button class="btn btn-primary"><i class="fa-solid fa-rotate"></i> Sinkronisasi Data</button>
+                <button class="btn btn-primary open-profile-sync-btn" type="button"><i class="fa-solid fa-rotate"></i> Sinkronisasi Data</button>
             </div>
             <div class="profile-list" id="profileList"></div>
         </div>
@@ -619,7 +618,7 @@
     </div>
 
     <script>
-        const medicalProfiles = [
+        let medicalProfiles = [
             {
                 name: 'Dr. Andi Wijaya, Sp.PD', profession: 'Dokter Spesialis Penyakit Dalam',
                 nik: '3174XXXXXXXX0001', gender: 'Laki-laki', birth: 'Bandung, 14 April 1982',
@@ -654,8 +653,35 @@
             }
         ];
 
+        try {
+            const savedProfiles = JSON.parse(localStorage.getItem('simrsMedicalProfiles'));
+            if (Array.isArray(savedProfiles)) medicalProfiles = savedProfiles;
+        } catch (error) {
+            localStorage.removeItem('simrsMedicalProfiles');
+        }
+
+        function escapeHtml(value) {
+            return String(value || '').replace(/[&<>'"]/g, function (character) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character];
+            });
+        }
+
+        function getStatusBadge(status) {
+            const normalized = String(status || '').toLowerCase();
+            const badgeClass = normalized.includes('aktif') ? 'badge-success' : normalized.includes('hampir') ? 'badge-warning' : 'badge-danger';
+            return '<span class="badge ' + badgeClass + '">' + escapeHtml(status) + '</span>';
+        }
+
+        function renderDashboardMedicalTable() {
+            const tableBody = document.getElementById('dashboardMedicalTableBody');
+            if (!tableBody) return;
+            tableBody.innerHTML = medicalProfiles.map(function (profile) {
+                return '<tr><td><div style="font-weight: 600;">' + escapeHtml(profile.name) + '</div><div style="font-size: 0.8rem; color: var(--text-muted);">NIK: ' + escapeHtml(profile.nik) + '</div></td><td>' + escapeHtml(profile.profession) + '</td><td>' + escapeHtml(profile.str) + '</td><td>' + getStatusBadge(profile.sipStatus) + '</td></tr>';
+            }).join('');
+        }
+
         function profileField(label, value) {
-            return '<div class="profile-data-item"><label>' + label + '</label><span>' + value + '</span></div>';
+            return '<div class="profile-data-item"><label>' + escapeHtml(label) + '</label><span>' + escapeHtml(value) + '</span></div>';
         }
 
         function renderProfilePage() {
@@ -665,7 +691,7 @@
                 }).slice(0, 2).join('');
 
                 return '<article class="medical-profile">' +
-                    '<div class="medical-profile-header"><div class="medical-avatar">' + initials + '</div><div><h2>' + profile.name + '</h2><p>' + profile.profession + '</p></div></div>' +
+                    '<div class="medical-profile-header"><div class="medical-avatar">' + escapeHtml(initials) + '</div><div><h2>' + escapeHtml(profile.name) + '</h2><p>' + escapeHtml(profile.profession) + '</p></div></div>' +
                     '<div class="medical-profile-body">' +
                     '<div class="profile-group"><div class="profile-group-title">Data Identitas</div><div class="profile-data">' +
                     profileField('NIK', profile.nik) + profileField('Jenis Kelamin', profile.gender) + profileField('Tempat, tanggal lahir', profile.birth) + profileField('Masa kerja', profile.experience) +
@@ -678,6 +704,37 @@
                     '</div></div>' +
                     '</div></article>';
             }).join('');
+        }
+
+        function openProfileSyncModal() {
+            openActionModal('Sinkronisasi Tenaga Medis', 'Tambahkan data tenaga medis ke Profil dan Dashboard',
+                '<form id="medicalProfileForm" class="sync-form">' +
+                '<div class="form-group-full"><label for="profileName">Nama lengkap</label><input id="profileName" name="name" required placeholder="Contoh: dr. Nama Dokter, Sp.PD"></div>' +
+                '<div><label for="profileProfession">Profesi</label><input id="profileProfession" name="profession" required placeholder="Contoh: Dokter Umum"></div>' +
+                '<div><label for="profileNik">NIK</label><input id="profileNik" name="nik" required placeholder="Nomor identitas tenaga medis"></div>' +
+                '<div><label for="profileGender">Jenis kelamin</label><select id="profileGender" name="gender"><option>Laki-laki</option><option>Perempuan</option></select></div>' +
+                '<div><label for="profileBirth">Tempat, tanggal lahir</label><input id="profileBirth" name="birth" placeholder="Contoh: Jakarta, 1 Januari 1990"></div>' +
+                '<div><label for="profileExperience">Masa kerja</label><input id="profileExperience" name="experience" placeholder="Contoh: 5 tahun"></div>' +
+                '<div><label for="profileEducation">Pendidikan terakhir</label><input id="profileEducation" name="education" placeholder="Contoh: Universitas Indonesia"></div>' +
+                '<div><label for="profileCompetency">Kompetensi utama</label><input id="profileCompetency" name="competency" placeholder="Contoh: Pelayanan medis umum"></div>' +
+                '<div><label for="profileStr">Nomor STR</label><input id="profileStr" name="str" required placeholder="Nomor STR"></div>' +
+                '<div><label for="profileSip">Nomor SIP</label><input id="profileSip" name="sip" required placeholder="Nomor SIP"></div>' +
+                '<div><label for="profileSipStatus">Status SIP</label><input id="profileSipStatus" name="sipStatus" required placeholder="Contoh: Aktif sampai 31 Desember 2026"></div>' +
+                '<div><label for="profilePhone">Nomor telepon</label><input id="profilePhone" name="phone" placeholder="Nomor telepon"></div>' +
+                '<div><label for="profileEmail">Email</label><input id="profileEmail" name="email" type="email" placeholder="Email tenaga medis"></div>' +
+                '<div class="sync-form-actions"><button type="button" class="btn" onclick="closeActionModal()">Batal</button><button type="submit" class="btn btn-primary"><i class="fa-solid fa-rotate"></i> Simpan & Sinkronkan</button></div>' +
+                '</form>');
+        }
+
+        function saveMedicalProfile(form) {
+            const formData = new FormData(form);
+            const profile = Object.fromEntries(formData.entries());
+            medicalProfiles.push(profile);
+            localStorage.setItem('simrsMedicalProfiles', JSON.stringify(medicalProfiles));
+            renderProfilePage();
+            renderDashboardMedicalTable();
+            closeActionModal();
+            showPage('profile');
         }
 
         function showPage(page) {
@@ -926,6 +983,11 @@
         });
 
         document.addEventListener('click', function (event) {
+            const profileSyncButton = event.target.closest('.open-profile-sync-btn');
+            if (profileSyncButton) {
+                openProfileSyncModal();
+            }
+
             const validationButton = event.target.closest('.validate-doc-btn');
             if (validationButton) {
                 openValidationModal({
@@ -967,6 +1029,13 @@
             }
         });
 
+        document.addEventListener('submit', function (event) {
+            if (event.target.id === 'medicalProfileForm') {
+                event.preventDefault();
+                saveMedicalProfile(event.target);
+            }
+        });
+
         document.querySelectorAll('.sidebar-nav .nav-item[data-page]').forEach(function (item) {
             item.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -975,6 +1044,7 @@
         });
 
         renderProfilePage();
+        renderDashboardMedicalTable();
 
         const pageMap = {
             '#profil-tenaga-medis': 'profile',
