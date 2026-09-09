@@ -72,6 +72,37 @@
             opacity: 1;
             transform: translateY(0);
         }
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem 1.25rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.65rem;
+            background: #f8fafc;
+        }
+        .profile-detail {
+            min-width: 0;
+        }
+        .profile-detail label {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .profile-detail span {
+            display: block;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+        @media (max-width: 600px) {
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -84,7 +115,7 @@
         </div>
         <nav class="sidebar-nav">
             <a onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active-green"><i class="fa-solid fa-chart-pie"></i> Dashboard Farmasi</a>
-            <a onclick="switchTab('antrean')" id="nav-antrean" class="nav-item"><i class="fa-solid fa-prescription-bottle-medical"></i> Antrean Resep <span class="badge badge-danger" style="margin-left:auto;">4</span></a>
+            <a onclick="switchTab('antrean')" id="nav-antrean" class="nav-item"><i class="fa-solid fa-prescription-bottle-medical"></i> Antrean Resep <span class="badge badge-danger" style="margin-left:auto;" id="badge-antrean-resep">4</span></a>
             <a onclick="switchTab('kasir')" id="nav-kasir" class="nav-item"><i class="fa-solid fa-cash-register"></i> Kasir & Penjualan <span class="badge badge-success" style="margin-left:auto;">POS</span></a>
             <a onclick="switchTab('stok')" id="nav-stok" class="nav-item"><i class="fa-solid fa-boxes-stacked"></i> Stok & Inventori <span class="badge badge-warning" style="margin-left:auto;" id="badge-total-obat">25</span></a>
             <a onclick="switchTab('laporan')" id="nav-laporan" class="nav-item"><i class="fa-solid fa-file-invoice"></i> Laporan Farmasi</a>
@@ -197,7 +228,7 @@
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
                                     <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">BPJS Rawat Jalan</span>
-                                    <button class="btn" style="background: #eff6ff; color: var(--primary); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;" onclick="detailResep('RSP-2026-081')">Proses</button>
+                                    <button class="btn" style="background: #eff6ff; color: var(--primary); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;" onclick="detailResep('RSP-081', 'Siapkan')">Proses</button>
                                 </div>
                             </div>
 
@@ -233,7 +264,7 @@
                                     <div style="text-align: right;"><div style="font-weight: 700; color: var(--secondary-dark); letter-spacing: 0.5px;">#RSP-083</div><span class="badge badge-info" style="margin-top: 0.5rem; display: inline-block;"><i class="fa-solid fa-file-circle-check"></i> Skrining</span></div>
                                 </div>
                                 <div class="queue-steps"><div class="queue-step active" title="Skrining"></div><div class="queue-step" title="Penyiapan"></div><div class="queue-step" title="Selesai"></div></div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;"><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">BPJS Rawat Jalan</span><button class="btn" style="background: #eff6ff; color: var(--primary); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;" onclick="detailResep('RSP-083')">Skrining</button></div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;"><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">BPJS Rawat Jalan</span><button class="btn" style="background: #eff6ff; color: var(--primary); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;" onclick="detailResep('RSP-083', 'Skrining')">Skrining</button></div>
                             </div>
 
                             <div class="queue-card status-prep" data-resep-id="RSP-084">
@@ -245,7 +276,7 @@
                                     <div style="text-align: right;"><div style="font-weight: 700; color: var(--secondary-dark); letter-spacing: 0.5px;">#RSP-084</div><span class="badge badge-success" style="margin-top: 0.5rem; display: inline-block;"><i class="fa-solid fa-circle-check"></i> Siap Diserahkan</span></div>
                                 </div>
                                 <div class="queue-steps"><div class="queue-step active" title="Penyiapan"></div><div class="queue-step active" title="Pengecekan"></div><div class="queue-step active" title="Selesai"></div></div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;"><span style="font-size: 0.8rem; color: var(--secondary-dark); font-weight: 600;">Umum Mandiri</span><button class="btn" style="background: #ecfdf5; color: var(--secondary-dark); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;" onclick="detailResep('RSP-084')">Serahkan</button></div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;"><span style="font-size: 0.8rem; color: var(--secondary-dark); font-weight: 600;">Umum Mandiri</span><button class="btn" style="background: #ecfdf5; color: var(--secondary-dark); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;" onclick="detailResep('RSP-084', 'Serahkan')">Serahkan</button></div>
                             </div>
                         </div>
                     </div>
@@ -356,7 +387,7 @@
                                     <td><span class="badge badge-warning"><i class="fa-solid fa-spinner fa-spin"></i> Dispensing</span></td>
                                     <td>
                                         <div style="display: flex; gap: 0.5rem;">
-                                            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-081')"><i class="fa-solid fa-hand-holding-medical"></i> Siapkan</button>
+                                            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-081', 'Siapkan')"><i class="fa-solid fa-hand-holding-medical"></i> Siapkan</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -394,14 +425,14 @@
                                     <td><div style="font-weight: 600;">Tn. Budi Santoso (51 Th)</div><div style="font-size: 0.75rem; color: var(--text-muted);">No. RM: 00-18-07-41</div></td>
                                     <td><div style="font-weight: 500;">Poli Gigi</div><div style="font-size: 0.75rem; color: var(--text-muted);">drg. Maya Putri</div></td>
                                     <td><span class="badge badge-info">1 R/ Obat Jadi</span></td><td><span class="badge badge-success">Non-Racikan</span></td><td><span class="badge badge-info"><i class="fa-solid fa-file-circle-check"></i> Skrining</span></td>
-                                    <td><button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-083')"><i class="fa-solid fa-file-circle-check"></i> Skrining</button></td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-083', 'Skrining')"><i class="fa-solid fa-file-circle-check"></i> Skrining</button></td>
                                 </tr>
                                 <tr data-resep-id="RSP-084" data-resep-status="selesai">
                                     <td><div style="display: flex; align-items: center; gap: 0.5rem;"><span style="font-size: 1.1rem; font-weight: 800; background: #ecfdf5; color: var(--secondary-dark); padding: 0.2rem 0.5rem; border-radius: 0.35rem;">A-20</span><div><div style="font-weight: 700; color: var(--text-main);">#RSP-084</div><div style="font-size: 0.75rem; color: var(--text-muted);">10:02 WIB</div></div></div></td>
                                     <td><div style="font-weight: 600;">Ny. Siti Aminah (36 Th)</div><div style="font-size: 0.75rem; color: var(--text-muted);">No. RM: 00-44-12-08</div></td>
                                     <td><div style="font-weight: 500;">Poli Umum</div><div style="font-size: 0.75rem; color: var(--text-muted);">dr. Raka Pratama</div></td>
                                     <td><span class="badge badge-info">2 R/ Obat Jadi</span></td><td><span class="badge badge-success">Non-Racikan</span></td><td><span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> Siap Diserahkan</span></td>
-                                    <td><button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-084')"><i class="fa-solid fa-hand-holding-medical"></i> Serahkan</button></td>
+                                    <td><button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-084', 'Serahkan')"><i class="fa-solid fa-hand-holding-medical"></i> Serahkan</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -812,6 +843,19 @@
         </div>
     </div>
 
+    <div id="actionModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 560px;">
+            <div class="modal-header">
+                <div>
+                    <h3 id="actionModalTitle" style="font-size: 1.15rem; font-weight: 700; color: var(--secondary-dark);">Proses Resep</h3>
+                    <p id="actionModalSubtitle" style="margin-top: 0.25rem; color: var(--text-muted); font-size: 0.85rem;"></p>
+                </div>
+                <button type="button" onclick="closeActionModal()" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-muted);">&times;</button>
+            </div>
+            <div id="actionModalBody" class="modal-body"></div>
+        </div>
+    </div>
+
     <!-- MODAL 3: CETAK STRUK THERMAL KASIR -->
     <div id="modal-struk" class="modal-overlay">
         <div class="modal-box" style="max-width: 420px; background: #f8fafc;">
@@ -1035,6 +1079,8 @@
                     tab.innerHTML = (icon ? icon.outerHTML + ' ' : '') + label + ' (' + counts[status] + ')';
                 }
             });
+            const queueBadge = document.getElementById('badge-antrean-resep');
+            if (queueBadge) queueBadge.textContent = counts.all;
         }
 
         function showToast(message) {
@@ -1060,6 +1106,17 @@
 
         function closeModal(id) {
             document.getElementById(id).classList.remove('active');
+        }
+
+        function openActionModal(title, subtitle, bodyHtml) {
+            document.getElementById('actionModalTitle').textContent = title;
+            document.getElementById('actionModalSubtitle').textContent = subtitle || '';
+            document.getElementById('actionModalBody').innerHTML = bodyHtml;
+            document.getElementById('actionModal').classList.add('active');
+        }
+
+        function closeActionModal() {
+            document.getElementById('actionModal').classList.remove('active');
         }
 
         // RENDER STOK TABLE DYNAMICALLY
@@ -1432,6 +1489,10 @@
             alert('Resep #' + resepId + ' Ny. Dewi Ratnasari berhasil dimuat ke Kasir!');
         }
 
+        function formatReceiptAmount(amount) {
+            return String(Math.round(Number(amount) || 0));
+        }
+
         // CHECKOUT & CETAK STRUK
         function processCheckout() {
             if (posCart.length === 0) {
@@ -1475,17 +1536,17 @@
                 <tr>
                     <td style="text-align: left;">${i.nama}</td>
                     <td style="text-align: center;">${i.qty}</td>
-                    <td class="text-right">${i.harga.toLocaleString('id-ID')}</td>
-                    <td class="text-right">${(i.harga * i.qty).toLocaleString('id-ID')}</td>
+                    <td class="text-right">${formatReceiptAmount(i.harga)}</td>
+                    <td class="text-right">${formatReceiptAmount(i.harga * i.qty)}</td>
                 </tr>
             `).join('');
 
-            document.getElementById('struk-subtotal').innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
-            document.getElementById('struk-diskon').innerText = 'Rp ' + diskon.toLocaleString('id-ID');
-            document.getElementById('struk-total').innerText = 'Rp ' + totalAkhir.toLocaleString('id-ID');
+            document.getElementById('struk-subtotal').innerText = 'Rp ' + formatReceiptAmount(subtotal);
+            document.getElementById('struk-diskon').innerText = 'Rp ' + formatReceiptAmount(diskon);
+            document.getElementById('struk-total').innerText = 'Rp ' + formatReceiptAmount(totalAkhir);
             document.getElementById('struk-metode').innerText = metode;
-            document.getElementById('struk-bayar').innerText = 'Rp ' + uangBayar.toLocaleString('id-ID');
-            document.getElementById('struk-kembali').innerText = 'Rp ' + kembalian.toLocaleString('id-ID');
+            document.getElementById('struk-bayar').innerText = 'Rp ' + formatReceiptAmount(uangBayar);
+            document.getElementById('struk-kembali').innerText = 'Rp ' + formatReceiptAmount(kembalian);
 
             // Add entry to Laporan Table
             const laporanBody = document.getElementById('laporan-kasir-body');
@@ -1605,8 +1666,63 @@
             handleGlobalSearch('');
         }
 
-        function detailResep(id) {
-            alert('Menampilkan rincian telaah resep #' + id + '\nStatus: Siap diverifikasi klinis & peracikan obat.');
+        function detail(label, value) {
+            return '<div class="profile-detail"><label>' + label + '</label><span>' + value + '</span></div>';
+        }
+
+        function detailResep(id, action) {
+            const actionName = action || 'Proses';
+            const nextStage = getNextPrescriptionStage(actionName);
+            const body = '<section class="profile-section"><h3>Rincian Tindakan</h3><div class="profile-details">' +
+                detail('Nomor resep', id) + detail('Tindakan saat ini', actionName) + detail('Status berikutnya', nextStage.label) +
+                '</div></section>' +
+                '<div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem;">' +
+                '<button class="btn" style="background: #e2e8f0; color: var(--text-main);" onclick="closeActionModal()">Batal</button>' +
+                '<button class="btn btn-secondary" onclick="advancePrescription(\'' + id + '\', \'' + actionName + '\')"><i class="fa-solid fa-arrow-right"></i> ' + nextStage.button + '</button>' +
+                '</div>';
+            openActionModal(actionName + ' Resep', 'Lanjutkan resep ke tahap berikutnya', body);
+        }
+
+        function getNextPrescriptionStage(action) {
+            if (action === 'Skrining') return { status: 'racik', label: 'Penyiapan / Racik', button: 'Mulai Penyiapan', nextAction: 'Siapkan' };
+            if (action === 'Siapkan') return { status: 'selesai', label: 'Siap Diserahkan', button: 'Siap Diserahkan', nextAction: 'Serahkan' };
+            return { status: 'selesai', label: 'Selesai dan dihapus dari antrean', button: 'Selesaikan Resep', nextAction: 'Serahkan' };
+        }
+
+        function advancePrescription(id, action) {
+            const nextStage = getNextPrescriptionStage(action);
+            if (action === 'Serahkan') {
+                removePrescriptionFromQueues(id);
+                showToast('Resep ' + id + ' selesai diserahkan dan dihapus dari antrean.');
+                closeActionModal();
+                return;
+            }
+
+            const row = document.querySelector('#resep-table-body [data-resep-id="' + id + '"]');
+            if (row) {
+                row.dataset.resepStatus = nextStage.status;
+                const statusCell = row.cells[5];
+                const actionCell = row.cells[6];
+                statusCell.innerHTML = nextStage.status === 'racik'
+                    ? '<span class="badge badge-warning"><i class="fa-solid fa-mortar-pestle"></i> Penyiapan / Racik</span>'
+                    : '<span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> Siap Diserahkan</span>';
+                actionCell.innerHTML = '<button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep(\'' + id + '\', \'' + nextStage.nextAction + '\')"><i class="fa-solid fa-arrow-right"></i> ' + nextStage.nextAction + '</button>';
+            }
+
+            const dashboardCard = document.querySelector('#view-dashboard [data-resep-id="' + id + '"]');
+            if (dashboardCard) {
+                const statusBadge = dashboardCard.querySelector('.queue-header > div:last-child span');
+                const actionButton = dashboardCard.querySelector('button');
+                if (statusBadge) statusBadge.innerHTML = nextStage.status === 'racik' ? '<i class="fa-solid fa-mortar-pestle"></i> Penyiapan / Racik' : '<i class="fa-solid fa-circle-check"></i> Siap Diserahkan';
+                if (actionButton) {
+                    actionButton.textContent = nextStage.status === 'racik' ? 'Siapkan' : 'Serahkan';
+                    actionButton.setAttribute('onclick', "detailResep('" + id + "', '" + nextStage.nextAction + "')");
+                }
+            }
+
+            filterResepStatus(currentResepStatus);
+            closeActionModal();
+            showToast('Resep ' + id + ' masuk ke tahap ' + nextStage.label + '.');
         }
 
         function openStokCard(namaObat) {
