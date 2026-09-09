@@ -215,10 +215,10 @@
         <nav class="sidebar-nav">
             <a href="#dashboard" class="nav-item active" data-page="dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
             <a href="#profil-tenaga-medis" class="nav-item" data-page="profile"><i class="fa-solid fa-user-doctor"></i> Profil Tenaga Medis</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-file-medical"></i> STR & SIP</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Pengembangan Kompetensi</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-building-user"></i> Fasilitas Pelayanan</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-chart-line"></i> Kinerja & Logbook</a>
+            <a href="#str-sip" class="nav-item" data-page="strsip"><i class="fa-solid fa-file-medical"></i> STR & SIP</a>
+            <a href="#kompetensi" class="nav-item" data-page="kompetensi"><i class="fa-solid fa-graduation-cap"></i> Pengembangan Kompetensi</a>
+            <a href="#fasilitas" class="nav-item" data-page="fasilitas"><i class="fa-solid fa-building-user"></i> Fasilitas Pelayanan</a>
+            <a href="#kinerja" class="nav-item" data-page="kinerja"><i class="fa-solid fa-chart-line"></i> Kinerja & Logbook</a>
             <div style="flex: 1;"></div>
             <a href="index.html" class="nav-item"><i class="fa-solid fa-arrow-left"></i> Kembali ke Portal</a>
             <a href="#" class="nav-item" style="color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
@@ -387,6 +387,209 @@
             </div>
             <div class="profile-list" id="profileList"></div>
         </div>
+
+        <div class="dashboard-container app-page hidden" id="strsipPage">
+            <div class="page-header">
+                <div>
+                    <h1>STR & SIP</h1>
+                    <p>Monitoring validitas, masa berlaku, dan kebutuhan perpanjangan dokumen profesi</p>
+                </div>
+                <button class="btn btn-primary open-doc-validation-btn" type="button"><i class="fa-solid fa-file-circle-check"></i> Validasi Dokumen</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Status Dokumen Profesional</h3>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Jenis</th>
+                                <th>No. Dokumen</th>
+                                <th>Masa Berlaku</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-doc-number="11211002345678" data-doc-name="Dr. Andi Wijaya, Sp.PD" data-doc-type="STR" data-doc-status="Valid" data-doc-expiry="12 Jan 2027" data-doc-issuer="Dinas Kesehatan Provinsi Jawa Barat" data-doc-detail="Surat Tanda Registrasi dokter spesialis untuk praktik medis di rumah sakit" data-doc-files="Scan STR, KTP, surat rekomendasi rumah sakit" data-doc-requirements="Dokumen lengkap dan sesuai nomor registrasi Kemenkes">
+                                <td>Dr. Andi Wijaya, Sp.PD</td>
+                                <td>STR</td>
+                                <td>11211002345678</td>
+                                <td>12 Jan 2027</td>
+                                <td><span class="badge badge-success">Valid</span></td>
+                                <td><button class="btn btn-secondary validate-doc-btn" type="button" data-name="Dr. Andi Wijaya, Sp.PD" data-type="STR" data-number="11211002345678" data-status="Valid" data-expiry="12 Jan 2027" data-issuer="Dinas Kesehatan Provinsi Jawa Barat" data-detail="Surat Tanda Registrasi dokter spesialis untuk praktik medis di rumah sakit" data-files="Scan STR, KTP, surat rekomendasi rumah sakit" data-requirements="Dokumen lengkap dan sesuai nomor registrasi Kemenkes">Validasi</button></td>
+                            </tr>
+                            <tr data-doc-number="21111002345679" data-doc-name="Ns. Siti Aminah, S.Kep" data-doc-type="SIP" data-doc-status="Akan Expire" data-doc-expiry="5 Okt 2026" data-doc-issuer="Dinas Kesehatan Kabupaten Bandung" data-doc-detail="Surat Izin Praktik perawat untuk pelayanan rawat inap dan rawat jalan" data-doc-files="Scan SIP, KTP, surat tugas rumah sakit" data-doc-requirements="Perlu penyesuaian masa berlaku dan konfirmasi jadwal perpanjangan">
+                                <td>Ns. Siti Aminah, S.Kep</td>
+                                <td>SIP</td>
+                                <td>21111002345679</td>
+                                <td>5 Okt 2026</td>
+                                <td><span class="badge badge-warning">Akan Expire</span></td>
+                                <td><button class="btn btn-secondary validate-doc-btn" type="button" data-name="Ns. Siti Aminah, S.Kep" data-type="SIP" data-number="21111002345679" data-status="Akan Expire" data-expiry="5 Okt 2026" data-issuer="Dinas Kesehatan Kabupaten Bandung" data-detail="Surat Izin Praktik perawat untuk pelayanan rawat inap dan rawat jalan" data-files="Scan SIP, KTP, surat tugas rumah sakit" data-requirements="Perlu penyesuaian masa berlaku dan konfirmasi jadwal perpanjangan">Validasi</button></td>
+                            </tr>
+                            <tr data-doc-number="12211002345680" data-doc-name="Drg. Budi Santoso" data-doc-type="STR" data-doc-status="Valid" data-doc-expiry="28 Des 2028" data-doc-issuer="Dinas Kesehatan Provinsi Jawa Barat" data-doc-detail="Surat Tanda Registrasi dokter gigi untuk praktik klinik gigi" data-doc-files="Scan STR, Ijazah, STR lama" data-doc-requirements="Dokumen pelengkap dan masa berlaku masih aktif">
+                                <td>Drg. Budi Santoso</td>
+                                <td>STR</td>
+                                <td>12211002345680</td>
+                                <td>28 Des 2028</td>
+                                <td><span class="badge badge-success">Valid</span></td>
+                                <td><button class="btn btn-secondary validate-doc-btn" type="button" data-name="Drg. Budi Santoso" data-type="STR" data-number="12211002345680" data-status="Valid" data-expiry="28 Des 2028" data-issuer="Dinas Kesehatan Provinsi Jawa Barat" data-detail="Surat Tanda Registrasi dokter gigi untuk praktik klinik gigi" data-files="Scan STR, Ijazah, STR lama" data-requirements="Dokumen pelengkap dan masa berlaku masih aktif">Validasi</button></td>
+                            </tr>
+                            <tr data-doc-number="31111002345681" data-doc-name="Apt. Rina Marlina, S.Farm" data-doc-type="SIP" data-doc-status="Perlu Renewal" data-doc-expiry="19 Sep 2025" data-doc-issuer="Dinas Kesehatan Kota Bandung" data-doc-detail="Surat Izin Praktik apoteker untuk layanan farmasi rumah sakit" data-doc-files="Scan SIP, SIA, KTP, surat izin kerja" data-doc-requirements="Dokumen kedaluwarsa, perlu perpanjangan dan upload ulang dokumen pendukung">
+                                <td>Apt. Rina Marlina, S.Farm</td>
+                                <td>SIP</td>
+                                <td>31111002345681</td>
+                                <td>19 Sep 2025</td>
+                                <td><span class="badge badge-danger">Perlu Renewal</span></td>
+                                <td><button class="btn btn-secondary validate-doc-btn" type="button" data-name="Apt. Rina Marlina, S.Farm" data-type="SIP" data-number="31111002345681" data-status="Perlu Renewal" data-expiry="19 Sep 2025" data-issuer="Dinas Kesehatan Kota Bandung" data-detail="Surat Izin Praktik apoteker untuk layanan farmasi rumah sakit" data-files="Scan SIP, SIA, KTP, surat izin kerja" data-requirements="Dokumen kedaluwarsa, perlu perpanjangan dan upload ulang dokumen pendukung">Validasi</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-container app-page hidden" id="kompetensiPage">
+            <div class="page-header">
+                <div>
+                    <h1>Pengembangan Kompetensi</h1>
+                    <p>Pelatihan, sertifikasi, dan program pembelajaran tenaga kesehatan</p>
+                </div>
+                <button class="btn btn-primary open-training-btn" type="button"><i class="fa-solid fa-calendar-plus"></i> Jadwalkan Pelatihan</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">Pelatihan Selesai</div>
+                    <div class="stat-value">18</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Mencapai target tahunan</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-title">Agenda Bulan Ini</div>
+                    <div class="stat-value">7</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">2 jadwal baru</div>
+                </div>
+                <div class="stat-card yellow">
+                    <div class="stat-title">Perlu Pengingat</div>
+                    <div class="stat-value">3</div>
+                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Butuh follow-up</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Daftar Program Kompetensi</h3>
+                </div>
+                <div class="table-container">
+                    <table id="trainingTable">
+                        <thead>
+                            <tr><th>Judul Pelatihan</th><th>Peserta</th><th>Metode</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Advanced Cardiac Life Support</td><td>12 Dokter</td><td>Workshop</td><td><span class="badge badge-success">Selesai</span></td></tr>
+                            <tr><td>Infection Prevention Audit</td><td>18 Perawat</td><td>Seminar</td><td><span class="badge badge-warning">Berlangsung</span></td></tr>
+                            <tr><td>Manajemen Farmasi Klinik</td><td>5 Apoteker</td><td>Pelatihan</td><td><span class="badge badge-info">Terjadwal</span></td></tr>
+                            <tr><td>Leadership & Team Communication</td><td>10 Supervisor</td><td>Coaching</td><td><span class="badge badge-secondary">Baru</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-container app-page hidden" id="fasilitasPage">
+            <div class="page-header">
+                <div>
+                    <h1>Fasilitas Pelayanan</h1>
+                    <p>Evaluasi kesiapan unit layanan, ruang perawatan, dan operasional fasilitas</p>
+                </div>
+                <button class="btn btn-primary open-facility-btn" type="button"><i class="fa-solid fa-hospital"></i> Lihat Detail Unit</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card facility-stat" data-unit="IGD" data-readiness="93%" data-desc="12 ruang perawatan aktif" data-details="Ruang triase, monitor bedside, dan stok obat darurat siap digunakan 24 jam." role="button" tabindex="0">
+                    <div class="stat-title">IGD</div>
+                    <div class="stat-value">93%</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Readiness</div>
+                </div>
+                <div class="stat-card green facility-stat" data-unit="Poliklinik" data-readiness="89%" data-desc="15 unit pelayanan" data-details="Antrian pelayanan terkelola otomatis dan rata-rata waktu tunggu 14 menit." role="button" tabindex="0">
+                    <div class="stat-title">Poliklinik</div>
+                    <div class="stat-value">89%</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Utilization</div>
+                </div>
+                <div class="stat-card yellow facility-stat" data-unit="ICU" data-readiness="100%" data-desc="6 bed monitor terpasang" data-details="Semua bed ICU terhubung sistem monitoring vital sign real-time dan alarm." role="button" tabindex="0">
+                    <div class="stat-title">ICU</div>
+                    <div class="stat-value">100%</div>
+                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Operasional</div>
+                </div>
+                <div class="stat-card red facility-stat" data-unit="Rehabilitasi" data-readiness="75%" data-desc="4 ruang terapi" data-details="Ketersediaan alat fisioterapi masih perlu penambahan pada sesi sore." role="button" tabindex="0">
+                    <div class="stat-title">Rehabilitasi</div>
+                    <div class="stat-value">75%</div>
+                    <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Pemakaian</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Ringkasan Unit Layanan</h3>
+                </div>
+                <div class="facility-grid">
+                    <div class="facility-card facility-card-clickable" data-unit="IGD" data-readiness="93%" data-desc="12 ruang perawatan aktif" data-details="Ruang triase, monitor bedside, dan stok obat darurat siap digunakan 24 jam."><h4>IGD</h4><p>12 ruang perawatan aktif</p><span>93% readiness</span></div>
+                    <div class="facility-card facility-card-clickable" data-unit="Poliklinik" data-readiness="89%" data-desc="15 unit pelayanan" data-details="Antrian pelayanan terkelola otomatis dan rata-rata waktu tunggu 14 menit."><h4>Poliklinik</h4><p>15 unit pelayanan</p><span>89% utilization</span></div>
+                    <div class="facility-card facility-card-clickable" data-unit="ICU" data-readiness="100%" data-desc="6 bed monitor terpasang" data-details="Semua bed ICU terhubung sistem monitoring vital sign real-time dan alarm."><h4>ICU</h4><p>6 bed monitor terpasang</p><span>100% operasional</span></div>
+                    <div class="facility-card facility-card-clickable" data-unit="Rehabilitasi" data-readiness="75%" data-desc="4 ruang terapi" data-details="Ketersediaan alat fisioterapi masih perlu penambahan pada sesi sore."><h4>Rehabilitasi</h4><p>4 ruang terapi</p><span>75% pemakaian</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-container app-page hidden" id="kinerjaPage">
+            <div class="page-header">
+                <div>
+                    <h1>Kinerja & Logbook</h1>
+                    <p>Analisis target SKP, aktivitas harian, dan jejak pelaporan kerja</p>
+                </div>
+                <button class="btn btn-primary open-activity-btn" type="button"><i class="fa-solid fa-pen-to-square"></i> Catat Kegiatan</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">Target SKP</div>
+                    <div class="stat-value">96%</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Tercapai</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-title">Case Handled</div>
+                    <div class="stat-value">312</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Bulan ini</div>
+                </div>
+                <div class="stat-card yellow">
+                    <div class="stat-title">Logbook Hari Ini</div>
+                    <div class="stat-value">21</div>
+                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Masuk sistem</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Aktivitas Terbaru</h3>
+                </div>
+                <div class="table-container">
+                    <table id="activityTable">
+                        <thead>
+                            <tr><th>Tanggal</th><th>Nama Nakes</th><th>Kegiatan</th><th>Hasil</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>09 Sep 2026</td><td>Dr. Andi Wijaya</td><td>Operasi/Follow up pasien</td><td><span class="badge badge-success">Baik</span></td></tr>
+                            <tr><td>08 Sep 2026</td><td>Ns. Siti Aminah</td><td>Pemberian edukasi pasien</td><td><span class="badge badge-info">Terekam</span></td></tr>
+                            <tr><td>07 Sep 2026</td><td>Drg. Budi Santoso</td><td>Tindakan gigi</td><td><span class="badge badge-warning">Perlu evaluasi</span></td></tr>
+                            <tr><td>06 Sep 2026</td><td>Apt. Rina Marlina</td><td>Review obat dan dispensing</td><td><span class="badge badge-success">Baik</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </main>
 
     <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
@@ -399,6 +602,19 @@
                 <button class="profile-close" type="button" aria-label="Tutup profil" onclick="closeProfile()">&times;</button>
             </div>
             <div id="profileModalBody"></div>
+        </div>
+    </div>
+
+    <div class="profile-modal" id="actionModal" role="dialog" aria-modal="true" aria-labelledby="actionModalTitle">
+        <div class="profile-modal-content">
+            <div class="profile-modal-header">
+                <div>
+                    <h2 id="actionModalTitle">Detail</h2>
+                    <p id="actionModalSubtitle"></p>
+                </div>
+                <button class="profile-close" type="button" aria-label="Tutup detail" onclick="closeActionModal()">&times;</button>
+            </div>
+            <div id="actionModalBody"></div>
         </div>
     </div>
 
@@ -465,13 +681,28 @@
         }
 
         function showPage(page) {
-            const showProfilePage = page === 'profile';
-            document.getElementById('dashboardPage').classList.toggle('hidden', showProfilePage);
-            document.getElementById('profilePage').classList.toggle('hidden', !showProfilePage);
+            const pages = ['dashboard', 'profile', 'strsip', 'kompetensi', 'fasilitas', 'kinerja'];
+            pages.forEach(function (key) {
+                const target = document.getElementById(key === 'dashboard' ? 'dashboardPage' : key === 'profile' ? 'profilePage' : key + 'Page');
+                if (target) {
+                    target.classList.toggle('hidden', key !== page);
+                }
+            });
+
             document.querySelectorAll('.sidebar-nav .nav-item[data-page]').forEach(function (item) {
                 item.classList.toggle('active', item.dataset.page === page);
             });
-            window.location.hash = showProfilePage ? 'profil-tenaga-medis' : 'dashboard';
+
+            const hashMap = {
+                dashboard: 'dashboard',
+                profile: 'profil-tenaga-medis',
+                strsip: 'str-sip',
+                kompetensi: 'kompetensi',
+                fasilitas: 'fasilitas',
+                kinerja: 'kinerja'
+            };
+
+            window.location.hash = hashMap[page] || 'dashboard';
         }
 
         function detail(label, value) {
@@ -503,12 +734,237 @@
             document.getElementById('profileModal').classList.remove('active');
         }
 
+        function openActionModal(title, subtitle, bodyHtml) {
+            document.getElementById('actionModalTitle').textContent = title;
+            document.getElementById('actionModalSubtitle').textContent = subtitle || '';
+            document.getElementById('actionModalBody').innerHTML = bodyHtml;
+            document.getElementById('actionModal').classList.add('active');
+        }
+
+        function closeActionModal() {
+            document.getElementById('actionModal').classList.remove('active');
+        }
+
+        function getStatusBadgeHtml(status) {
+            const normalized = (status || 'Valid').toLowerCase();
+            if (normalized.includes('renew') || normalized.includes('kedaluwarsa')) return '<span class="badge badge-danger">Perlu Renewal</span>';
+            if (normalized.includes('expire') || normalized.includes('akan')) return '<span class="badge badge-warning">Akan Expire</span>';
+            return '<span class="badge badge-success">Valid</span>';
+        }
+
+        function approveDocument(data) {
+            const row = document.querySelector('[data-doc-number="' + (data.number || '') + '"]');
+            if (!row) return;
+
+            const statusCell = row.querySelector('td:nth-child(5)');
+            if (statusCell) {
+                statusCell.innerHTML = getStatusBadgeHtml('Valid');
+            }
+
+            row.dataset.docStatus = 'Valid';
+            closeActionModal();
+        }
+
+        function rejectDocument(data) {
+            const row = document.querySelector('[data-doc-number="' + (data.number || '') + '"]');
+            if (!row) return;
+
+            const statusCell = row.querySelector('td:nth-child(5)');
+            if (statusCell) {
+                statusCell.innerHTML = getStatusBadgeHtml('Perlu Renewal');
+            }
+
+            row.dataset.docStatus = 'Perlu Renewal';
+            closeActionModal();
+        }
+
+        function openValidationModal(data) {
+            const detailMap = [
+                ['Nama', data.name],
+                ['Jenis Dokumen', data.type],
+                ['Nomor Dokumen', data.number],
+                ['Masa Berlaku', data.expiry || 'Belum tercatat'],
+                ['Penerbit', data.issuer || 'Dokumen rumah sakit'],
+                ['Status Saat Ini', data.status || 'Belum diproses'],
+                ['Detail Dokumen', data.detail || 'Dokumen izin pelayanan profesi tenaga kesehatan'],
+                ['Kelengkapan File', data.files || 'STR/SIP, KTP, surat tugas'],
+                ['Persyaratan', data.requirements || 'Diupload dan diverifikasi secara lengkap']
+            ];
+
+            const body = '<section class="profile-section"><h3>Detail Validasi Dokumen</h3><div class="profile-details">' +
+                detailMap.map(([label, value]) => detail(label, value)).join('') +
+                '</div></section>' +
+                '<div class="profile-section" style="display:flex; gap:0.75rem; justify-content:flex-end;">' +
+                '<button class="btn btn-secondary" type="button" onclick="rejectDocument(' + JSON.stringify(data).replace(/"/g, '&quot;') + ')">Tolak</button>' +
+                '<button class="btn btn-primary" type="button" onclick="approveDocument(' + JSON.stringify(data).replace(/"/g, '&quot;') + ')">Setujui</button>' +
+                '</div>';
+            openActionModal('Validasi Dokumen', 'Review kelengkapan, legalitas, dan masa berlaku profesi', body);
+        }
+
+        function openValidationQueue() {
+            const rows = document.querySelectorAll('#strsipPage [data-doc-number]');
+            const items = Array.from(rows).map(function (row) {
+                const number = row.dataset.docNumber;
+                const name = row.dataset.docName;
+                const type = row.dataset.docType;
+                const status = row.dataset.docStatus;
+                return '<div class="profile-section" style="padding:0.9rem 1rem; border:1px solid rgba(82,112,255,0.15); border-radius:12px; margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center; gap:1rem;">' +
+                    '<div><strong>' + name + '</strong><div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.2rem;">' + type + ' • ' + number + '</div></div>' +
+                    '<button class="btn btn-secondary" type="button" onclick="openValidationModal({name: \'' + (name || '').replace(/'/g, "\\'") + '\', type: \'' + (type || '').replace(/'/g, "\\'") + '\', number: \'' + (number || '').replace(/'/g, "\\'") + '\', status: \'' + (status || '').replace(/'/g, "\\'") + '\', expiry: \'' + (row.dataset.docExpiry || '').replace(/'/g, "\\'") + '\', issuer: \'' + (row.dataset.docIssuer || '').replace(/'/g, "\\'") + '\', detail: \'' + (row.dataset.docDetail || '').replace(/'/g, "\\'") + '\', files: \'' + (row.dataset.docFiles || '').replace(/'/g, "\\'") + '\', requirements: \'' + (row.dataset.docRequirements || '').replace(/'/g, "\\'") + '\'})">Lihat Detail</button>' +
+                    '</div>';
+            }).join('');
+
+            openActionModal('Validasi Dokumen', 'Daftar kebutuhan review legalitas tenaga medis', '<div class="profile-section">' + items + '</div>');
+        }
+
+        function openTrainingModal() {
+            const body = '<form id="trainingForm" class="profile-section" onsubmit="event.preventDefault(); submitTrainingForm(); return false;">' +
+                '<div class="profile-details" style="grid-template-columns:1fr 1fr;">' +
+                '<div class="profile-detail"><label>Judul Pelatihan</label><input class="form-control" name="title" placeholder="contoh: ACLS Renewal" required /></div>' +
+                '<div class="profile-detail"><label>Peserta</label><input class="form-control" name="participants" placeholder="contoh: 12 Dokter" required /></div>' +
+                '<div class="profile-detail"><label>Metode</label><input class="form-control" name="method" placeholder="contoh: Workshop" required /></div>' +
+                '<div class="profile-detail"><label>Tanggal</label><input class="form-control" name="date" type="date" required /></div>' +
+                '<div class="profile-detail" style="grid-column:1 / -1;"><label>Lokasi</label><input class="form-control" name="location" placeholder="contoh: Ruang Seminar Lt. 3" required /></div>' +
+                '<div class="profile-detail" style="grid-column:1 / -1;"><label>Pengajar</label><input class="form-control" name="trainer" placeholder="contoh: Tim PPGD & Emergency Care" required /></div>' +
+                '</div>' +
+                '<div class="profile-section" style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">' +
+                '<button type="button" class="btn btn-secondary" onclick="closeActionModal()">Batal</button>' +
+                '<button type="submit" class="btn btn-primary">Simpan Jadwal</button>' +
+                '</div>' +
+                '</form>';
+            openActionModal('Jadwal Pelatihan', 'Perencanaan program kompetensi bulan ini', body);
+        }
+
+        function submitTrainingForm() {
+            const form = document.getElementById('trainingForm');
+            if (!form) return;
+
+            const inputs = new FormData(form);
+            const title = inputs.get('title') || 'Pelatihan Baru';
+            const participants = inputs.get('participants') || 'Peserta';
+            const method = inputs.get('method') || 'Pelatihan';
+            const dateValue = inputs.get('date');
+            const formattedDate = dateValue ? new Date(dateValue + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Tanggal belum ditentukan';
+
+            const tableBody = document.getElementById('trainingTable')?.querySelector('tbody');
+            if (tableBody) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td>' + title + '</td><td>' + participants + '</td><td>' + method + '</td><td><span class="badge badge-info">Terjadwal</span></td>';
+                tableBody.prepend(row);
+            }
+
+            closeActionModal();
+            form.reset();
+        }
+
+        function openActivityModal() {
+            const body = '<form id="activityForm" class="profile-section" onsubmit="event.preventDefault(); submitActivityForm(); return false;">' +
+                '<div class="profile-details" style="grid-template-columns:1fr 1fr;">' +
+                '<div class="profile-detail"><label>Tanggal</label><input class="form-control" name="date" type="date" required /></div>' +
+                '<div class="profile-detail"><label>Nama Nakes</label><input class="form-control" name="name" placeholder="contoh: Dr. Andi Wijaya" required /></div>' +
+                '<div class="profile-detail" style="grid-column:1 / -1;"><label>Kegiatan</label><textarea class="form-control" name="activity" rows="3" placeholder="Tuliskan kegiatan yang dilakukan" required></textarea></div>' +
+                '<div class="profile-detail"><label>Hasil</label><select class="form-control" name="result"><option value="Baik">Baik</option><option value="Terekam">Terekam</option><option value="Perlu evaluasi">Perlu evaluasi</option></select></div>' +
+                '</div>' +
+                '<div class="profile-section" style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">' +
+                '<button type="button" class="btn btn-secondary" onclick="closeActionModal()">Batal</button>' +
+                '<button type="submit" class="btn btn-primary">Simpan Kegiatan</button>' +
+                '</div>' +
+                '</form>';
+            openActionModal('Catat Kegiatan', 'Input aktivitas harian tenaga kesehatan', body);
+        }
+
+        function submitActivityForm() {
+            const form = document.getElementById('activityForm');
+            if (!form) return;
+
+            const inputs = new FormData(form);
+            const dateValue = inputs.get('date');
+            const name = inputs.get('name') || 'Nakes';
+            const activity = inputs.get('activity') || 'Kegiatan';
+            const result = inputs.get('result') || 'Baik';
+            const prettyDate = dateValue ? new Date(dateValue + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Tanggal belum ditentukan';
+
+            const resultClass = result === 'Baik' ? 'badge badge-success' : result === 'Terekam' ? 'badge badge-info' : 'badge badge-warning';
+            const tableBody = document.getElementById('activityTable')?.querySelector('tbody');
+            if (tableBody) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td>' + prettyDate + '</td><td>' + name + '</td><td>' + activity + '</td><td><span class="' + resultClass + '">' + result + '</span></td>';
+                tableBody.prepend(row);
+            }
+
+            closeActionModal();
+            form.reset();
+        }
+
+        function openFacilityModal(unit) {
+            const data = {
+                IGD: { readiness: '93%', desc: '12 ruang perawatan aktif', details: 'Ruang triase, monitor bedside, dan stok obat darurat siap digunakan 24 jam.' },
+                Poliklinik: { readiness: '89%', desc: '15 unit pelayanan', details: 'Antrian pelayanan terkelola otomatis dan rata-rata waktu tunggu 14 menit.' },
+                ICU: { readiness: '100%', desc: '6 bed monitor terpasang', details: 'Semua bed ICU terhubung sistem monitoring vital sign real-time dan alarm.' },
+                Rehabilitasi: { readiness: '75%', desc: '4 ruang terapi', details: 'Ketersediaan alat fisioterapi masih perlu penambahan pada sesi sore.' }
+            };
+            const item = data[unit] || data.IGD;
+            const body = '<section class="profile-section"><h3>Detail Unit Pelayanan</h3><div class="profile-details">' +
+                detail('Unit', unit) + detail('Kesiapan', item.readiness) + detail('Keterangan', item.desc) + detail('Catatan', item.details) +
+                '</div></section>';
+            openActionModal('Detail Unit ' + unit, 'Status operasional dan kebutuhan pemeliharaan', body);
+        }
+
         document.getElementById('profileModal').addEventListener('click', function (event) {
             if (event.target === this) closeProfile();
         });
 
+        document.getElementById('actionModal').addEventListener('click', function (event) {
+            if (event.target === this) closeActionModal();
+        });
+
         document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') closeProfile();
+            if (event.key === 'Escape') {
+                closeProfile();
+                closeActionModal();
+            }
+        });
+
+        document.addEventListener('click', function (event) {
+            const validationButton = event.target.closest('.validate-doc-btn');
+            if (validationButton) {
+                openValidationModal({
+                    name: validationButton.dataset.name,
+                    type: validationButton.dataset.type,
+                    number: validationButton.dataset.number,
+                    status: validationButton.dataset.status,
+                    expiry: validationButton.dataset.expiry,
+                    issuer: validationButton.dataset.issuer,
+                    detail: validationButton.dataset.detail,
+                    files: validationButton.dataset.files,
+                    requirements: validationButton.dataset.requirements
+                });
+            }
+
+            const openValidationQueueButton = event.target.closest('.open-doc-validation-btn');
+            if (openValidationQueueButton) {
+                openValidationQueue();
+            }
+
+            const trainingButton = event.target.closest('.open-training-btn');
+            if (trainingButton) {
+                openTrainingModal();
+            }
+
+            const activityButton = event.target.closest('.open-activity-btn');
+            if (activityButton) {
+                openActivityModal();
+            }
+
+            const facilityButton = event.target.closest('.open-facility-btn');
+            if (facilityButton) {
+                openFacilityModal('IGD');
+            }
+
+            const facilityStat = event.target.closest('.facility-stat, .facility-card-clickable');
+            if (facilityStat) {
+                openFacilityModal(facilityStat.dataset.unit);
+            }
         });
 
         document.querySelectorAll('.sidebar-nav .nav-item[data-page]').forEach(function (item) {
@@ -519,7 +975,16 @@
         });
 
         renderProfilePage();
-        showPage(window.location.hash === '#profil-tenaga-medis' ? 'profile' : 'dashboard');
+
+        const pageMap = {
+            '#profil-tenaga-medis': 'profile',
+            '#str-sip': 'strsip',
+            '#kompetensi': 'kompetensi',
+            '#fasilitas': 'fasilitas',
+            '#kinerja': 'kinerja'
+        };
+
+        showPage(pageMap[window.location.hash] || 'dashboard');
     </script>
 
 </body>

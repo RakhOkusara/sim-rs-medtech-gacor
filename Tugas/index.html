@@ -10,12 +10,17 @@
 </head>
 <body>
     <div class="portal-container">
-        <div style="text-align: center; width: 100%;">
-            <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">Sistem Informasi Manajemen RS</h1>
-            <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 3rem;">Pilih modul untuk masuk ke sistem</p>
+        <div style="text-align: center; width: min(1100px, 100%); padding: 2rem;">
+            <div style="margin-bottom: 2rem;">
+                <span style="display:inline-flex; align-items:center; gap:0.5rem; background: rgba(255,255,255,0.8); border:1px solid rgba(148,163,184,0.2); padding:0.45rem 0.9rem; border-radius:999px; color: var(--text-muted); font-weight:600; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);">
+                    <i class="fa-solid fa-shield-heart" style="color: var(--primary);"></i> Integrasi Sistem Rumah Sakit
+                </span>
+            </div>
+
+            <h1 style="font-size: clamp(2.2rem, 4vw, 3.1rem); font-weight: 800; color: var(--text-main); margin-bottom: 0.8rem;">Sistem Informasi Manajemen RS</h1>
+            <p style="color: var(--text-muted); font-size: 1.08rem; margin-bottom: 3rem; max-width: 700px; margin-inline:auto;">Pilih modul operasional untuk mengelola SDMK, farmasi, dan data pelayanan rumah sakit secara terpadu.</p>
 
             <div class="portal-grid">
-                <!-- SDMK Card -->
                 <a href="sim_rs_sdmk.html" class="portal-card sdmk">
                     <div class="portal-icon">
                         <i class="fa-solid fa-user-doctor fa-3x"></i>
@@ -27,7 +32,6 @@
                     <span class="btn btn-primary" style="margin-top: auto; padding: 0.75rem 2rem;">Masuk Modul <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i></span>
                 </a>
 
-                <!-- Apotek Card -->
                 <a href="sim_rs_apotek.html" class="portal-card apotek">
                     <div class="portal-icon">
                         <i class="fa-solid fa-pills fa-3x"></i>
@@ -39,7 +43,13 @@
                     <span class="btn btn-secondary" style="margin-top: auto; padding: 0.75rem 2rem;">Masuk Modul <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i></span>
                 </a>
             </div>
-            
+
+            <div style="margin-top: 3rem; display:flex; justify-content:center; gap:2rem; flex-wrap:wrap; color: var(--text-muted); font-size: 0.9rem;">
+                <span><i class="fa-solid fa-circle-dot" style="color: var(--primary); margin-right:0.35rem;"></i> 342 Nakes aktif</span>
+                <span><i class="fa-solid fa-circle-dot" style="color: var(--secondary); margin-right:0.35rem;"></i> 142 resep hari ini</span>
+                <span><i class="fa-solid fa-circle-dot" style="color: var(--warning); margin-right:0.35rem;"></i> 28 stok menipis</span>
+            </div>
+
             <div style="margin-top: 3rem; color: var(--text-muted); font-size: 0.9rem;">
                 &copy; 2026 Teknologi Kedokteran - Semester 5
             </div>
