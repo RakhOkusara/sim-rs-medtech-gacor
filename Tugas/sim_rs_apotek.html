@@ -75,7 +75,11 @@
         <!-- Topbar -->
         <header class="topbar">
             <div class="search-bar" style="width: 420px;">
-                <input type="text" id="global-search" class="form-control" placeholder="Cari obat, resep, kode batch, atau pasien..." style="width: 100%; padding-left: 2.5rem; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' fill=\'%2364748b\' viewBox=\'0 0 16 16\'><path d=\'M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z\'/></svg>'); background-repeat: no-repeat; background-position: 12px center;" onkeyup="handleGlobalSearch(this.value)">
+                <div class="search-wrapper" style="position: relative; display: flex; align-items: center; width: 100%;">
+                    <button class="search-btn-icon" title="Cari Obat / Resep" style="position: absolute; left: 12px; color: var(--text-muted); background: none; border: none; cursor: pointer; font-size: 0.95rem;" onclick="triggerApotekSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <input type="text" id="global-search" class="form-control" placeholder="Cari obat, resep, kode batch, atau pasien..." style="width: 100%; padding-left: 2.75rem; padding-right: 2.5rem;" oninput="handleGlobalSearch(this.value)" onkeyup="handleGlobalSearch(this.value)">
+                    <button id="apotek-search-clear" style="position: absolute; right: 12px; color: var(--text-muted); background: none; border: none; cursor: pointer; font-size: 0.9rem; display: none;" onclick="clearApotekSearch()"><i class="fa-solid fa-circle-xmark"></i></button>
+                </div>
             </div>
             <div class="user-profile">
                 <div style="display: flex; gap: 0.75rem; align-items: center; margin-right: 0.5rem;">
@@ -1362,11 +1366,32 @@
 
         // GLOBAL SEARCH HANDLER
         function handleGlobalSearch(val) {
-            if (!val) return;
-            document.getElementById('stok-search').value = val;
-            document.getElementById('pos-search').value = val;
+            const query = (val || '').trim();
+            const clearBtn = document.getElementById('apotek-search-clear');
+            if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
+
+            const stokInput = document.getElementById('stok-search');
+            const posInput = document.getElementById('pos-search');
+
+            if (stokInput) stokInput.value = query;
+            if (posInput) posInput.value = query;
+
             renderStokTable();
             renderPosCatalog();
+        }
+
+        function triggerApotekSearch() {
+            const input = document.getElementById('global-search');
+            if (input) {
+                input.focus();
+                handleGlobalSearch(input.value);
+            }
+        }
+
+        function clearApotekSearch() {
+            const input = document.getElementById('global-search');
+            if (input) input.value = '';
+            handleGlobalSearch('');
         }
 
         function detailResep(id) {

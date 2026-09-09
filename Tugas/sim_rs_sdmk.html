@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SATUSEHAT SDMK - Sistem Informasi Manajemen RS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -17,6 +17,7 @@
             justify-content: center;
             padding: 1rem;
             background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
         }
 
         .profile-modal.active {
@@ -118,43 +119,52 @@
             border-radius: 1rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
             overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .medical-profile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+            border-color: var(--primary);
         }
 
         .medical-profile-header {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1.5rem;
+            padding: 1.25rem 1.5rem;
             border-bottom: 1px solid var(--border);
+            background: linear-gradient(to right, #f8fafc, #ffffff);
         }
 
         .medical-avatar {
-            width: 52px;
-            height: 52px;
-            flex: 0 0 52px;
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             background: var(--primary-light);
             color: white;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 700;
         }
 
         .medical-profile-header h2 {
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
             color: var(--text-main);
-            font-size: 1.05rem;
+            font-size: 1rem;
+            font-weight: 700;
         }
 
         .medical-profile-header p {
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
         }
 
         .medical-profile-body {
-            padding: 1.5rem;
+            padding: 1.25rem 1.5rem;
         }
 
         .profile-group {
@@ -168,8 +178,10 @@
         .profile-group-title {
             margin-bottom: 0.75rem;
             color: var(--primary);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 700;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 0.25rem;
         }
 
         .profile-data {
@@ -228,18 +240,42 @@
             margin-top: 0.5rem;
         }
 
-        @media (max-width: 900px) {
-            .profile-list {
-                grid-template-columns: 1fr;
-            }
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
         }
 
-        @media (max-width: 600px) {
-            .profile-data {
-                grid-template-columns: 1fr;
-            }
+        .search-wrapper input {
+            padding-left: 2.75rem;
+            padding-right: 2.5rem;
+            width: 100%;
+        }
 
-            .sync-form {
+        .search-btn-icon {
+            position: absolute;
+            left: 12px;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .search-clear-icon {
+            position: absolute;
+            right: 12px;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .profile-list {
                 grid-template-columns: 1fr;
             }
         }
@@ -255,7 +291,7 @@
         </div>
         <nav class="sidebar-nav">
             <a href="#dashboard" class="nav-item active" data-page="dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
-            <a href="#profil-tenaga-medis" class="nav-item" data-page="profile"><i class="fa-solid fa-user-doctor"></i> Profil Tenaga Medis</a>
+            <a href="#profil-tenaga-medis" class="nav-item" data-page="profile"><i class="fa-solid fa-user-doctor"></i> Profil Tenaga Medis (<span id="nav-count-nakes">28</span>)</a>
             <a href="#str-sip" class="nav-item" data-page="strsip"><i class="fa-solid fa-file-medical"></i> STR & SIP</a>
             <a href="#kompetensi" class="nav-item" data-page="kompetensi"><i class="fa-solid fa-graduation-cap"></i> Pengembangan Kompetensi</a>
             <a href="#fasilitas" class="nav-item" data-page="fasilitas"><i class="fa-solid fa-building-user"></i> Fasilitas Pelayanan</a>
@@ -270,14 +306,18 @@
     <main class="main-content">
         <!-- Topbar -->
         <header class="topbar">
-            <div class="search-bar" style="width: 300px;">
-                <input type="text" class="form-control" placeholder="Cari data NIK, Nama, atau STR..." style="padding-left: 2.5rem; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' fill=\'gray\' viewBox=\'0 0 16 16\'><path d=\'M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z\'/></svg>'); background-repeat: no-repeat; background-position: 10px center;">
+            <div class="search-bar" style="width: 380px;">
+                <div class="search-wrapper">
+                    <button class="search-btn-icon" title="Cari Data SDMK" onclick="triggerSdmkSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <input type="text" id="sdmk-global-search" class="form-control" placeholder="Cari NIK, Nama Dokter/Nakes, Spesialis, STR..." oninput="handleSdmkLiveSearch(this.value)" onkeyup="handleSdmkLiveSearch(this.value)">
+                    <button class="search-clear-icon" id="sdmk-search-clear" onclick="clearSdmkSearch()"><i class="fa-solid fa-circle-xmark"></i></button>
+                </div>
             </div>
             <div class="user-profile">
-                <i class="fa-regular fa-bell" style="font-size: 1.2rem; color: var(--text-muted); cursor: pointer;"></i>
+                <i class="fa-regular fa-bell" style="font-size: 1.2rem; color: var(--text-muted); cursor: pointer;" title="Notifikasi Integrasi"></i>
                 <div style="text-align: right;">
                     <div style="font-weight: 600; font-size: 0.9rem;">Dr. Rakha Okusara</div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Dokter Umum</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Dokter Kepala Shift / SDMK Admin</div>
                 </div>
                 <div class="avatar">RO</div>
             </div>
@@ -286,31 +326,52 @@
         <!-- Dashboard Content -->
         <div class="dashboard-container app-page" id="dashboardPage">
             <div class="page-header">
-                <h1>Overview SDMK RS</h1>
-                <p>Ringkasan data Sumber Daya Manusia Kesehatan terintegrasi SATUSEHAT</p>
+                <div>
+                    <h1>Overview SDMK RS Cendana</h1>
+                    <p>Ringkasan data Sumber Daya Manusia Kesehatan terintegrasi Kemkes SATUSEHAT & SISMK</p>
+                </div>
             </div>
 
             <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-title">Total Nakes Aktif</div>
-                    <div class="stat-value">342</div>
-                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;"><i class="fa-solid fa-arrow-trend-up"></i> +12 bulan ini</div>
+                    <div class="stat-title">Total Nakes Terdaftar</div>
+                    <div class="stat-value" id="stat-total-nakes">28</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;"><i class="fa-solid fa-arrow-trend-up"></i> Spesialis Lengkap RS Tipe B</div>
                 </div>
                 <div class="stat-card green">
-                    <div class="stat-title">SIP Berlaku</div>
-                    <div class="stat-value">315</div>
-                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">92% dari total nakes</div>
+                    <div class="stat-title">SIP Berlaku (Aktif)</div>
+                    <div class="stat-value" id="stat-sip-aktif">25</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Terverifikasi SATUSEHAT API</div>
                 </div>
                 <div class="stat-card yellow">
-                    <div class="stat-title">SIP Akan Berakhir (< 3 bln)</div>
-                    <div class="stat-value">18</div>
-                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Perlu perpanjangan segera</div>
+                    <div class="stat-title">SIP Akan Berakhir (&lt; 3 bln)</div>
+                    <div class="stat-value" id="stat-sip-warning">2</div>
+                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Perlu pengajuan perpanjangan</div>
                 </div>
                 <div class="stat-card red">
-                    <div class="stat-title">Pemenuhan SKP Kurang</div>
-                    <div class="stat-value">9</div>
-                    <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Pantau di portal CPD</div>
+                    <div class="stat-title">SIP Kedaluwarsa / Renewal</div>
+                    <div class="stat-value" id="stat-sip-danger">1</div>
+                    <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Segera upload berkas SIP baru</div>
+                </div>
+            </div>
+
+            <!-- Live Filter Sub-bar -->
+            <div class="card" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 0.75rem; flex: 1; flex-wrap: wrap;">
+                        <input type="text" id="dashboard-search-input" class="form-control" placeholder="Cari Nama Nakes / Profesi / NIK..." style="width: 280px;" oninput="handleDashboardSearch(this.value)">
+                        <select id="dashboard-filter-profesi" class="form-control" style="width: 220px;" onchange="renderDashboardMedicalTable()">
+                            <option value="all">Semua Kategori Profesi</option>
+                            <option value="Spesialis">Dokter Spesialis</option>
+                            <option value="Dokter Umum">Dokter Umum / Gigi</option>
+                            <option value="Perawat">Perawat & Bidan</option>
+                            <option value="Penunjang">Farmasi & Penunjang Medis</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary open-profile-sync-btn" type="button"><i class="fa-solid fa-plus"></i> Tambah Nakes Baru</button>
+                    </div>
                 </div>
             </div>
 
@@ -318,17 +379,18 @@
                 <!-- Data Table -->
                 <div class="card" id="profil-tenaga-medis">
                     <div class="card-header">
-                        <h3 class="card-title">Direktori Tenaga Medis (Sinkronisasi SATUSEHAT)</h3>
-                        <button class="btn btn-primary open-profile-sync-btn" type="button"><i class="fa-solid fa-rotate"></i> Sinkronisasi Data</button>
+                        <h3 class="card-title"><i class="fa-solid fa-user-doctor" style="color: var(--primary);"></i> Direktori Tenaga Medis (Terintegrasi SATUSEHAT)</h3>
+                        <span class="badge badge-info" id="table-results-badge">28 Nakes</span>
                     </div>
                     <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Nama Nakes</th>
-                                    <th>Profesi</th>
+                                    <th>Nama Nakes & NIK</th>
+                                    <th>Profesi & Spesialisasi</th>
                                     <th>No. STR</th>
-                                    <th>Status SIP</th>
+                                    <th>Status SIP & Izin Praktik</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="dashboardMedicalTableBody"></tbody>
@@ -340,37 +402,37 @@
                 <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Pembaruan Terkini</h3>
+                            <h3 class="card-title">Pembaruan Terkini SDMK</h3>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
                             <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
                                 <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--primary); margin-top: 5px;"></div>
                                 <div>
-                                    <div style="font-weight: 600; font-size: 0.9rem;">Integrasi API IHS</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Sinkronisasi data master SDMK berhasil dilakukan hari ini pukul 08:00 WIB.</div>
+                                    <div style="font-weight: 600; font-size: 0.9rem;">Integrasi API IHS Kemenkes</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Sinkronisasi data master SDMK 28 Tenaga Medis berhasil hari ini.</div>
                                 </div>
                             </div>
                             <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
                                 <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--warning); margin-top: 5px;"></div>
                                 <div>
-                                    <div style="font-weight: 600; font-size: 0.9rem;">Peringatan SIP</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-muted);">5 Perawat dan 2 Dokter membutuhkan pembaruan SIP dalam bulan ini.</div>
+                                    <div style="font-weight: 600; font-size: 0.9rem;">Peringatan SIP Kadaluarsa</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Ns. Siti Aminah & dr. Denny Sp.THT membutuhkan perpanjangan SIP.</div>
                                 </div>
                             </div>
                             <div style="display: flex; gap: 1rem;">
                                 <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--secondary); margin-top: 5px;"></div>
                                 <div>
-                                    <div style="font-weight: 600; font-size: 0.9rem;">Verifikasi Kompetensi</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Data SKP untuk 12 nakes telah tervalidasi dengan sistem Plataran Sehat.</div>
+                                    <div style="font-weight: 600; font-size: 0.9rem;">Verifikasi SKP Plataran Sehat</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">28 Nakes telah memverifikasi perolehan SKP di Plataran Sehat.</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none;">
-                        <h3 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem;">Butuh Bantuan Integrasi?</h3>
-                        <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 1.5rem;">Kunjungi panduan teknis SATUSEHAT untuk dokumentasi API Endpoint dan Sandbox environment.</p>
-                        <button class="btn" style="background: white; color: var(--primary); width: 100%;">Lihat Dokumentasi</button>
+                        <h3 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem;">Dokumentasi SATUSEHAT SDMK</h3>
+                        <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 1.5rem;">Kunjungi portal resmi Kemenkes untuk dokumentasi API Endpoint KKI & SISMK.</p>
+                        <button class="btn" style="background: white; color: var(--primary); width: 100%; font-weight: 700;" onclick="window.open('https://satusehat.kemkes.go.id/sdmk', '_blank')"><i class="fa-solid fa-globe"></i> Portal SATUSEHAT SDMK</button>
                     </div>
                 </div>
             </div>
@@ -379,10 +441,13 @@
         <div class="dashboard-container app-page hidden" id="profilePage">
             <div class="page-header">
                 <div>
-                    <h1>Profil Tenaga Medis</h1>
-                    <p>Data lengkap tenaga medis yang terdaftar di Rumah Sakit</p>
+                    <h1>Profil Tenaga Medis Lengkap</h1>
+                    <p>Direktori 28 Tenaga Medis & Spesialis Rumah Sakit Cendana</p>
                 </div>
-                <button class="btn btn-primary open-profile-sync-btn" type="button"><i class="fa-solid fa-rotate"></i> Sinkronisasi Data</button>
+                <div style="display: flex; gap: 0.75rem;">
+                    <input type="text" id="profile-page-search" class="form-control" placeholder="Cari nama, spesialis, NIK..." style="width: 260px;" oninput="renderProfilePage(this.value)">
+                    <button class="btn btn-primary open-profile-sync-btn" type="button"><i class="fa-solid fa-plus"></i> Tambah Nakes</button>
+                </div>
             </div>
             <div class="profile-list" id="profileList"></div>
         </div>
@@ -390,61 +455,31 @@
         <div class="dashboard-container app-page hidden" id="strsipPage">
             <div class="page-header">
                 <div>
-                    <h1>STR & SIP</h1>
-                    <p>Monitoring validitas, masa berlaku, dan kebutuhan perpanjangan dokumen profesi</p>
+                    <h1>STR & SIP Tenaga Kesehatan</h1>
+                    <p>Monitoring validitas, masa berlaku, dan perpanjangan surat izin praktik profesi</p>
                 </div>
                 <button class="btn btn-primary open-doc-validation-btn" type="button"><i class="fa-solid fa-file-circle-check"></i> Validasi Dokumen</button>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Status Dokumen Profesional</h3>
+                    <h3 class="card-title">Status Dokumen STR & SIP Pasien</h3>
+                    <input type="text" id="strsip-search" class="form-control" placeholder="Cari dokumen nakes..." style="width: 240px;" oninput="renderStrsipTable(this.value)">
                 </div>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Nama</th>
+                                <th>Nama Nakes</th>
                                 <th>Jenis</th>
                                 <th>No. Dokumen</th>
                                 <th>Masa Berlaku</th>
-                                <th>Status</th>
+                                <th>Status Legalisasi</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr data-doc-number="11211002345678" data-doc-name="Dr. Andi Wijaya, Sp.PD" data-doc-type="STR" data-doc-status="Valid" data-doc-expiry="12 Jan 2027" data-doc-issuer="Dinas Kesehatan Provinsi Jawa Barat" data-doc-detail="Surat Tanda Registrasi dokter spesialis untuk praktik medis di rumah sakit" data-doc-files="Scan STR, KTP, surat rekomendasi rumah sakit" data-doc-requirements="Dokumen lengkap dan sesuai nomor registrasi Kemenkes">
-                                <td>Dr. Andi Wijaya, Sp.PD</td>
-                                <td>STR</td>
-                                <td>11211002345678</td>
-                                <td>12 Jan 2027</td>
-                                <td><span class="badge badge-success">Valid</span></td>
-                                <td><button class="btn btn-secondary validate-doc-btn" type="button" data-name="Dr. Andi Wijaya, Sp.PD" data-type="STR" data-number="11211002345678" data-status="Valid" data-expiry="12 Jan 2027" data-issuer="Dinas Kesehatan Provinsi Jawa Barat" data-detail="Surat Tanda Registrasi dokter spesialis untuk praktik medis di rumah sakit" data-files="Scan STR, KTP, surat rekomendasi rumah sakit" data-requirements="Dokumen lengkap dan sesuai nomor registrasi Kemenkes">Validasi</button></td>
-                            </tr>
-                            <tr data-doc-number="21111002345679" data-doc-name="Ns. Siti Aminah, S.Kep" data-doc-type="SIP" data-doc-status="Akan Expire" data-doc-expiry="5 Okt 2026" data-doc-issuer="Dinas Kesehatan Kabupaten Bandung" data-doc-detail="Surat Izin Praktik perawat untuk pelayanan rawat inap dan rawat jalan" data-doc-files="Scan SIP, KTP, surat tugas rumah sakit" data-doc-requirements="Perlu penyesuaian masa berlaku dan konfirmasi jadwal perpanjangan">
-                                <td>Ns. Siti Aminah, S.Kep</td>
-                                <td>SIP</td>
-                                <td>21111002345679</td>
-                                <td>5 Okt 2026</td>
-                                <td><span class="badge badge-warning">Akan Expire</span></td>
-                                <td><button class="btn btn-secondary validate-doc-btn" type="button" data-name="Ns. Siti Aminah, S.Kep" data-type="SIP" data-number="21111002345679" data-status="Akan Expire" data-expiry="5 Okt 2026" data-issuer="Dinas Kesehatan Kabupaten Bandung" data-detail="Surat Izin Praktik perawat untuk pelayanan rawat inap dan rawat jalan" data-files="Scan SIP, KTP, surat tugas rumah sakit" data-requirements="Perlu penyesuaian masa berlaku dan konfirmasi jadwal perpanjangan">Validasi</button></td>
-                            </tr>
-                            <tr data-doc-number="12211002345680" data-doc-name="Drg. Budi Santoso" data-doc-type="STR" data-doc-status="Valid" data-doc-expiry="28 Des 2028" data-doc-issuer="Dinas Kesehatan Provinsi Jawa Barat" data-doc-detail="Surat Tanda Registrasi dokter gigi untuk praktik klinik gigi" data-doc-files="Scan STR, Ijazah, STR lama" data-doc-requirements="Dokumen pelengkap dan masa berlaku masih aktif">
-                                <td>Drg. Budi Santoso</td>
-                                <td>STR</td>
-                                <td>12211002345680</td>
-                                <td>28 Des 2028</td>
-                                <td><span class="badge badge-success">Valid</span></td>
-                                <td><button class="btn btn-secondary validate-doc-btn" type="button" data-name="Drg. Budi Santoso" data-type="STR" data-number="12211002345680" data-status="Valid" data-expiry="28 Des 2028" data-issuer="Dinas Kesehatan Provinsi Jawa Barat" data-detail="Surat Tanda Registrasi dokter gigi untuk praktik klinik gigi" data-files="Scan STR, Ijazah, STR lama" data-requirements="Dokumen pelengkap dan masa berlaku masih aktif">Validasi</button></td>
-                            </tr>
-                            <tr data-doc-number="31111002345681" data-doc-name="Apt. Rina Marlina, S.Farm" data-doc-type="SIP" data-doc-status="Perlu Renewal" data-doc-expiry="19 Sep 2025" data-doc-issuer="Dinas Kesehatan Kota Bandung" data-doc-detail="Surat Izin Praktik apoteker untuk layanan farmasi rumah sakit" data-doc-files="Scan SIP, SIA, KTP, surat izin kerja" data-doc-requirements="Dokumen kedaluwarsa, perlu perpanjangan dan upload ulang dokumen pendukung">
-                                <td>Apt. Rina Marlina, S.Farm</td>
-                                <td>SIP</td>
-                                <td>31111002345681</td>
-                                <td>19 Sep 2025</td>
-                                <td><span class="badge badge-danger">Perlu Renewal</span></td>
-                                <td><button class="btn btn-secondary validate-doc-btn" type="button" data-name="Apt. Rina Marlina, S.Farm" data-type="SIP" data-number="31111002345681" data-status="Perlu Renewal" data-expiry="19 Sep 2025" data-issuer="Dinas Kesehatan Kota Bandung" data-detail="Surat Izin Praktik apoteker untuk layanan farmasi rumah sakit" data-files="Scan SIP, SIA, KTP, surat izin kerja" data-requirements="Dokumen kedaluwarsa, perlu perpanjangan dan upload ulang dokumen pendukung">Validasi</button></td>
-                            </tr>
+                        <tbody id="strsip-table-body">
+                            <!-- Populated by JS -->
                         </tbody>
                     </table>
                 </div>
@@ -455,7 +490,7 @@
             <div class="page-header">
                 <div>
                     <h1>Pengembangan Kompetensi</h1>
-                    <p>Pelatihan, sertifikasi, dan program pembelajaran tenaga kesehatan</p>
+                    <p>Pelatihan, sertifikasi SKP, dan program pembelajaran tenaga kesehatan</p>
                 </div>
                 <button class="btn btn-primary open-training-btn" type="button"><i class="fa-solid fa-calendar-plus"></i> Jadwalkan Pelatihan</button>
             </div>
@@ -463,35 +498,36 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-title">Pelatihan Selesai</div>
-                    <div class="stat-value">18</div>
+                    <div class="stat-value">24</div>
                     <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Mencapai target tahunan</div>
                 </div>
                 <div class="stat-card green">
                     <div class="stat-title">Agenda Bulan Ini</div>
                     <div class="stat-value">7</div>
-                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">2 jadwal baru</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Terverifikasi Plataran Sehat</div>
                 </div>
                 <div class="stat-card yellow">
-                    <div class="stat-title">Perlu Pengingat</div>
+                    <div class="stat-title">Perlu Renewal SKP</div>
                     <div class="stat-value">3</div>
-                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Butuh follow-up</div>
+                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Butuh pemenuhan modul</div>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Daftar Program Kompetensi</h3>
+                    <h3 class="card-title">Daftar Program Kompetensi SDMK</h3>
                 </div>
                 <div class="table-container">
                     <table id="trainingTable">
                         <thead>
-                            <tr><th>Judul Pelatihan</th><th>Peserta</th><th>Metode</th><th>Status</th></tr>
+                            <tr><th>Judul Pelatihan</th><th>Peserta Target</th><th>Metode</th><th>Status</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>Advanced Cardiac Life Support</td><td>12 Dokter</td><td>Workshop</td><td><span class="badge badge-success">Selesai</span></td></tr>
-                            <tr><td>Infection Prevention Audit</td><td>18 Perawat</td><td>Seminar</td><td><span class="badge badge-warning">Berlangsung</span></td></tr>
-                            <tr><td>Manajemen Farmasi Klinik</td><td>5 Apoteker</td><td>Pelatihan</td><td><span class="badge badge-info">Terjadwal</span></td></tr>
-                            <tr><td>Leadership & Team Communication</td><td>10 Supervisor</td><td>Coaching</td><td><span class="badge badge-secondary">Baru</span></td></tr>
+                            <tr><td>Advanced Cardiac Life Support (ACLS)</td><td>Dokter Spesialis & IGD</td><td>Workshop / Praktik</td><td><span class="badge badge-success">Selesai</span></td></tr>
+                            <tr><td>Infection Prevention & Control (PPI)</td><td>Seluruh Perawat & Bidan</td><td>Seminar & Audit</td><td><span class="badge badge-warning">Berlangsung</span></td></tr>
+                            <tr><td>Manajemen Pelayanan Farmasi Klinik</td><td>Apoteker & Vokasi</td><td>Pelatihan Sertifikasi</td><td><span class="badge badge-info">Terjadwal</span></td></tr>
+                            <tr><td>Penanganan Kegawatdaruratan Maternal (PPGDON)</td><td>Bidan & Dokter Sp.OG</td><td>Workshop Simuasi</td><td><span class="badge badge-success">Selesai</span></td></tr>
+                            <tr><td>Interpretasi EKG & Monitor Bedside ICU</td><td>Perawat ICU/ICCU</td><td>Coaching Klinis</td><td><span class="badge badge-info">Terjadwal</span></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -501,44 +537,32 @@
         <div class="dashboard-container app-page hidden" id="fasilitasPage">
             <div class="page-header">
                 <div>
-                    <h1>Fasilitas Pelayanan</h1>
-                    <p>Evaluasi kesiapan unit layanan, ruang perawatan, dan operasional fasilitas</p>
+                    <h1>Fasilitas & Unit Pelayanan RS</h1>
+                    <p>Evaluasi kesiapan unit penugasan Nakes & operasional instalasi medis</p>
                 </div>
                 <button class="btn btn-primary open-facility-btn" type="button"><i class="fa-solid fa-hospital"></i> Lihat Detail Unit</button>
             </div>
 
             <div class="stats-grid">
-                <div class="stat-card facility-stat" data-unit="IGD" data-readiness="93%" data-desc="12 ruang perawatan aktif" data-details="Ruang triase, monitor bedside, dan stok obat darurat siap digunakan 24 jam." role="button" tabindex="0">
-                    <div class="stat-title">IGD</div>
-                    <div class="stat-value">93%</div>
-                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Readiness</div>
+                <div class="stat-card facility-stat" data-unit="IGD" data-readiness="95%" data-desc="18 Dokter & Perawat Siaga 24 Jam" data-details="Ruang Resusitasi, Triase, Medikal Bedah Siap 24 Jam." role="button" tabindex="0">
+                    <div class="stat-title">Instalasi Gawat Darurat</div>
+                    <div class="stat-value">95%</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Readiness 24/7</div>
                 </div>
-                <div class="stat-card green facility-stat" data-unit="Poliklinik" data-readiness="89%" data-desc="15 unit pelayanan" data-details="Antrian pelayanan terkelola otomatis dan rata-rata waktu tunggu 14 menit." role="button" tabindex="0">
-                    <div class="stat-title">Poliklinik</div>
-                    <div class="stat-value">89%</div>
-                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Utilization</div>
+                <div class="stat-card green facility-stat" data-unit="Poliklinik" data-readiness="92%" data-desc="18 Klinik Spesialis Aktif" data-details="Poliklinik Spesialis Lengkap Buka Setiap Hari Kerja." role="button" tabindex="0">
+                    <div class="stat-title">Poliklinik Spesialis</div>
+                    <div class="stat-value">92%</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Kapasitas Pelayanan</div>
                 </div>
-                <div class="stat-card yellow facility-stat" data-unit="ICU" data-readiness="100%" data-desc="6 bed monitor terpasang" data-details="Semua bed ICU terhubung sistem monitoring vital sign real-time dan alarm." role="button" tabindex="0">
-                    <div class="stat-title">ICU</div>
+                <div class="stat-card yellow facility-stat" data-unit="ICU" data-readiness="100%" data-desc="8 Bed Intensive Care" data-details="Kesiapan Ventilator & Monitor Vital Sign Terintegrasi." role="button" tabindex="0">
+                    <div class="stat-title">ICU / ICCU / NICU</div>
                     <div class="stat-value">100%</div>
-                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Operasional</div>
+                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Operasional Siap</div>
                 </div>
-                <div class="stat-card red facility-stat" data-unit="Rehabilitasi" data-readiness="75%" data-desc="4 ruang terapi" data-details="Ketersediaan alat fisioterapi masih perlu penambahan pada sesi sore." role="button" tabindex="0">
-                    <div class="stat-title">Rehabilitasi</div>
-                    <div class="stat-value">75%</div>
-                    <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Pemakaian</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Ringkasan Unit Layanan</h3>
-                </div>
-                <div class="facility-grid">
-                    <div class="facility-card facility-card-clickable" data-unit="IGD" data-readiness="93%" data-desc="12 ruang perawatan aktif" data-details="Ruang triase, monitor bedside, dan stok obat darurat siap digunakan 24 jam."><h4>IGD</h4><p>12 ruang perawatan aktif</p><span>93% readiness</span></div>
-                    <div class="facility-card facility-card-clickable" data-unit="Poliklinik" data-readiness="89%" data-desc="15 unit pelayanan" data-details="Antrian pelayanan terkelola otomatis dan rata-rata waktu tunggu 14 menit."><h4>Poliklinik</h4><p>15 unit pelayanan</p><span>89% utilization</span></div>
-                    <div class="facility-card facility-card-clickable" data-unit="ICU" data-readiness="100%" data-desc="6 bed monitor terpasang" data-details="Semua bed ICU terhubung sistem monitoring vital sign real-time dan alarm."><h4>ICU</h4><p>6 bed monitor terpasang</p><span>100% operasional</span></div>
-                    <div class="facility-card facility-card-clickable" data-unit="Rehabilitasi" data-readiness="75%" data-desc="4 ruang terapi" data-details="Ketersediaan alat fisioterapi masih perlu penambahan pada sesi sore."><h4>Rehabilitasi</h4><p>4 ruang terapi</p><span>75% pemakaian</span></div>
+                <div class="stat-card red facility-stat" data-unit="Instalasi Bedah" data-readiness="88%" data-desc="4 Kamar Operasi Terpadu" data-details="Operasi Elektif & Cito Berjalan Sesuai Jadwal." role="button" tabindex="0">
+                    <div class="stat-title">Kamar Bedah (OK)</div>
+                    <div class="stat-value">88%</div>
+                    <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Kesiapan Tim</div>
                 </div>
             </div>
         </div>
@@ -546,44 +570,27 @@
         <div class="dashboard-container app-page hidden" id="kinerjaPage">
             <div class="page-header">
                 <div>
-                    <h1>Kinerja & Logbook</h1>
-                    <p>Analisis target SKP, aktivitas harian, dan jejak pelaporan kerja</p>
+                    <h1>Kinerja & Logbook SDMK</h1>
+                    <p>Analisis target SKP, aktivitas pelayanan harian, dan verifikasi supervisi medis</p>
                 </div>
-                <button class="btn btn-primary open-activity-btn" type="button"><i class="fa-solid fa-pen-to-square"></i> Catat Kegiatan</button>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-title">Target SKP</div>
-                    <div class="stat-value">96%</div>
-                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Tercapai</div>
-                </div>
-                <div class="stat-card green">
-                    <div class="stat-title">Case Handled</div>
-                    <div class="stat-value">312</div>
-                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Bulan ini</div>
-                </div>
-                <div class="stat-card yellow">
-                    <div class="stat-title">Logbook Hari Ini</div>
-                    <div class="stat-value">21</div>
-                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Masuk sistem</div>
-                </div>
+                <button class="btn btn-primary open-activity-btn" type="button"><i class="fa-solid fa-pen-to-square"></i> Catat Logbook</button>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Aktivitas Terbaru</h3>
+                    <h3 class="card-title">Aktivitas Pelayanan Nakes Terbaru</h3>
                 </div>
                 <div class="table-container">
                     <table id="activityTable">
                         <thead>
-                            <tr><th>Tanggal</th><th>Nama Nakes</th><th>Kegiatan</th><th>Hasil</th></tr>
+                            <tr><th>Tanggal</th><th>Nama Nakes</th><th>Kegiatan Pelayanan</th><th>Hasil / Status</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>09 Sep 2026</td><td>Dr. Andi Wijaya</td><td>Operasi/Follow up pasien</td><td><span class="badge badge-success">Baik</span></td></tr>
-                            <tr><td>08 Sep 2026</td><td>Ns. Siti Aminah</td><td>Pemberian edukasi pasien</td><td><span class="badge badge-info">Terekam</span></td></tr>
-                            <tr><td>07 Sep 2026</td><td>Drg. Budi Santoso</td><td>Tindakan gigi</td><td><span class="badge badge-warning">Perlu evaluasi</span></td></tr>
-                            <tr><td>06 Sep 2026</td><td>Apt. Rina Marlina</td><td>Review obat dan dispensing</td><td><span class="badge badge-success">Baik</span></td></tr>
+                            <tr><td>09 Sep 2026</td><td>dr. Andi Wijaya, Sp.PD</td><td>Visite Pasien Rawat Inap Melati 3 & Endoskopi Saluran Cerna</td><td><span class="badge badge-success">Selesai & Verified</span></td></tr>
+                            <tr><td>09 Sep 2026</td><td>dr. Syaiful Anwar, Sp.JP</td><td>Tindakan Kateterisasi Jantung (Cath Lab) 2 Pasien</td><td><span class="badge badge-success">Selesai & Verified</span></td></tr>
+                            <tr><td>08 Sep 2026</td><td>dr. Ratna Juwita, Sp.OG</td><td>Tindakan Operasi Sectio Caesarea (SC) Emergency</td><td><span class="badge badge-success">Selesai</span></td></tr>
+                            <tr><td>08 Sep 2026</td><td>Ns. Siti Aminah, S.Kep</td><td>Asuhan Keperawatan Kritis ICU & Post-OP Monitoring</td><td><span class="badge badge-info">Terekam</span></td></tr>
+                            <tr><td>07 Sep 2026</td><td>Apt. Rina Marlina, S.Farm</td><td>Rekonsiliasi Obat Rawat Inap & Dispensing IV Admixture</td><td><span class="badge badge-success">Verified</span></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -591,73 +598,127 @@
         </div>
     </main>
 
-    <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <!-- MODAL PROFILE DETAIL -->
+    <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true">
         <div class="profile-modal-content">
             <div class="profile-modal-header">
                 <div>
                     <h2 id="profileModalTitle">Profil Tenaga Medis</h2>
                     <p id="profileModalSubtitle"></p>
                 </div>
-                <button class="profile-close" type="button" aria-label="Tutup profil" onclick="closeProfile()">&times;</button>
+                <button class="profile-close" type="button" onclick="closeProfile()">&times;</button>
             </div>
             <div id="profileModalBody"></div>
         </div>
     </div>
 
-    <div class="profile-modal" id="actionModal" role="dialog" aria-modal="true" aria-labelledby="actionModalTitle">
+    <!-- MODAL GENERIC ACTION -->
+    <div class="profile-modal" id="actionModal" role="dialog" aria-modal="true">
         <div class="profile-modal-content">
             <div class="profile-modal-header">
                 <div>
                     <h2 id="actionModalTitle">Detail</h2>
                     <p id="actionModalSubtitle"></p>
                 </div>
-                <button class="profile-close" type="button" aria-label="Tutup detail" onclick="closeActionModal()">&times;</button>
+                <button class="profile-close" type="button" onclick="closeActionModal()">&times;</button>
             </div>
             <div id="actionModalBody"></div>
         </div>
     </div>
 
+    <!-- JAVASCRIPT LOGIC & COMPREHENSIVE HOSPITAL STAFF DATABASE -->
     <script>
+        // COMPREHENSIVE INDONESIAN HOSPITAL MEDICAL STAFF DATABASE (28 STAFF MEMBERS ACROSS ALL SPECIALTIES)
         let medicalProfiles = [
-            {
-                name: 'Dr. Andi Wijaya, Sp.PD', profession: 'Dokter Spesialis Penyakit Dalam',
-                nik: '3174XXXXXXXX0001', gender: 'Laki-laki', birth: 'Bandung, 14 April 1982',
-                phone: '0812-3456-7890', email: 'andi.wijaya@rs-sehat.id',
-                education: 'Spesialis Penyakit Dalam, Universitas Indonesia',
-                str: '11211002345678', sip: 'SIP-001/RS/2026', sipStatus: 'Aktif sampai 31 Desember 2026',
-                competency: 'Konsultan Gastroenterohepatologi', experience: '12 tahun'
-            },
-            {
-                name: 'Ns. Siti Aminah, S.Kep', profession: 'Perawat',
-                nik: '3271XXXXXXXX0005', gender: 'Perempuan', birth: 'Bogor, 22 September 1990',
-                phone: '0813-2222-4567', email: 'siti.aminah@rs-sehat.id',
-                education: 'Sarjana Keperawatan, Universitas Padjadjaran',
-                str: '21111002345679', sip: 'SIP-024/RS/2025', sipStatus: 'Hampir habis pada 30 November 2026',
-                competency: 'Keperawatan Medikal Bedah', experience: '8 tahun'
-            },
-            {
-                name: 'Drg. Budi Santoso', profession: 'Dokter Gigi',
-                nik: '3374XXXXXXXX0003', gender: 'Laki-laki', birth: 'Semarang, 8 Januari 1987',
-                phone: '0812-9988-7766', email: 'budi.santoso@rs-sehat.id',
-                education: 'Kedokteran Gigi, Universitas Gadjah Mada',
-                str: '12211002345680', sip: 'SIP-017/RS/2026', sipStatus: 'Aktif sampai 31 Desember 2026',
-                competency: 'Konservasi Gigi', experience: '9 tahun'
-            },
-            {
-                name: 'Apt. Rina Marlina, S.Farm', profession: 'Apoteker',
-                nik: '3471XXXXXXXX0002', gender: 'Perempuan', birth: 'Yogyakarta, 17 Juni 1989',
-                phone: '0813-7777-8899', email: 'rina.marlina@rs-sehat.id',
-                education: 'Profesi Apoteker, Universitas Sanata Dharma',
-                str: '31111002345681', sip: 'SIP-009/RS/2024', sipStatus: 'Kedaluwarsa pada 31 Agustus 2026',
-                competency: 'Farmasi Klinik dan Komunitas', experience: '7 tahun'
-            }
+            // DOKTER SPESIALIS
+            { name: 'dr. Andi Wijaya, Sp.PD', profession: 'Dokter Spesialis Penyakit Dalam', nik: '3174011404820001', gender: 'Laki-laki', birth: 'Bandung, 14 April 1982', phone: '0812-3456-7890', email: 'andi.wijaya@rscendana.id', education: 'Spesialis Penyakit Dalam, Universitas Indonesia', str: '11211002345678', sip: 'SIP-001/RS/2026', sipStatus: 'Aktif sampai 31 Desember 2026', competency: 'Konsultan Gastroenterohepatologi', experience: '12 tahun' },
+            { name: 'dr. Hendra Pratama, Sp.A, M.Ked', profession: 'Dokter Spesialis Anak', nik: '3271052209850002', gender: 'Laki-laki', birth: 'Bogor, 22 September 1985', phone: '0813-8899-1022', email: 'hendra.pratama@rscendana.id', education: 'Spesialis Anak, Universitas Padjadjaran', str: '11211002345679', sip: 'SIP-002/RS/2026', sipStatus: 'Aktif sampai 15 Oktober 2027', competency: 'Pediatri Gawat Darurat & Neonatologi', experience: '10 tahun' },
+            { name: 'dr. Ratna Juwita, Sp.OG(K)', profession: 'Dokter Spesialis Kebidanan & Kandungan', nik: '3175081706880003', gender: 'Perempuan', birth: 'Jakarta, 17 Juni 1988', phone: '0811-2233-4455', email: 'ratna.juwita@rscendana.id', education: 'Spesialis Obstetri & Ginekologi, UI', str: '11211002345680', sip: 'SIP-003/RS/2026', sipStatus: 'Aktif sampai 20 Mei 2028', competency: 'Konsultan Fetomaternal & Laparoskopi', experience: '11 tahun' },
+            { name: 'dr. Bambang Irawan, Sp.B', profession: 'Dokter Spesialis Bedah Umum', nik: '3374020801800004', gender: 'Laki-laki', birth: 'Semarang, 8 Januari 1980', phone: '0812-9988-7711', email: 'bambang.irawan@rscendana.id', education: 'Spesialis Bedah, Universitas Diponegoro', str: '11211002345681', sip: 'SIP-004/RS/2026', sipStatus: 'Aktif sampai 10 Agustus 2027', competency: 'Bedah Digestif & Traumatologi', experience: '14 tahun' },
+            { name: 'dr. Farhan Rizky, Sp.OT', profession: 'Dokter Spesialis Orthopedi & Traumatologi', nik: '3578011211860005', gender: 'Laki-laki', birth: 'Surabaya, 12 November 1986', phone: '0813-4455-6677', email: 'farhan.rizky@rscendana.id', education: 'Spesialis Orthopedi, Universitas Airlangga', str: '11211002345682', sip: 'SIP-005/RS/2026', sipStatus: 'Aktif sampai 28 Februari 2028', competency: 'Artroskopi & Rekonstruksi Tulang Sendi', experience: '9 tahun' },
+            { name: 'dr. Syaiful Anwar, Sp.JP(K), FIHA', profession: 'Dokter Spesialis Jantung & Pembuluh Darah', nik: '3471090503790006', gender: 'Laki-laki', birth: 'Yogyakarta, 5 Maret 1979', phone: '0811-9900-1122', email: 'syaiful.anwar@rscendana.id', education: 'Spesialis Kardiologi, UGM', str: '11211002345683', sip: 'SIP-006/RS/2026', sipStatus: 'Aktif sampai 14 Juli 2027', competency: 'Konsultan Kardiologi Intervensi & Cath Lab', experience: '15 tahun' },
+            { name: 'dr. Maya Kartika, Sp.N', profession: 'Dokter Spesialis Saraf (Neurologi)', nik: '3273041908870007', gender: 'Perempuan', birth: 'Bandung, 19 Agustus 1987', phone: '0812-1122-3344', email: 'maya.kartika@rscendana.id', education: 'Spesialis Neurologi, Universitas Padjadjaran', str: '11211002345684', sip: 'SIP-007/RS/2026', sipStatus: 'Aktif sampai 19 September 2027', competency: 'Stroke Unit & Intervensi Neuro', experience: '9 tahun' },
+            { name: 'dr. Anita Sari, Sp.M', profession: 'Dokter Spesialis Mata', nik: '3174092502890008', gender: 'Perempuan', birth: 'Jakarta, 25 Februari 1989', phone: '0813-7788-9900', email: 'anita.sari@rscendana.id', education: 'Spesialis Mata, Universitas Indonesia', str: '11211002345685', sip: 'SIP-008/RS/2026', sipStatus: 'Aktif sampai 11 Januari 2028', competency: 'Bedah Katarak Phacoemulsification', experience: '8 tahun' },
+            { name: 'dr. Denny Sumargo, Sp.THT-KL', profession: 'Dokter Spesialis THT-KL', nik: '3374110304840009', gender: 'Laki-laki', birth: 'Surakarta, 3 April 1984', phone: '0812-6677-8899', email: 'denny.sumargo@rscendana.id', education: 'Spesialis THT-KL, Universitas Sebelas Maret', str: '11211002345686', sip: 'SIP-009/RS/2026', sipStatus: 'Hampir habis pada 15 November 2026', competency: 'Endoskopi THT & Bedah Sinus', experience: '11 tahun' },
+            { name: 'dr. Lukman Hakim, Sp.An-TI', profession: 'Dokter Spesialis Anestesiologi & Terapi Intensif', nik: '3578031410810010', gender: 'Laki-laki', birth: 'Malang, 14 Oktober 1981', phone: '0811-3344-5566', email: 'lukman.hakim@rscendana.id', education: 'Spesialis Anestesi, Universitas Brawijaya', str: '11211002345687', sip: 'SIP-010/RS/2026', sipStatus: 'Aktif sampai 30 April 2028', competency: 'Anestesi Bedah Saraf & Manajemen Nyeri', experience: '13 tahun' },
+            { name: 'dr. Tari Kusuma, Sp.Rad', profession: 'Dokter Spesialis Radiologi', nik: '3175020101900011', gender: 'Perempuan', birth: 'Jakarta, 1 Januari 1990', phone: '0812-8877-6655', email: 'tari.kusuma@rscendana.id', education: 'Spesialis Radiologi, Universitas Indonesia', str: '11211002345688', sip: 'SIP-011/RS/2026', sipStatus: 'Aktif sampai 08 Juni 2027', competency: 'CT-Scan, MRI & Radiologi Intervensi', experience: '7 tahun' },
+            { name: 'dr. Herman Utama, Sp.PK', profession: 'Dokter Spesialis Patologi Klinik', nik: '3271060909830012', gender: 'Laki-laki', birth: 'Bogor, 9 September 1983', phone: '0813-1122-4455', email: 'herman.utama@rscendana.id', education: 'Spesialis Patologi Klinik, UI', str: '11211002345689', sip: 'SIP-012/RS/2026', sipStatus: 'Aktif sampai 22 Desember 2027', competency: 'Laboratorium Sentral & Bank Darah', experience: '12 tahun' },
+            { name: 'dr. Fitri Handayani, Sp.KFR', profession: 'Dokter Spesialis Kedokteran Fisik & Rehabilitasi', nik: '3471011805880013', gender: 'Perempuan', birth: 'Yogyakarta, 18 Mei 1988', phone: '0812-4433-2211', email: 'fitri.handayani@rscendana.id', education: 'Spesialis KFR, Universitas Gadjah Mada', str: '11211002345690', sip: 'SIP-013/RS/2026', sipStatus: 'Aktif sampai 19 Oktober 2028', competency: 'Rehabilitasi Neuromuskuler & Pasca Stroke', experience: '8 tahun' },
+            { name: 'dr. Claudia Kusuma, Sp.DVE', profession: 'Dokter Spesialis Dermatologi & Venereologi', nik: '3174071103910014', gender: 'Perempuan', birth: 'Jakarta, 11 Maret 1991', phone: '0813-9988-1122', email: 'claudia.kusuma@rscendana.id', education: 'Spesialis Kulit & Kelamin, UI', str: '11211002345691', sip: 'SIP-014/RS/2026', sipStatus: 'Aktif sampai 05 Maret 2028', competency: 'Dermatologi Laser & Alergi Imunologi', experience: '6 tahun' },
+            { name: 'dr. Zulkifli Harahap, Sp.P', profession: 'Dokter Spesialis Paru & Respirasi', nik: '1271020404820015', gender: 'Laki-laki', birth: 'Medan, 4 April 1982', phone: '0812-5566-7788', email: 'zulkifli.harahap@rscendana.id', education: 'Spesialis Paru, Universitas Sumatera Utara', str: '11211002345692', sip: 'SIP-015/RS/2026', sipStatus: 'Aktif sampai 17 Agustus 2027', competency: 'Bronkoskopi & Paru Intervensi ICU', experience: '13 tahun' },
+            { name: 'dr. Dimas Anggara, Sp.KJ', profession: 'Dokter Spesialis Kesehatan Jiwa (Psikiatri)', nik: '3273100912860016', gender: 'Laki-laki', birth: 'Bandung, 9 Desember 1986', phone: '0813-2211-0099', email: 'dimas.anggara@rscendana.id', education: 'Spesialis Psikiatri, Unpad', str: '11211002345693', sip: 'SIP-016/RS/2026', sipStatus: 'Aktif sampai 28 September 2027', competency: 'Psikosomatik & Konsultasi Psikiatri Medik', experience: '9 tahun' },
+
+            // DOKTER UMUM & DOKTER GIGI
+            { name: 'dr. Rakha Okusara', profession: 'Dokter Umum (Kepala Shift IGD)', nik: '3174081010940017', gender: 'Laki-laki', birth: 'Jakarta, 10 Oktober 1994', phone: '0812-9900-8877', email: 'rakha.okusara@rscendana.id', education: 'Kedokteran Umum, Universitas Indonesia', str: '11211002345694', sip: 'SIP-017/RS/2026', sipStatus: 'Aktif sampai 31 Desember 2026', competency: 'ATLS, ACLS, Emergency Medicine', experience: '5 tahun' },
+            { name: 'dr. Nabila Putri', profession: 'Dokter Umum (Poliklinik)', nik: '3271041506950018', gender: 'Perempuan', birth: 'Bogor, 15 Juni 1995', phone: '0813-6655-4433', email: 'nabila.putri@rscendana.id', education: 'Kedokteran Umum, Universitas Padjadjaran', str: '11211002345695', sip: 'SIP-018/RS/2026', sipStatus: 'Aktif sampai 15 Juni 2027', competency: 'Pelayanan Kesehatan Primer & Vaksinasi', experience: '4 tahun' },
+            { name: 'drg. Budi Santoso', profession: 'Dokter Gigi', nik: '33740801870003', gender: 'Laki-laki', birth: 'Semarang, 8 Januari 1987', phone: '0812-9988-7766', email: 'budi.santoso@rscendana.id', education: 'Kedokteran Gigi, Universitas Gadjah Mada', str: '12211002345680', sip: 'SIP-019/RS/2026', sipStatus: 'Aktif sampai 28 Desember 2028', competency: 'Konservasi & Penambalan Gigi Estetis', experience: '9 tahun' },
+            { name: 'drg. Veronica Lin, Sp.KG', profession: 'Dokter Gigi Spesialis Konservasi Gigi', nik: '3175052903900020', gender: 'Perempuan', birth: 'Jakarta, 29 Maret 1990', phone: '0811-8899-7700', email: 'veronica.lin@rscendana.id', education: 'Spesialis Konservasi Gigi, UI', str: '12211002345696', sip: 'SIP-020/RS/2026', sipStatus: 'Aktif sampai 10 November 2027', competency: 'Perawatan Saluran Akar (Endodontik)', experience: '7 tahun' },
+
+            // PERAWAT & BIDAN
+            { name: 'Ns. Siti Aminah, S.Kep', profession: 'Perawat Kepala Ruang ICU', nik: '3271092209900005', gender: 'Perempuan', birth: 'Bogor, 22 September 1990', phone: '0813-2222-4567', email: 'siti.aminah@rscendana.id', education: 'Sarjana Keperawatan, Ners Unpad', str: '21111002345679', sip: 'SIP-021/RS/2026', sipStatus: 'Hampir habis pada 30 November 2026', competency: 'Keperawatan Intensif Care (ICU)', experience: '8 tahun' },
+            { name: 'Ns. Joko Prasetyo, S.Kep', profession: 'Perawat Bedah (Kamar Operasi)', nik: '3374031505910022', gender: 'Laki-laki', birth: 'Solo, 15 Mei 1991', phone: '0812-7788-1122', email: 'joko.prasetyo@rscendana.id', education: 'S1 Keperawatan, Ners Undip', str: '21111002345697', sip: 'SIP-022/RS/2026', sipStatus: 'Aktif sampai 04 Mei 2028', competency: 'Penata Anestesi & Instrumen Bedah OK', experience: '7 tahun' },
+            { name: 'Ns. Dewi Anggraini, S.Kep', profession: 'Perawat Kepala Bangsal Melati', nik: '3174062007920023', gender: 'Perempuan', birth: 'Jakarta, 20 Juli 1992', phone: '0813-4433-2211', email: 'dewi.anggraini@rscendana.id', education: 'S1 Keperawatan, Ners UI', str: '21111002345698', sip: 'SIP-023/RS/2026', sipStatus: 'Aktif sampai 12 Februari 2028', competency: 'Keperawatan Medikal Bedah Inap', experience: '6 tahun' },
+            { name: 'Bdn. Rahmawati, S.Tr.Keb', profession: 'Bidan Koordinator Kamar Bersalin (VK)', nik: '3271010804890024', gender: 'Perempuan', birth: 'Depok, 8 April 1989', phone: '0812-5544-3322', email: 'rahmawati@rscendana.id', education: 'Sarjana Terapan Kebidanan, Poltekkes', str: '22111002345699', sip: 'SIP-024/RS/2026', sipStatus: 'Aktif sampai 20 September 2027', competency: 'Asuhan Persalinan Normal (APN) & Resusitasi', experience: '9 tahun' },
+
+            // KEFARMASIAN & PENUNJANG MEDIS
+            { name: 'Apt. Rina Marlina, S.Farm', profession: 'Apoteker Penanggung Jawab Farmasi', nik: '3471061706890002', gender: 'Perempuan', birth: 'Yogyakarta, 17 Juni 1989', phone: '0813-7777-8899', email: 'rina.marlina@rscendana.id', education: 'Profesi Apoteker, Universitas Sanata Dharma', str: '31111002345681', sip: 'SIP-025/RS/2026', sipStatus: 'Kedaluwarsa pada 31 Agustus 2026', competency: 'Farmasi Klinik & Manajerial Depo', experience: '7 tahun' },
+            { name: 'Dodi Septian, A.Md.Rad', profession: 'Radiografer Utama', nik: '3175041010930026', gender: 'Laki-laki', birth: 'Jakarta, 10 Oktober 1993', phone: '0812-1100-2299', email: 'dodi.septian@rscendana.id', education: 'D3 Teknik Radiodiagnostik & Radioterapi', str: '41111002345700', sip: 'SIP-026/RS/2026', sipStatus: 'Aktif sampai 18 Oktober 2027', competency: 'Pengoperasian MRI 1.5 Tesla & CT-Scan', experience: '6 tahun' },
+            { name: 'Siska Lestari, A.Md.AK', profession: 'Ahli Teknologi Laboratorium Medik (ATLM)', nik: '3273081402940027', gender: 'Perempuan', birth: 'Bandung, 14 Februari 1994', phone: '0813-6677-8899', email: 'siska.lestari@rscendana.id', education: 'D3 Analis Kesehatan / TLM', str: '42111002345701', sip: 'SIP-027/RS/2026', sipStatus: 'Aktif sampai 01 Maret 2028', competency: 'Pemeriksaan Hematologi & Kimia Darah', experience: '5 tahun' },
+            { name: 'Eko Purwanto, S.Fis, Ftr', profession: 'Fisioterapis Senior', nik: '3374070707880028', gender: 'Laki-laki', birth: 'Semarang, 7 Juli 1988', phone: '0812-4455-6677', email: 'eko.purwanto@rscendana.id', education: 'Profesi Fisioterapi, Universitas Udayana', str: '43111002345702', sip: 'SIP-028/RS/2026', sipStatus: 'Aktif sampai 14 November 2027', competency: 'Fisioterapi Kardiorespirasi & Muskoloskeletal', experience: '8 tahun' }
         ];
 
-        try {
-            const savedProfiles = JSON.parse(localStorage.getItem('simrsMedicalProfiles'));
-            if (Array.isArray(savedProfiles)) medicalProfiles = savedProfiles;
-        } catch (error) {
-            localStorage.removeItem('simrsMedicalProfiles');
+        let currentGlobalSearchQuery = '';
+
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboardMedicalTable();
+            renderProfilePage();
+            renderStrsipTable();
+            updateSdmkStats();
+        });
+
+        function updateSdmkStats() {
+            const total = medicalProfiles.length;
+            const aktif = medicalProfiles.filter(m => m.sipStatus.toLowerCase().includes('aktif')).length;
+            const warning = medicalProfiles.filter(m => m.sipStatus.toLowerCase().includes('hampir')).length;
+            const danger = medicalProfiles.filter(m => m.sipStatus.toLowerCase().includes('kedaluwarsa')).length;
+
+            document.getElementById('stat-total-nakes').innerText = total;
+            document.getElementById('nav-count-nakes').innerText = total;
+            document.getElementById('table-results-badge').innerText = total + ' Nakes';
+            document.getElementById('stat-sip-aktif').innerText = aktif;
+            document.getElementById('stat-sip-warning').innerText = warning;
+            document.getElementById('stat-sip-danger').innerText = danger;
+        }
+
+        // GLOBAL SEARCH LOGIC FOR ALL PAGES IN SDMK
+        function handleSdmkLiveSearch(val) {
+            currentGlobalSearchQuery = (val || '').trim().toLowerCase();
+            const clearBtn = document.getElementById('sdmk-search-clear');
+            if (clearBtn) clearBtn.style.display = currentGlobalSearchQuery ? 'block' : 'none';
+
+            // Filter across all views
+            renderDashboardMedicalTable(currentGlobalSearchQuery);
+            renderProfilePage(currentGlobalSearchQuery);
+            renderStrsipTable(currentGlobalSearchQuery);
+        }
+
+        function triggerSdmkSearch() {
+            const input = document.getElementById('sdmk-global-search');
+            if (input) {
+                input.focus();
+                handleSdmkLiveSearch(input.value);
+            }
+        }
+
+        function clearSdmkSearch() {
+            const input = document.getElementById('sdmk-global-search');
+            if (input) input.value = '';
+            handleSdmkLiveSearch('');
+        }
+
+        function handleDashboardSearch(val) {
+            handleSdmkLiveSearch(val);
         }
 
         function escapeHtml(value) {
@@ -668,15 +729,48 @@
 
         function getStatusBadge(status) {
             const normalized = String(status || '').toLowerCase();
-            const badgeClass = normalized.includes('aktif') ? 'badge-success' : normalized.includes('hampir') ? 'badge-warning' : 'badge-danger';
+            let badgeClass = 'badge-success';
+            if (normalized.includes('hampir')) badgeClass = 'badge-warning';
+            if (normalized.includes('kedaluwarsa') || normalized.includes('expired')) badgeClass = 'badge-danger';
             return '<span class="badge ' + badgeClass + '">' + escapeHtml(status) + '</span>';
         }
 
-        function renderDashboardMedicalTable() {
+        // RENDER DASHBOARD TABLE
+        function renderDashboardMedicalTable(query = currentGlobalSearchQuery) {
             const tableBody = document.getElementById('dashboardMedicalTableBody');
             if (!tableBody) return;
-            tableBody.innerHTML = medicalProfiles.map(function (profile) {
-                return '<tr><td><div style="font-weight: 600;">' + escapeHtml(profile.name) + '</div><div style="font-size: 0.8rem; color: var(--text-muted);">NIK: ' + escapeHtml(profile.nik) + '</div></td><td>' + escapeHtml(profile.profession) + '</td><td>' + escapeHtml(profile.str) + '</td><td>' + getStatusBadge(profile.sipStatus) + '</td></tr>';
+
+            const categoryFilter = document.getElementById('dashboard-filter-profesi')?.value || 'all';
+
+            const filtered = medicalProfiles.filter(profile => {
+                const q = query.toLowerCase();
+                const matchQuery = !q || profile.name.toLowerCase().includes(q) || profile.profession.toLowerCase().includes(q) || profile.nik.toLowerCase().includes(q) || profile.str.toLowerCase().includes(q) || profile.competency.toLowerCase().includes(q);
+                
+                let matchCat = true;
+                if (categoryFilter === 'Spesialis') matchCat = profile.profession.toLowerCase().includes('spesialis');
+                else if (categoryFilter === 'Dokter Umum') matchCat = profile.profession.toLowerCase().includes('dokter umum') || profile.profession.toLowerCase().includes('gigi');
+                else if (categoryFilter === 'Perawat') matchCat = profile.profession.toLowerCase().includes('perawat') || profile.profession.toLowerCase().includes('bidan');
+                else if (categoryFilter === 'Penunjang') matchCat = profile.profession.toLowerCase().includes('apoteker') || profile.profession.toLowerCase().includes('radiografer') || profile.profession.toLowerCase().includes('analis') || profile.profession.toLowerCase().includes('fisioterapis');
+
+                return matchQuery && matchCat;
+            });
+
+            document.getElementById('table-results-badge').innerText = filtered.length + ' / ' + medicalProfiles.length + ' Nakes';
+
+            if (filtered.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:2rem; color:var(--text-muted);"><i class="fa-solid fa-user-slash fa-2x" style="margin-bottom:0.5rem; opacity:0.4;"></i><br>Tidak ada data tenaga kesehatan yang cocok dengan kata kunci "' + escapeHtml(query) + '"</td></tr>';
+                return;
+            }
+
+            tableBody.innerHTML = filtered.map(function (profile, idx) {
+                const originalIndex = medicalProfiles.indexOf(profile);
+                return '<tr>' +
+                    '<td><div style="font-weight: 700; color:var(--text-main);">' + escapeHtml(profile.name) + '</div><div style="font-size: 0.78rem; color: var(--text-muted);">NIK: ' + escapeHtml(profile.nik) + ' &bull; ' + escapeHtml(profile.gender) + '</div></td>' +
+                    '<td><div style="font-weight:600;">' + escapeHtml(profile.profession) + '</div><div style="font-size:0.75rem; color:var(--primary);">' + escapeHtml(profile.competency) + '</div></td>' +
+                    '<td><span style="font-family:monospace; font-weight:600;">' + escapeHtml(profile.str) + '</span></td>' +
+                    '<td>' + getStatusBadge(profile.sipStatus) + '</td>' +
+                    '<td><button class="btn btn-secondary" style="padding:0.3rem 0.65rem; font-size:0.75rem;" onclick="showProfile(' + originalIndex + ')"><i class="fa-solid fa-id-card"></i> Detail Profil</button></td>' +
+                    '</tr>';
             }).join('');
         }
 
@@ -684,8 +778,22 @@
             return '<div class="profile-data-item"><label>' + escapeHtml(label) + '</label><span>' + escapeHtml(value) + '</span></div>';
         }
 
-        function renderProfilePage() {
-            document.getElementById('profileList').innerHTML = medicalProfiles.map(function (profile) {
+        // RENDER PROFILE PAGE CARDS
+        function renderProfilePage(query = currentGlobalSearchQuery) {
+            const container = document.getElementById('profileList');
+            if (!container) return;
+
+            const q = query.toLowerCase();
+            const filtered = medicalProfiles.filter(p => {
+                return !q || p.name.toLowerCase().includes(q) || p.profession.toLowerCase().includes(q) || p.nik.toLowerCase().includes(q) || p.competency.toLowerCase().includes(q) || p.str.toLowerCase().includes(q);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--text-muted);"><i class="fa-solid fa-users-slash fa-3x" style="margin-bottom:1rem; opacity:0.3;"></i><h3>Tidak ada profil nakes ditemukan</h3><p>Coba gunakan kata kunci pencarian yang lain.</p></div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(function (profile) {
                 const initials = profile.name.replace(/[^A-Za-z ]/g, '').split(' ').filter(Boolean).map(function (word) {
                     return word[0];
                 }).slice(0, 2).join('');
@@ -700,41 +808,83 @@
                     profileField('Pendidikan terakhir', profile.education) + profileField('Kompetensi utama', profile.competency) +
                     '</div></div>' +
                     '<div class="profile-group"><div class="profile-group-title">Perizinan dan Kontak</div><div class="profile-data">' +
-                    profileField('Nomor STR', profile.str) + profileField('Nomor SIP', profile.sip) + profileField('Status SIP', profile.sipStatus) + profileField('Nomor telepon', profile.phone) + profileField('Email', profile.email) +
+                    profileField('Nomor STR', profile.str) + profileField('Nomor SIP', profile.sip) + profileField('Status SIP', profile.sipStatus) + profileField('Kontak HP / Email', profile.phone + ' / ' + profile.email) +
                     '</div></div>' +
                     '</div></article>';
             }).join('');
         }
 
+        // RENDER STR & SIP TABLE
+        function renderStrsipTable(query = currentGlobalSearchQuery) {
+            const tbody = document.getElementById('strsip-table-body');
+            if (!tbody) return;
+
+            const q = query.toLowerCase();
+            const filtered = medicalProfiles.filter(p => {
+                return !q || p.name.toLowerCase().includes(q) || p.str.toLowerCase().includes(q) || p.sip.toLowerCase().includes(q);
+            });
+
+            tbody.innerHTML = filtered.map(p => `
+                <tr data-doc-number="${p.str}" data-doc-name="${p.name}" data-doc-type="STR & SIP" data-doc-status="${p.sipStatus}">
+                    <td>
+                        <div style="font-weight:700;">${escapeHtml(p.name)}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(p.profession)}</div>
+                    </td>
+                    <td><span class="badge badge-info">STR & SIP</span></td>
+                    <td>
+                        <div>STR: <strong>${p.str}</strong></div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">SIP: ${p.sip}</div>
+                    </td>
+                    <td>${p.sipStatus.replace('Aktif sampai ', '').replace('Hampir habis pada ', '')}</td>
+                    <td>${getStatusBadge(p.sipStatus)}</td>
+                    <td>
+                        <button class="btn btn-secondary validate-doc-btn" type="button" 
+                            data-name="${escapeHtml(p.name)}" 
+                            data-type="STR & SIP" 
+                            data-number="${p.str}" 
+                            data-status="${p.sipStatus}" 
+                            data-expiry="${p.sipStatus}" 
+                            data-issuer="Dinas Kesehatan Kemenkes SATUSEHAT" 
+                            data-detail="Dokumen STR KKI dan SIP Praktik Medis Aktif" 
+                            data-files="Scan STR, SIP, KTP, Surat Rekomendasi OP" 
+                            data-requirements="Persyaratan lengkap terverifikasi di PTP SATUSEHAT SDMK">Validasi</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
         function openProfileSyncModal() {
-            openActionModal('Sinkronisasi Tenaga Medis', 'Tambahkan data tenaga medis ke Profil dan Dashboard',
+            openActionModal('Sinkronisasi Tenaga Medis SATUSEHAT', 'Tambahkan data nakes baru ke sistem SDMK Rumah Sakit',
                 '<form id="medicalProfileForm" class="sync-form">' +
-                '<div class="form-group-full"><label for="profileName">Nama lengkap</label><input id="profileName" name="name" required placeholder="Contoh: dr. Nama Dokter, Sp.PD"></div>' +
-                '<div><label for="profileProfession">Profesi</label><input id="profileProfession" name="profession" required placeholder="Contoh: Dokter Umum"></div>' +
-                '<div><label for="profileNik">NIK</label><input id="profileNik" name="nik" required placeholder="Nomor identitas tenaga medis"></div>' +
-                '<div><label for="profileGender">Jenis kelamin</label><select id="profileGender" name="gender"><option>Laki-laki</option><option>Perempuan</option></select></div>' +
-                '<div><label for="profileBirth">Tempat, tanggal lahir</label><input id="profileBirth" name="birth" placeholder="Contoh: Jakarta, 1 Januari 1990"></div>' +
-                '<div><label for="profileExperience">Masa kerja</label><input id="profileExperience" name="experience" placeholder="Contoh: 5 tahun"></div>' +
-                '<div><label for="profileEducation">Pendidikan terakhir</label><input id="profileEducation" name="education" placeholder="Contoh: Universitas Indonesia"></div>' +
-                '<div><label for="profileCompetency">Kompetensi utama</label><input id="profileCompetency" name="competency" placeholder="Contoh: Pelayanan medis umum"></div>' +
-                '<div><label for="profileStr">Nomor STR</label><input id="profileStr" name="str" required placeholder="Nomor STR"></div>' +
-                '<div><label for="profileSip">Nomor SIP</label><input id="profileSip" name="sip" required placeholder="Nomor SIP"></div>' +
-                '<div><label for="profileSipStatus">Status SIP</label><input id="profileSipStatus" name="sipStatus" required placeholder="Contoh: Aktif sampai 31 Desember 2026"></div>' +
-                '<div><label for="profilePhone">Nomor telepon</label><input id="profilePhone" name="phone" placeholder="Nomor telepon"></div>' +
-                '<div><label for="profileEmail">Email</label><input id="profileEmail" name="email" type="email" placeholder="Email tenaga medis"></div>' +
-                '<div class="sync-form-actions"><button type="button" class="btn" onclick="closeActionModal()">Batal</button><button type="submit" class="btn btn-primary"><i class="fa-solid fa-rotate"></i> Simpan & Sinkronkan</button></div>' +
+                '<div class="form-group-full"><label for="profileName">Nama lengkap & Gelar Spesialis</label><input id="profileName" name="name" required placeholder="Contoh: dr. Budi Raharjo, Sp.B"></div>' +
+                '<div><label for="profileProfession">Profesi / Spesialisasi</label><input id="profileProfession" name="profession" required placeholder="Contoh: Dokter Spesialis Bedah"></div>' +
+                '<div><label for="profileNik">NIK KTP (16 Digit)</label><input id="profileNik" name="nik" required placeholder="Nomor NIK KTP"></div>' +
+                '<div><label for="profileGender">Jenis Kelamin</label><select id="profileGender" name="gender"><option>Laki-laki</option><option>Perempuan</option></select></div>' +
+                '<div><label for="profileBirth">Tempat, Tanggal Lahir</label><input id="profileBirth" name="birth" placeholder="Contoh: Jakarta, 15 Mei 1985"></div>' +
+                '<div><label for="profileExperience">Masa Kerja</label><input id="profileExperience" name="experience" placeholder="Contoh: 8 tahun"></div>' +
+                '<div><label for="profileEducation">Pendidikan Terakhir</label><input id="profileEducation" name="education" placeholder="Contoh: Spesialis Bedah, UI"></div>' +
+                '<div><label for="profileCompetency">Sub-Spesialis / Sub-Kompetensi</label><input id="profileCompetency" name="competency" placeholder="Contoh: Bedah Laparoskopi Minimal Invasif"></div>' +
+                '<div><label for="profileStr">Nomor STR Konsil</label><input id="profileStr" name="str" required placeholder="16 digit nomor STR"></div>' +
+                '<div><label for="profileSip">Nomor SIP Dinkes</label><input id="profileSip" name="sip" required placeholder="SIP-xxx/RS/2026"></div>' +
+                '<div><label for="profileSipStatus">Status Masa Berlaku SIP</label><input id="profileSipStatus" name="sipStatus" required value="Aktif sampai 31 Desember 2028"></div>' +
+                '<div><label for="profilePhone">Nomor Telepon / WA</label><input id="profilePhone" name="phone" placeholder="0812-xxxx-xxxx"></div>' +
+                '<div><label for="profileEmail">Email Resmi</label><input id="profileEmail" name="email" type="email" placeholder="nama@rscendana.id"></div>' +
+                '<div class="sync-form-actions"><button type="button" class="btn" onclick="closeActionModal()">Batal</button><button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Simpan & Sinkronkan</button></div>' +
                 '</form>');
         }
 
         function saveMedicalProfile(form) {
             const formData = new FormData(form);
             const profile = Object.fromEntries(formData.entries());
-            medicalProfiles.push(profile);
-            localStorage.setItem('simrsMedicalProfiles', JSON.stringify(medicalProfiles));
+            medicalProfiles.unshift(profile);
+            
+            updateSdmkStats();
             renderProfilePage();
             renderDashboardMedicalTable();
+            renderStrsipTable();
             closeActionModal();
-            showPage('profile');
+            alert('Tenaga Medis ' + profile.name + ' berhasil ditambahkan dan disinkronisasi!');
+            showPage('dashboard');
         }
 
         function showPage(page) {
@@ -749,40 +899,31 @@
             document.querySelectorAll('.sidebar-nav .nav-item[data-page]').forEach(function (item) {
                 item.classList.toggle('active', item.dataset.page === page);
             });
-
-            const hashMap = {
-                dashboard: 'dashboard',
-                profile: 'profil-tenaga-medis',
-                strsip: 'str-sip',
-                kompetensi: 'kompetensi',
-                fasilitas: 'fasilitas',
-                kinerja: 'kinerja'
-            };
-
-            window.location.hash = hashMap[page] || 'dashboard';
         }
 
         function detail(label, value) {
-            return '<div class="profile-detail"><label>' + label + '</label><span>' + value + '</span></div>';
+            return '<div class="profile-detail"><label>' + escapeHtml(label) + '</label><span>' + escapeHtml(value) + '</span></div>';
         }
 
         function showProfile(index) {
             const profile = medicalProfiles[index];
+            if (!profile) return;
+
             const modal = document.getElementById('profileModal');
             document.getElementById('profileModalTitle').textContent = profile.name;
             document.getElementById('profileModalSubtitle').textContent = profile.profession;
             document.getElementById('profileModalBody').innerHTML =
-                '<section class="profile-section"><h3>Data Identitas</h3><div class="profile-details">' +
-                detail('NIK', profile.nik) + detail('Jenis Kelamin', profile.gender) + detail('Tempat, tanggal lahir', profile.birth) + detail('Masa kerja', profile.experience) +
+                '<section class="profile-section"><h3>Data Identitas Tenaga Medis</h3><div class="profile-details">' +
+                detail('NIK (SATUSEHAT ID)', profile.nik) + detail('Jenis Kelamin', profile.gender) + detail('Tempat, Tanggal Lahir', profile.birth) + detail('Masa Kerja Klinis', profile.experience) +
                 '</div></section>' +
-                '<section class="profile-section"><h3>Pendidikan dan Kompetensi</h3><div class="profile-details">' +
-                detail('Pendidikan terakhir', profile.education) + detail('Kompetensi utama', profile.competency) +
+                '<section class="profile-section"><h3>Pendidikan & Sub-Kompetensi</h3><div class="profile-details">' +
+                detail('Pendidikan Utama', profile.education) + detail('Sub-Kompetensi / Keahlian', profile.competency) +
                 '</div></section>' +
-                '<section class="profile-section"><h3>Perizinan Praktik</h3><div class="profile-details">' +
-                detail('Nomor STR', profile.str) + detail('Nomor SIP', profile.sip) + detail('Status SIP', profile.sipStatus) +
+                '<section class="profile-section"><h3>Perizinan Praktik & Legalitas</h3><div class="profile-details">' +
+                detail('Nomor STR Konsil', profile.str) + detail('Nomor SIP Dinkes', profile.sip) + detail('Status Validasi SIP', profile.sipStatus) +
                 '</div></section>' +
-                '<section class="profile-section"><h3>Kontak</h3><div class="profile-details">' +
-                detail('Nomor telepon', profile.phone) + detail('Email', profile.email) +
+                '<section class="profile-section"><h3>Kontak Resmi Nakes</h3><div class="profile-details">' +
+                detail('Nomor Telepon', profile.phone) + detail('Email RS', profile.email) +
                 '</div></section>';
             modal.classList.add('active');
         }
@@ -802,106 +943,50 @@
             document.getElementById('actionModal').classList.remove('active');
         }
 
-        function getStatusBadgeHtml(status) {
-            const normalized = (status || 'Valid').toLowerCase();
-            if (normalized.includes('renew') || normalized.includes('kedaluwarsa')) return '<span class="badge badge-danger">Perlu Renewal</span>';
-            if (normalized.includes('expire') || normalized.includes('akan')) return '<span class="badge badge-warning">Akan Expire</span>';
-            return '<span class="badge badge-success">Valid</span>';
-        }
-
-        function approveDocument(data) {
-            const row = document.querySelector('[data-doc-number="' + (data.number || '') + '"]');
-            if (!row) return;
-
-            const statusCell = row.querySelector('td:nth-child(5)');
-            if (statusCell) {
-                statusCell.innerHTML = getStatusBadgeHtml('Valid');
-            }
-
-            row.dataset.docStatus = 'Valid';
-            closeActionModal();
-        }
-
-        function rejectDocument(data) {
-            const row = document.querySelector('[data-doc-number="' + (data.number || '') + '"]');
-            if (!row) return;
-
-            const statusCell = row.querySelector('td:nth-child(5)');
-            if (statusCell) {
-                statusCell.innerHTML = getStatusBadgeHtml('Perlu Renewal');
-            }
-
-            row.dataset.docStatus = 'Perlu Renewal';
-            closeActionModal();
-        }
-
         function openValidationModal(data) {
             const detailMap = [
-                ['Nama', data.name],
+                ['Nama Nakes', data.name],
                 ['Jenis Dokumen', data.type],
-                ['Nomor Dokumen', data.number],
-                ['Masa Berlaku', data.expiry || 'Belum tercatat'],
-                ['Penerbit', data.issuer || 'Dokumen rumah sakit'],
-                ['Status Saat Ini', data.status || 'Belum diproses'],
-                ['Detail Dokumen', data.detail || 'Dokumen izin pelayanan profesi tenaga kesehatan'],
-                ['Kelengkapan File', data.files || 'STR/SIP, KTP, surat tugas'],
-                ['Persyaratan', data.requirements || 'Diupload dan diverifikasi secara lengkap']
+                ['Nomor Registrasi', data.number],
+                ['Masa Berlaku Status', data.status],
+                ['Penerbit Legalisasi', data.issuer || 'Kemenkes SATUSEHAT & Dinkes'],
+                ['Verifikasi Faskes', 'Rumah Sakit Cendana'],
+                ['Berkas Diupload', data.files || 'Scan STR, SIP, KTP, Surat Rekomendasi OP']
             ];
 
-            const body = '<section class="profile-section"><h3>Detail Validasi Dokumen</h3><div class="profile-details">' +
+            const body = '<section class="profile-section"><h3>Review Validasi Legalisasi Dokumen</h3><div class="profile-details">' +
                 detailMap.map(([label, value]) => detail(label, value)).join('') +
                 '</div></section>' +
-                '<div class="profile-section" style="display:flex; gap:0.75rem; justify-content:flex-end;">' +
-                '<button class="btn btn-secondary" type="button" onclick="rejectDocument(' + JSON.stringify(data).replace(/"/g, '&quot;') + ')">Tolak</button>' +
-                '<button class="btn btn-primary" type="button" onclick="approveDocument(' + JSON.stringify(data).replace(/"/g, '&quot;') + ')">Setujui</button>' +
+                '<div class="profile-section" style="display:flex; gap:0.75rem; justify-flex:flex-end; margin-top:1.5rem;">' +
+                '<button class="btn btn-secondary" type="button" onclick="closeActionModal()">Tutup</button>' +
+                '<button class="btn btn-primary" type="button" onclick="alert(\'Dokumen ' + (data.name || '').replace(/'/g, "\\'") + ' berhasil diverifikasi sah di sistem SATUSEHAT!\'); closeActionModal();">Setujui Validasi</button>' +
                 '</div>';
-            openActionModal('Validasi Dokumen', 'Review kelengkapan, legalitas, dan masa berlaku profesi', body);
-        }
-
-        function openValidationQueue() {
-            const rows = document.querySelectorAll('#strsipPage [data-doc-number]');
-            const items = Array.from(rows).map(function (row) {
-                const number = row.dataset.docNumber;
-                const name = row.dataset.docName;
-                const type = row.dataset.docType;
-                const status = row.dataset.docStatus;
-                return '<div class="profile-section" style="padding:0.9rem 1rem; border:1px solid rgba(82,112,255,0.15); border-radius:12px; margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center; gap:1rem;">' +
-                    '<div><strong>' + name + '</strong><div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.2rem;">' + type + ' • ' + number + '</div></div>' +
-                    '<button class="btn btn-secondary" type="button" onclick="openValidationModal({name: \'' + (name || '').replace(/'/g, "\\'") + '\', type: \'' + (type || '').replace(/'/g, "\\'") + '\', number: \'' + (number || '').replace(/'/g, "\\'") + '\', status: \'' + (status || '').replace(/'/g, "\\'") + '\', expiry: \'' + (row.dataset.docExpiry || '').replace(/'/g, "\\'") + '\', issuer: \'' + (row.dataset.docIssuer || '').replace(/'/g, "\\'") + '\', detail: \'' + (row.dataset.docDetail || '').replace(/'/g, "\\'") + '\', files: \'' + (row.dataset.docFiles || '').replace(/'/g, "\\'") + '\', requirements: \'' + (row.dataset.docRequirements || '').replace(/'/g, "\\'") + '\'})">Lihat Detail</button>' +
-                    '</div>';
-            }).join('');
-
-            openActionModal('Validasi Dokumen', 'Daftar kebutuhan review legalitas tenaga medis', '<div class="profile-section">' + items + '</div>');
+            openActionModal('Validasi Dokumen Professional', 'Review legalitas perizinan praktek tenaga kesehatan', body);
         }
 
         function openTrainingModal() {
             const body = '<form id="trainingForm" class="profile-section" onsubmit="event.preventDefault(); submitTrainingForm(); return false;">' +
                 '<div class="profile-details" style="grid-template-columns:1fr 1fr;">' +
-                '<div class="profile-detail"><label>Judul Pelatihan</label><input class="form-control" name="title" placeholder="contoh: ACLS Renewal" required /></div>' +
-                '<div class="profile-detail"><label>Peserta</label><input class="form-control" name="participants" placeholder="contoh: 12 Dokter" required /></div>' +
-                '<div class="profile-detail"><label>Metode</label><input class="form-control" name="method" placeholder="contoh: Workshop" required /></div>' +
+                '<div class="profile-detail"><label>Judul Pelatihan</label><input class="form-control" name="title" placeholder="contoh: ACLS Renewal 2026" required /></div>' +
+                '<div class="profile-detail"><label>Peserta Target</label><input class="form-control" name="participants" placeholder="contoh: Dokter Spesialis & IGD" required /></div>' +
+                '<div class="profile-detail"><label>Metode</label><input class="form-control" name="method" placeholder="contoh: Workshop Simuasi" required /></div>' +
                 '<div class="profile-detail"><label>Tanggal</label><input class="form-control" name="date" type="date" required /></div>' +
-                '<div class="profile-detail" style="grid-column:1 / -1;"><label>Lokasi</label><input class="form-control" name="location" placeholder="contoh: Ruang Seminar Lt. 3" required /></div>' +
-                '<div class="profile-detail" style="grid-column:1 / -1;"><label>Pengajar</label><input class="form-control" name="trainer" placeholder="contoh: Tim PPGD & Emergency Care" required /></div>' +
                 '</div>' +
                 '<div class="profile-section" style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">' +
                 '<button type="button" class="btn btn-secondary" onclick="closeActionModal()">Batal</button>' +
                 '<button type="submit" class="btn btn-primary">Simpan Jadwal</button>' +
                 '</div>' +
                 '</form>';
-            openActionModal('Jadwal Pelatihan', 'Perencanaan program kompetensi bulan ini', body);
+            openActionModal('Jadwal Pelatihan Baru', 'Perencanaan program kompetensi SKP Plataran Sehat', body);
         }
 
         function submitTrainingForm() {
             const form = document.getElementById('trainingForm');
             if (!form) return;
-
             const inputs = new FormData(form);
-            const title = inputs.get('title') || 'Pelatihan Baru';
+            const title = inputs.get('title') || 'Pelatihan';
             const participants = inputs.get('participants') || 'Peserta';
-            const method = inputs.get('method') || 'Pelatihan';
-            const dateValue = inputs.get('date');
-            const formattedDate = dateValue ? new Date(dateValue + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Tanggal belum ditentukan';
+            const method = inputs.get('method') || 'Workshop';
 
             const tableBody = document.getElementById('trainingTable')?.querySelector('tbody');
             if (tableBody) {
@@ -909,62 +994,8 @@
                 row.innerHTML = '<td>' + title + '</td><td>' + participants + '</td><td>' + method + '</td><td><span class="badge badge-info">Terjadwal</span></td>';
                 tableBody.prepend(row);
             }
-
             closeActionModal();
-            form.reset();
-        }
-
-        function openActivityModal() {
-            const body = '<form id="activityForm" class="profile-section" onsubmit="event.preventDefault(); submitActivityForm(); return false;">' +
-                '<div class="profile-details" style="grid-template-columns:1fr 1fr;">' +
-                '<div class="profile-detail"><label>Tanggal</label><input class="form-control" name="date" type="date" required /></div>' +
-                '<div class="profile-detail"><label>Nama Nakes</label><input class="form-control" name="name" placeholder="contoh: Dr. Andi Wijaya" required /></div>' +
-                '<div class="profile-detail" style="grid-column:1 / -1;"><label>Kegiatan</label><textarea class="form-control" name="activity" rows="3" placeholder="Tuliskan kegiatan yang dilakukan" required></textarea></div>' +
-                '<div class="profile-detail"><label>Hasil</label><select class="form-control" name="result"><option value="Baik">Baik</option><option value="Terekam">Terekam</option><option value="Perlu evaluasi">Perlu evaluasi</option></select></div>' +
-                '</div>' +
-                '<div class="profile-section" style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">' +
-                '<button type="button" class="btn btn-secondary" onclick="closeActionModal()">Batal</button>' +
-                '<button type="submit" class="btn btn-primary">Simpan Kegiatan</button>' +
-                '</div>' +
-                '</form>';
-            openActionModal('Catat Kegiatan', 'Input aktivitas harian tenaga kesehatan', body);
-        }
-
-        function submitActivityForm() {
-            const form = document.getElementById('activityForm');
-            if (!form) return;
-
-            const inputs = new FormData(form);
-            const dateValue = inputs.get('date');
-            const name = inputs.get('name') || 'Nakes';
-            const activity = inputs.get('activity') || 'Kegiatan';
-            const result = inputs.get('result') || 'Baik';
-            const prettyDate = dateValue ? new Date(dateValue + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Tanggal belum ditentukan';
-
-            const resultClass = result === 'Baik' ? 'badge badge-success' : result === 'Terekam' ? 'badge badge-info' : 'badge badge-warning';
-            const tableBody = document.getElementById('activityTable')?.querySelector('tbody');
-            if (tableBody) {
-                const row = document.createElement('tr');
-                row.innerHTML = '<td>' + prettyDate + '</td><td>' + name + '</td><td>' + activity + '</td><td><span class="' + resultClass + '">' + result + '</span></td>';
-                tableBody.prepend(row);
-            }
-
-            closeActionModal();
-            form.reset();
-        }
-
-        function openFacilityModal(unit) {
-            const data = {
-                IGD: { readiness: '93%', desc: '12 ruang perawatan aktif', details: 'Ruang triase, monitor bedside, dan stok obat darurat siap digunakan 24 jam.' },
-                Poliklinik: { readiness: '89%', desc: '15 unit pelayanan', details: 'Antrian pelayanan terkelola otomatis dan rata-rata waktu tunggu 14 menit.' },
-                ICU: { readiness: '100%', desc: '6 bed monitor terpasang', details: 'Semua bed ICU terhubung sistem monitoring vital sign real-time dan alarm.' },
-                Rehabilitasi: { readiness: '75%', desc: '4 ruang terapi', details: 'Ketersediaan alat fisioterapi masih perlu penambahan pada sesi sore.' }
-            };
-            const item = data[unit] || data.IGD;
-            const body = '<section class="profile-section"><h3>Detail Unit Pelayanan</h3><div class="profile-details">' +
-                detail('Unit', unit) + detail('Kesiapan', item.readiness) + detail('Keterangan', item.desc) + detail('Catatan', item.details) +
-                '</div></section>';
-            openActionModal('Detail Unit ' + unit, 'Status operasional dan kebutuhan pemeliharaan', body);
+            alert('Jadwal pelatihan berhasil disimpan!');
         }
 
         document.getElementById('profileModal').addEventListener('click', function (event) {
@@ -995,37 +1026,13 @@
                     type: validationButton.dataset.type,
                     number: validationButton.dataset.number,
                     status: validationButton.dataset.status,
-                    expiry: validationButton.dataset.expiry,
-                    issuer: validationButton.dataset.issuer,
-                    detail: validationButton.dataset.detail,
-                    files: validationButton.dataset.files,
-                    requirements: validationButton.dataset.requirements
+                    files: validationButton.dataset.files
                 });
-            }
-
-            const openValidationQueueButton = event.target.closest('.open-doc-validation-btn');
-            if (openValidationQueueButton) {
-                openValidationQueue();
             }
 
             const trainingButton = event.target.closest('.open-training-btn');
             if (trainingButton) {
                 openTrainingModal();
-            }
-
-            const activityButton = event.target.closest('.open-activity-btn');
-            if (activityButton) {
-                openActivityModal();
-            }
-
-            const facilityButton = event.target.closest('.open-facility-btn');
-            if (facilityButton) {
-                openFacilityModal('IGD');
-            }
-
-            const facilityStat = event.target.closest('.facility-stat, .facility-card-clickable');
-            if (facilityStat) {
-                openFacilityModal(facilityStat.dataset.unit);
             }
         });
 
@@ -1042,20 +1049,6 @@
                 showPage(item.dataset.page);
             });
         });
-
-        renderProfilePage();
-        renderDashboardMedicalTable();
-
-        const pageMap = {
-            '#profil-tenaga-medis': 'profile',
-            '#str-sip': 'strsip',
-            '#kompetensi': 'kompetensi',
-            '#fasilitas': 'fasilitas',
-            '#kinerja': 'kinerja'
-        };
-
-        showPage(pageMap[window.location.hash] || 'dashboard');
     </script>
-
 </body>
 </html>
