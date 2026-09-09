@@ -125,109 +125,113 @@
                 <!-- Content Grid -->
                 <div class="content-grid">
                     <!-- Quick Table -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title"><i class="fa-solid fa-clock-rotate-left" style="color: var(--secondary); margin-right: 0.5rem;"></i> Antrean Resep Terbaru</h3>
-                            <a onclick="switchTab('antrean')" class="btn" style="background: #f1f5f9; color: var(--secondary-dark); font-size: 0.75rem;">Lihat Semua <i class="fa-solid fa-arrow-right"></i></a>
+                    <div class="card" style="background: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+                        <div class="card-header" style="border-bottom: none; padding-bottom: 0.5rem;">
+                            <h3 class="elegant-section-title"><i class="fa-solid fa-prescription-bottle-medical" style="color: var(--secondary);"></i> Live Antrean Resep</h3>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <a onclick="switchTab('antrean')" class="btn" style="background: var(--background); color: var(--text-muted); border: 1px solid var(--border);"><i class="fa-solid fa-arrow-right"></i> Semua Antrean</a>
+                                <button class="btn btn-secondary" onclick="openModal('modal-resep')"><i class="fa-solid fa-plus"></i> Resep Baru</button>
+                            </div>
                         </div>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>No. Resep</th>
-                                        <th>Pasien & Dokter</th>
-                                        <th>Tipe Layanan</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <span style="font-weight: 700; color: var(--secondary-dark);">#RSP-2026-081</span>
-                                            <div style="font-size: 0.75rem; color: var(--text-muted);">09:42 WIB</div>
-                                        </td>
-                                        <td>
-                                            <div style="font-weight: 600;">Tn. Ahmad Fauzi (42 Th)</div>
-                                            <div style="font-size: 0.75rem; color: var(--text-muted);">Poli Penyakit Dalam (dr. Andi, Sp.PD)</div>
-                                        </td>
-                                        <td><span class="badge badge-info">BPJS Rawat Jalan</span></td>
-                                        <td><span class="badge badge-warning"><i class="fa-solid fa-spinner fa-spin"></i> Dispensing Obat</span></td>
-                                        <td><button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-2026-081')">Proses</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span style="font-weight: 700; color: var(--secondary-dark);">#RSP-2026-082</span>
-                                            <div style="font-size: 0.75rem; color: var(--text-muted);">09:48 WIB</div>
-                                        </td>
-                                        <td>
-                                            <div style="font-weight: 600;">Ny. Dewi Ratnasari (29 Th)</div>
-                                            <div style="font-size: 0.75rem; color: var(--text-muted);">Poli Kandungan (dr. Ratna, Sp.OG)</div>
-                                        </td>
-                                        <td><span class="badge badge-secondary">Umum Mandiri</span></td>
-                                        <td><span class="badge badge-danger"><i class="fa-solid fa-receipt"></i> Kasir / Bayar</span></td>
-                                        <td><button class="btn" style="background: #f1f5f9; color: var(--text-main); padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-2026-082')">Detail</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span style="font-weight: 700; color: var(--secondary-dark);">#RSP-2026-083</span>
-                                            <div style="font-size: 0.75rem; color: var(--text-muted);">09:55 WIB</div>
-                                        </td>
-                                        <td>
-                                            <div style="font-weight: 600;">An. Reyhan Saputra (6 Th)</div>
-                                            <div style="font-size: 0.75rem; color: var(--text-muted);">Poli Anak (dr. Hendra, Sp.A)</div>
-                                        </td>
-                                        <td><span class="badge badge-info">BPJS Kesehatan</span></td>
-                                        <td><span class="badge badge-info"><i class="fa-solid fa-mortar-pestle"></i> Racikan Pulveres</span></td>
-                                        <td><button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-2026-083')">Proses</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="queue-list" style="padding: 0.5rem 0;">
+                            
+                            <!-- Item 1: Penyiapan -->
+                            <div class="queue-card status-prep">
+                                <div class="queue-header">
+                                    <div class="queue-patient-info">
+                                        <span style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);">Tn. Ahmad Fauzi (42 Th)</span>
+                                        <span style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;"><i class="fa-regular fa-clock"></i> 09:42 WIB &bull; dr. Andi, Sp.PD</span>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-weight: 700; color: var(--secondary-dark); letter-spacing: 0.5px;">#RSP-2026-081</div>
+                                        <span class="badge badge-warning" style="margin-top: 0.5rem; display: inline-block; box-shadow: 0 2px 4px rgba(245,158,11,0.1);"><i class="fa-solid fa-spinner fa-spin"></i> Dispensing</span>
+                                    </div>
+                                </div>
+                                <div class="queue-steps">
+                                    <div class="queue-step active" title="Penyiapan Obat"></div>
+                                    <div class="queue-step" title="Pengecekan"></div>
+                                    <div class="queue-step" title="Selesai"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                                    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">BPJS Rawat Jalan</span>
+                                    <button class="btn" style="background: #eff6ff; color: var(--primary); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;" onclick="detailResep('RSP-2026-081')">Proses</button>
+                                </div>
+                            </div>
+
+                            <!-- Item 2: Menunggu Pembayaran -->
+                            <div class="queue-card status-wait">
+                                <div class="queue-header">
+                                    <div class="queue-patient-info">
+                                        <span style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);">Ny. Dewi Ratnasari (29 Th)</span>
+                                        <span style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;"><i class="fa-regular fa-clock"></i> 09:48 WIB &bull; dr. Ratna, Sp.OG</span>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-weight: 700; color: var(--secondary-dark); letter-spacing: 0.5px;">#RSP-2026-082</div>
+                                        <span class="badge badge-danger" style="margin-top: 0.5rem; display: inline-block; box-shadow: 0 2px 4px rgba(239,68,68,0.1);"><i class="fa-solid fa-receipt"></i> Kasir / Bayar</span>
+                                    </div>
+                                </div>
+                                <div class="queue-steps">
+                                    <div class="queue-step active" title="Penyiapan"></div>
+                                    <div class="queue-step" title="Pengecekan"></div>
+                                    <div class="queue-step" title="Selesai"></div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                                    <span style="font-size: 0.8rem; color: var(--danger); font-weight: 500;">Umum Mandiri</span>
+                                    <button class="btn" style="background: #fee2e2; color: var(--danger); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;" onclick="detailResep('RSP-2026-082')">Detail</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Side Panel / Quick Inventory -->
                     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title"><i class="fa-solid fa-box-open" style="color: var(--warning); margin-right: 0.5rem;"></i> Status Stok Kritis</h3>
+                        <div class="card" style="background: linear-gradient(to bottom left, #ffffff, #f8fafc);">
+                            <div class="card-header" style="border-bottom: none; padding-bottom: 0.5rem;">
+                                <h3 class="elegant-section-title"><i class="fa-solid fa-boxes-stacked" style="color: var(--primary);"></i> Monitoring Stok</h3>
                                 <a onclick="switchTab('stok')" class="btn" style="background: transparent; color: var(--secondary); font-size: 0.75rem; padding: 0;">Lihat Semua</a>
                             </div>
-                            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
-                                        <span>Amoxicillin 500mg</span>
-                                        <span style="color: var(--danger);">12 / 100 Strip</span>
+                            
+                            <div class="stock-list">
+                                <!-- Stock Item 1 -->
+                                <div class="stock-item">
+                                    <div class="stock-icon danger">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
                                     </div>
-                                    <div class="progress-bar-container">
-                                        <div class="progress-bar" style="width: 12%; background: var(--danger);"></div>
+                                    <div class="stock-info">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                            <span style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">Amoxicillin 500mg</span>
+                                            <span style="font-weight: 700; color: var(--danger); background: #fee2e2; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">12 / 100</span>
+                                        </div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Sisa stok kritis. Segera re-order.</div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill danger" style="width: 12%;"></div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
-                                        <span>Paracetamol Infus 100ml</span>
-                                        <span style="color: var(--danger);">8 / 50 Botol</span>
+
+                                <!-- Stock Item 2 -->
+                                <div class="stock-item">
+                                    <div class="stock-icon warning">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
                                     </div>
-                                    <div class="progress-bar-container">
-                                        <div class="progress-bar" style="width: 16%; background: var(--danger);"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
-                                        <span>Ceftriaxone 1g Injeksi</span>
-                                        <span style="color: var(--warning);">24 / 80 Vial</span>
-                                    </div>
-                                    <div class="progress-bar-container">
-                                        <div class="progress-bar" style="width: 30%; background: var(--warning);"></div>
+                                    <div class="stock-info">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                            <span style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">Ceftriaxone 1g Injeksi</span>
+                                            <span style="font-weight: 700; color: var(--warning); background: #fef3c7; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">24 Vial</span>
+                                        </div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Menipis (Batas 80 Vial)</div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill warning" style="width: 30%;"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="card" style="background: linear-gradient(135deg, var(--secondary-dark), var(--secondary)); color: white; border: none;">
-                            <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-truck-ramp-box"></i> Penerimaan PBF Hari Ini</h4>
-                            <p style="font-size: 0.82rem; opacity: 0.9; margin-bottom: 1rem;">Ada 2 faktur pengiriman obat dari Kimia Farma & Anugrah Argon Medica siap verifikasi.</p>
-                            <button class="btn" style="background: white; color: var(--secondary-dark); width: 100%;"><i class="fa-solid fa-clipboard-check"></i> Verifikasi Faktur & Batch</button>
+                        <div class="card" style="background: linear-gradient(135deg, var(--secondary-dark), var(--secondary)); color: white; border: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                            <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;"><i class="fa-solid fa-truck-ramp-box"></i> Penerimaan PBF Hari Ini</h4>
+                            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 1rem;">Ada 2 faktur pengiriman obat dari Kimia Farma & Anugrah Argon Medica siap verifikasi.</p>
+                            <button class="btn" style="background: white; color: var(--secondary-dark); width: 100%; font-weight: 600;"><i class="fa-solid fa-clipboard-check"></i> Verifikasi Faktur & Batch</button>
                         </div>
                     </div>
                 </div>

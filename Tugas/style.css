@@ -511,3 +511,129 @@ tbody tr:hover {
     background: #ccfbf1;
     color: var(--secondary-dark);
 }
+
+/* Elegant Dashboard Extensions */
+.elegant-section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.queue-card {
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+    background: var(--surface);
+    transition: var(--transition);
+    border-left: 4px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.queue-card:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
+    border-color: var(--border);
+}
+.queue-card.status-prep { border-left-color: var(--warning); }
+.queue-card.status-check { border-left-color: var(--primary); }
+.queue-card.status-done { border-left-color: var(--secondary); }
+.queue-card.status-wait { border-left-color: var(--danger); }
+
+.queue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.queue-patient-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.queue-steps {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+.queue-step {
+    flex: 1;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+.queue-step.active::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+}
+.status-prep .queue-step:nth-child(1)::after { background: var(--warning); }
+.status-wait .queue-step:nth-child(1)::after { background: var(--danger); }
+.status-check .queue-step:nth-child(1)::after, .status-check .queue-step:nth-child(2)::after { background: var(--primary); }
+.status-done .queue-step::after { background: var(--secondary); }
+
+.stock-item {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+    background: var(--surface);
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    transition: var(--transition);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.stock-item:hover {
+    transform: translateX(4px);
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+}
+.stock-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-right: 1.25rem;
+    flex-shrink: 0;
+}
+.stock-icon.danger { background: #fee2e2; color: var(--danger); }
+.stock-icon.warning { background: #fef3c7; color: var(--warning); }
+.stock-icon.success { background: #dcfce7; color: var(--secondary-dark); }
+.stock-info {
+    flex: 1;
+}
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 0.25rem;
+}
+.progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-fill.danger { background: var(--danger); }
+.progress-fill.warning { background: var(--warning); }
+.progress-fill.success { background: var(--secondary); }
+
+/* Elegant Card Refinement */
+.card {
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);
+    background: rgba(255,255,255,0.98);
+}
