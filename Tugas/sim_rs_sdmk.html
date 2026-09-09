@@ -7,6 +7,101 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.55);
+        }
+
+        .profile-modal.active {
+            display: flex;
+        }
+
+        .profile-modal-content {
+            width: min(760px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            border-radius: 16px;
+            background: var(--surface, #fff);
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.25);
+        }
+
+        .profile-modal-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-modal-header h2 {
+            margin: 0 0 0.35rem;
+            color: var(--text-main);
+        }
+
+        .profile-modal-header p {
+            margin: 0;
+            color: var(--text-muted);
+        }
+
+        .profile-close {
+            border: 0;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.6rem;
+            line-height: 1;
+        }
+
+        .profile-section {
+            margin-top: 1.25rem;
+        }
+
+        .profile-section h3 {
+            margin: 0 0 0.75rem;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem 1.25rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .profile-detail label {
+            display: block;
+            margin-bottom: 0.2rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .profile-detail span {
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .profile-modal-content {
+                padding: 1.25rem;
+            }
+
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -17,8 +112,8 @@
             <h2>SATUSEHAT<br><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">SDMK Dashboard</span></h2>
         </div>
         <nav class="sidebar-nav">
-            <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i> Dashboard</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-user-doctor"></i> Profil Tenaga Medis</a>
+            <a href="sim_rs_sdmk.html" class="nav-item active"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="sim_rs_sdmk_profil.html" class="nav-item"><i class="fa-solid fa-user-doctor"></i> Profil Tenaga Medis</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-file-medical"></i> STR & SIP</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Pengembangan Kompetensi</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-building-user"></i> Fasilitas Pelayanan</a>
@@ -79,7 +174,7 @@
 
             <div class="content-grid">
                 <!-- Data Table -->
-                <div class="card">
+                <div class="card" id="profil-tenaga-medis">
                     <div class="card-header">
                         <h3 class="card-title">Direktori Tenaga Medis (Sinkronisasi SATUSEHAT)</h3>
                         <button class="btn btn-primary"><i class="fa-solid fa-rotate"></i> Sinkronisasi Data</button>
@@ -104,7 +199,7 @@
                                     <td>Dokter Spesialis Penyakit Dalam</td>
                                     <td>11211002345678</td>
                                     <td><span class="badge badge-success">Aktif</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--primary);">Detail</button></td>
+                                    <td><button class="btn" style="background: var(--background); color: var(--primary);" onclick="showProfile(0)">Detail</button></td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -114,7 +209,7 @@
                                     <td>Perawat</td>
                                     <td>21111002345679</td>
                                     <td><span class="badge badge-warning">Hampir Habis</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--primary);">Detail</button></td>
+                                    <td><button class="btn" style="background: var(--background); color: var(--primary);" onclick="showProfile(1)">Detail</button></td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -124,7 +219,7 @@
                                     <td>Dokter Gigi</td>
                                     <td>12211002345680</td>
                                     <td><span class="badge badge-success">Aktif</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--primary);">Detail</button></td>
+                                    <td><button class="btn" style="background: var(--background); color: var(--primary);" onclick="showProfile(2)">Detail</button></td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -134,7 +229,7 @@
                                     <td>Apoteker</td>
                                     <td>31111002345681</td>
                                     <td><span class="badge badge-danger">Kedaluwarsa</span></td>
-                                    <td><button class="btn" style="background: var(--background); color: var(--primary);">Detail</button></td>
+                                    <td><button class="btn" style="background: var(--background); color: var(--primary);" onclick="showProfile(3)">Detail</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -181,5 +276,93 @@
             </div>
         </div>
     </main>
+
+    <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+        <div class="profile-modal-content">
+            <div class="profile-modal-header">
+                <div>
+                    <h2 id="profileModalTitle">Profil Tenaga Medis</h2>
+                    <p id="profileModalSubtitle"></p>
+                </div>
+                <button class="profile-close" type="button" aria-label="Tutup profil" onclick="closeProfile()">&times;</button>
+            </div>
+            <div id="profileModalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const medicalProfiles = [
+            {
+                name: 'Dr. Andi Wijaya, Sp.PD', profession: 'Dokter Spesialis Penyakit Dalam',
+                nik: '3174XXXXXXXX0001', gender: 'Laki-laki', birth: 'Bandung, 14 April 1982',
+                phone: '0812-3456-7890', email: 'andi.wijaya@rs-sehat.id',
+                education: 'Spesialis Penyakit Dalam, Universitas Indonesia',
+                str: '11211002345678', sip: 'SIP-001/RS/2026', sipStatus: 'Aktif sampai 31 Desember 2026',
+                competency: 'Konsultan Gastroenterohepatologi', experience: '12 tahun'
+            },
+            {
+                name: 'Ns. Siti Aminah, S.Kep', profession: 'Perawat',
+                nik: '3271XXXXXXXX0005', gender: 'Perempuan', birth: 'Bogor, 22 September 1990',
+                phone: '0813-2222-4567', email: 'siti.aminah@rs-sehat.id',
+                education: 'Sarjana Keperawatan, Universitas Padjadjaran',
+                str: '21111002345679', sip: 'SIP-024/RS/2025', sipStatus: 'Hampir habis pada 30 November 2026',
+                competency: 'Keperawatan Medikal Bedah', experience: '8 tahun'
+            },
+            {
+                name: 'Drg. Budi Santoso', profession: 'Dokter Gigi',
+                nik: '3374XXXXXXXX0003', gender: 'Laki-laki', birth: 'Semarang, 8 Januari 1987',
+                phone: '0812-9988-7766', email: 'budi.santoso@rs-sehat.id',
+                education: 'Kedokteran Gigi, Universitas Gadjah Mada',
+                str: '12211002345680', sip: 'SIP-017/RS/2026', sipStatus: 'Aktif sampai 31 Desember 2026',
+                competency: 'Konservasi Gigi', experience: '9 tahun'
+            },
+            {
+                name: 'Apt. Rina Marlina, S.Farm', profession: 'Apoteker',
+                nik: '3471XXXXXXXX0002', gender: 'Perempuan', birth: 'Yogyakarta, 17 Juni 1989',
+                phone: '0813-7777-8899', email: 'rina.marlina@rs-sehat.id',
+                education: 'Profesi Apoteker, Universitas Sanata Dharma',
+                str: '31111002345681', sip: 'SIP-009/RS/2024', sipStatus: 'Kedaluwarsa pada 31 Agustus 2026',
+                competency: 'Farmasi Klinik dan Komunitas', experience: '7 tahun'
+            }
+        ];
+
+        function detail(label, value) {
+            return '<div class="profile-detail"><label>' + label + '</label><span>' + value + '</span></div>';
+        }
+
+        function showProfile(index) {
+            const profile = medicalProfiles[index];
+            const modal = document.getElementById('profileModal');
+            document.getElementById('profileModalTitle').textContent = profile.name;
+            document.getElementById('profileModalSubtitle').textContent = profile.profession;
+            document.getElementById('profileModalBody').innerHTML =
+                '<section class="profile-section"><h3>Data Identitas</h3><div class="profile-details">' +
+                detail('NIK', profile.nik) + detail('Jenis Kelamin', profile.gender) + detail('Tempat, tanggal lahir', profile.birth) + detail('Masa kerja', profile.experience) +
+                '</div></section>' +
+                '<section class="profile-section"><h3>Pendidikan dan Kompetensi</h3><div class="profile-details">' +
+                detail('Pendidikan terakhir', profile.education) + detail('Kompetensi utama', profile.competency) +
+                '</div></section>' +
+                '<section class="profile-section"><h3>Perizinan Praktik</h3><div class="profile-details">' +
+                detail('Nomor STR', profile.str) + detail('Nomor SIP', profile.sip) + detail('Status SIP', profile.sipStatus) +
+                '</div></section>' +
+                '<section class="profile-section"><h3>Kontak</h3><div class="profile-details">' +
+                detail('Nomor telepon', profile.phone) + detail('Email', profile.email) +
+                '</div></section>';
+            modal.classList.add('active');
+        }
+
+        function closeProfile() {
+            document.getElementById('profileModal').classList.remove('active');
+        }
+
+        document.getElementById('profileModal').addEventListener('click', function (event) {
+            if (event.target === this) closeProfile();
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') closeProfile();
+        });
+    </script>
+
 </body>
 </html>

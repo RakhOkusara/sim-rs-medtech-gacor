@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Tenaga Medis - SATUSEHAT SDMK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
+        }
+
+        .medical-profile {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+        }
+
+        .medical-profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .medical-avatar {
+            width: 52px;
+            height: 52px;
+            flex: 0 0 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .medical-profile-header h2 {
+            margin-bottom: 0.25rem;
+            color: var(--text-main);
+            font-size: 1.05rem;
+        }
+
+        .medical-profile-header p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .medical-profile-body {
+            padding: 1.5rem;
+        }
+
+        .profile-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .profile-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .profile-group-title {
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .profile-data {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem 1rem;
+        }
+
+        .profile-data-item label {
+            display: block;
+            margin-bottom: 0.2rem;
+            color: var(--text-muted);
+            font-size: 0.73rem;
+        }
+
+        .profile-data-item span {
+            color: var(--text-main);
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 900px) {
+            .profile-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-container {
+                padding: 1.25rem;
+            }
+
+            .profile-data {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-heart-pulse fa-2x" style="color: var(--primary);"></i>
+            <h2>SATUSEHAT<br><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">SDMK Dashboard</span></h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="sim_rs_sdmk.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="sim_rs_sdmk_profil.html" class="nav-item active"><i class="fa-solid fa-user-doctor"></i> Profil Tenaga Medis</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-file-medical"></i> STR & SIP</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Pengembangan Kompetensi</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-building-user"></i> Fasilitas Pelayanan</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-chart-line"></i> Kinerja & Logbook</a>
+            <div style="flex: 1;"></div>
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-arrow-left"></i> Kembali ke Portal</a>
+            <a href="#" class="nav-item" style="color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="search-bar" style="width: 300px;">
+                <input type="text" class="form-control" placeholder="Cari nama, NIK, atau profesi..." style="padding-left: 2.5rem; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' fill=\'gray\' viewBox=\'0 0 16 16\'><path d=\'M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85A1.007 1.007 0 0 0 11.742 10.344zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z\'/></svg>'); background-repeat: no-repeat; background-position: 10px center;">
+            </div>
+            <div class="user-profile">
+                <i class="fa-regular fa-bell" style="font-size: 1.2rem; color: var(--text-muted); cursor: pointer;"></i>
+                <div style="text-align: right;">
+                    <div style="font-weight: 600; font-size: 0.9rem;">Dr. Rakha Okusara</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Dokter Umum</div>
+                </div>
+                <div class="avatar">RO</div>
+            </div>
+        </header>
+
+        <div class="dashboard-container">
+            <div class="page-header">
+                <div>
+                    <h1>Profil Tenaga Medis</h1>
+                    <p>Data lengkap tenaga medis yang terdaftar di Rumah Sakit</p>
+                </div>
+                <button class="btn btn-primary"><i class="fa-solid fa-rotate"></i> Sinkronisasi Data</button>
+            </div>
+
+            <div class="profile-list">
+                <article class="medical-profile">
+                    <div class="medical-profile-header">
+                        <div class="medical-avatar">AW</div>
+                        <div><h2>Dr. Andi Wijaya, Sp.PD</h2><p>Dokter Spesialis Penyakit Dalam</p></div>
+                    </div>
+                    <div class="medical-profile-body">
+                        <div class="profile-group"><div class="profile-group-title">Data Identitas</div><div class="profile-data">
+                            <div class="profile-data-item"><label>NIK</label><span>3174XXXXXXXX0001</span></div>
+                            <div class="profile-data-item"><label>Jenis Kelamin</label><span>Laki-laki</span></div>
+                            <div class="profile-data-item"><label>Tempat, tanggal lahir</label><span>Bandung, 14 April 1982</span></div>
+                            <div class="profile-data-item"><label>Masa kerja</label><span>12 tahun</span></div>
+                        </div></div>
+                        <div class="profile-group"><div class="profile-group-title">Pendidikan dan Kompetensi</div><div class="profile-data">
+                            <div class="profile-data-item"><label>Pendidikan terakhir</label><span>Spesialis Penyakit Dalam, UI</span></div>
+                            <div class="profile-data-item"><label>Kompetensi utama</label><span>Konsultan Gastroenterohepatologi</span></div>
+                        </div></div>
+                        <div class="profile-group"><div class="profile-group-title">Perizinan dan Kontak</div><div class="profile-data">
+                            <div class="profile-data-item"><label>No. STR</label><span>11211002345678</span></div>
+                            <div class="profile-data-item"><label>Status SIP</label><span class="badge badge-success">Aktif</span></div>
+                            <div class="profile-data-item"><label>No. telepon</label><span>0812-3456-7890</span></div>
+                            <div class="profile-data-item"><label>Email</label><span>andi.wijaya@rs-sehat.id</span></div>
+                        </div></div>
+                    </div>
+                </article>
+
+                <article class="medical-profile">
+                    <div class="medical-profile-header">
+                        <div class="medical-avatar">SA</div>
+                        <div><h2>Ns. Siti Aminah, S.Kep</h2><p>Perawat</p></div>
+                    </div>
+                    <div class="medical-profile-body">
+                        <div class="profile-group"><div class="profile-group-title">Data Identitas</div><div class="profile-data">
+                            <div class="profile-data-item"><label>NIK</label><span>3271XXXXXXXX0005</span></div>
+                            <div class="profile-data-item"><label>Jenis Kelamin</label><span>Perempuan</span></div>
+                            <div class="profile-data-item"><label>Tempat, tanggal lahir</label><span>Bogor, 22 September 1990</span></div>
+                            <div class="profile-data-item"><label>Masa kerja</label><span>8 tahun</span></div>
+                        </div></div>
+                        <div class="profile-group"><div class="profile-group-title">Pendidikan dan Kompetensi</div><div class="profile-data">
+                            <div class="profile-data-item"><label>Pendidikan terakhir</label><span>Sarjana Keperawatan, Unpad</span></div>
+                            <div class="profile-data-item"><label>Kompetensi utama</label><span>Keperawatan Medikal Bedah</span></div>
+                        </div></div>
+                        <div class="profile-group"><div class="profile-group-title">Perizinan dan Kontak</div><div class="profile-data">
+                            <div class="profile-data-item"><label>No. STR</label><span>21111002345679</span></div>
+                            <div class="profile-data-item"><label>Status SIP</label><span class="badge badge-warning">Hampir Habis</span></div>
+                            <div class="profile-data-item"><label>No. telepon</label><span>0813-2222-4567</span></div>
+                            <div class="profile-data-item"><label>Email</label><span>siti.aminah@rs-sehat.id</span></div>
+                        </div></div>
+                    </div>
+                </article>
+
+                <article class="medical-profile">
+                    <div class="medical-profile-header">
+                        <div class="medical-avatar">BS</div>
+                        <div><h2>Drg. Budi Santoso</h2><p>Dokter Gigi</p></div>
+                    </div>
+                    <div class="medical-profile-body">
+                        <div class="profile-group"><div class="profile-group-title">Data Identitas</div><div class="profile-data">
+                            <div class="profile-data-item"><label>NIK</label><span>3374XXXXXXXX0003</span></div>
+                            <div class="profile-data-item"><label>Jenis Kelamin</label><span>Laki-laki</span></div>
+                            <div class="profile-data-item"><label>Tempat, tanggal lahir</label><span>Semarang, 8 Januari 1987</span></div>
+                            <div class="profile-data-item"><label>Masa kerja</label><span>9 tahun</span></div>
+                        </div></div>
+                        <div class="profile-group"><div class="profile-group-title">Pendidikan dan Kompetensi</div><div class="profile-data">
+                            <div class="profile-data-item"><label>Pendidikan terakhir</label><span>Kedokteran Gigi, UGM</span></div>
+                            <div class="profile-data-item"><label>Kompetensi utama</label><span>Konservasi Gigi</span></div>
+                        </div></div>
+                        <div class="profile-group"><div class="profile-group-title">Perizinan dan Kontak</div><div class="profile-data">
+                            <div class="profile-data-item"><label>No. STR</label><span>12211002345680</span></div>
+                            <div class="profile-data-item"><label>Status SIP</label><span class="badge badge-success">Aktif</span></div>
+                            <div class="profile-data-item"><label>No. telepon</label><span>0812-9988-7766</span></div>
+                            <div class="profile-data-item"><label>Email</label><span>budi.santoso@rs-sehat.id</span></div>
+                        </div></div>
+                    </div>
+                </article>
+
+                <article class="medical-profile">
+                    <div class="medical-profile-header">
+                        <div class="medical-avatar">RM</div>
+                        <div><h2>Apt. Rina Marlina, S.Farm</h2><p>Apoteker</p></div>
+                    </div>
+                    <div class="medical-profile-body">
+                        <div class="profile-group"><div class="profile-group-title">Data Identitas</div><div class="profile-data">
+                            <div class="profile-data-item"><label>NIK</label><span>3471XXXXXXXX0002</span></div>
+                            <div class="profile-data-item"><label>Jenis Kelamin</label><span>Perempuan</span></div>
+                            <div class="profile-data-item"><label>Tempat, tanggal lahir</label><span>Yogyakarta, 17 Juni 1989</span></div>
+                            <div class="profile-data-item"><label>Masa kerja</label><span>7 tahun</span></div>
+                        </div></div>
+                        <div class="profile-group"><div class="profile-group-title">Pendidikan dan Kompetensi</div><div class="profile-data">
+                            <div class="profile-data-item"><label>Pendidikan terakhir</label><span>Profesi Apoteker, USD</span></div>
+                            <div class="profile-data-item"><label>Kompetensi utama</label><span>Farmasi Klinik dan Komunitas</span></div>
+                        </div></div>
+                        <div class="profile-group"><div class="profile-group-title">Perizinan dan Kontak</div><div class="profile-data">
+                            <div class="profile-data-item"><label>No. STR</label><span>31111002345681</span></div>
+                            <div class="profile-data-item"><label>Status SIP</label><span class="badge badge-danger">Kedaluwarsa</span></div>
+                            <div class="profile-data-item"><label>No. telepon</label><span>0813-7777-8899</span></div>
+                            <div class="profile-data-item"><label>Email</label><span>rina.marlina@rs-sehat.id</span></div>
+                        </div></div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
