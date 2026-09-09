@@ -11,6 +11,7 @@
         .sidebar-header h2 { color: var(--secondary-dark); }
         .page-header h1 {
             background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-light));
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -249,7 +250,7 @@
                 <div class="card" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
                     <div class="filter-bar" style="margin-bottom: 0; align-items: center; justify-content: space-between;">
                         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                            <input type="text" class="form-control" placeholder="Cari No. Resep / Nama Pasien..." style="width: 280px;">
+                            <input type="text" id="resep-search" class="form-control" placeholder="Cari No. Resep / Nama Pasien..." style="width: 280px;" oninput="filterResepStatus(currentResepStatus)">
                             <select class="form-control">
                                 <option>Semua Unit Layanan</option>
                                 <option>Instalasi Rawat Jalan (Poliklinik)</option>
@@ -263,7 +264,7 @@
                                 <option>Asuransi Swasta</option>
                             </select>
                         </div>
-                        <button class="btn" style="background: #f1f5f9; color: var(--text-muted);"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
+                            <button class="btn" type="button" style="background: #f1f5f9; color: var(--text-muted);" onclick="refreshResepData()"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
                     </div>
                 </div>
 
@@ -282,8 +283,8 @@
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
+                            <tbody id="resep-table-body">
+                                <tr data-resep-status="racik">
                                     <td>
                                         <div style="display: flex; align-items: center; gap: 0.5rem;">
                                             <span style="font-size: 1.1rem; font-weight: 800; background: #ecfdf5; color: var(--secondary-dark); padding: 0.2rem 0.5rem; border-radius: 0.35rem;">A-14</span>
@@ -312,7 +313,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr data-resep-status="kasir">
                                     <td>
                                         <div style="display: flex; align-items: center; gap: 0.5rem;">
                                             <span style="font-size: 1.1rem; font-weight: 800; background: #fee2e2; color: var(--danger); padding: 0.2rem 0.5rem; border-radius: 0.35rem;">A-18</span>
@@ -869,6 +870,7 @@
         // POS CART STATE
         let posCart = [];
         let currentPosPillCategory = 'all';
+        let currentResepStatus = 'all';
 
         // INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
@@ -876,6 +878,7 @@
             renderDashboardAlerts();
             renderPosCatalog();
             updateTotalObatBadge();
+            filterResepStatus('all');
         });
 
         function updateTotalObatBadge() {
@@ -898,6 +901,48 @@
 
             const activeNav = document.getElementById('nav-' + viewId);
             if (activeNav) activeNav.classList.add('active-green');
+        }
+
+        function filterResepStatus(status, clickedTab) {
+            currentResepStatus = status || 'all';
+            const searchQuery = (document.getElementById('resep-search')?.value || '').trim().toLowerCase();
+            const rows = document.querySelectorAll('#resep-table-body tr[data-resep-status]');
+            let visibleRows = 0;
+
+            document.querySelectorAll('#view-antrean .view-tab').forEach(tab => tab.classList.remove('active'));
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+            } else {
+                const matchingTab = document.querySelector('#view-antrean .view-tab[onclick*="\'' + currentResepStatus + '\'"]');
+                if (matchingTab) matchingTab.classList.add('active');
+            }
+
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                const matchesStatus = currentResepStatus === 'all' || row.dataset.resepStatus === currentResepStatus;
+                const matchesSearch = !searchQuery || rowText.includes(searchQuery);
+                const visible = matchesStatus && matchesSearch;
+                row.style.display = visible ? '' : 'none';
+                if (visible) visibleRows += 1;
+            });
+
+            const tableBody = document.getElementById('resep-table-body');
+            let emptyRow = document.getElementById('resep-empty-row');
+            if (!visibleRows) {
+                if (!emptyRow) {
+                    emptyRow = document.createElement('tr');
+                    emptyRow.id = 'resep-empty-row';
+                    emptyRow.innerHTML = '<td colspan="7" style="padding: 2rem; text-align: center; color: var(--text-muted);"><i class="fa-solid fa-magnifying-glass" style="margin-right: 0.4rem;"></i> Tidak ada resep yang sesuai.</td>';
+                    tableBody.appendChild(emptyRow);
+                }
+                emptyRow.style.display = '';
+            } else if (emptyRow) {
+                emptyRow.style.display = 'none';
+            }
+        }
+
+        function refreshResepData() {
+            filterResepStatus(currentResepStatus);
         }
 
         function openModal(id) {
@@ -1378,6 +1423,19 @@
 
             renderStokTable();
             renderPosCatalog();
+
+            const antreanRows = Array.from(document.querySelectorAll('#resep-table-body tr[data-resep-status]'));
+            const matchingResep = query && antreanRows.some(row => row.textContent.toLowerCase().includes(query.toLowerCase()));
+            if (matchingResep) {
+                const resepSearch = document.getElementById('resep-search');
+                if (resepSearch) resepSearch.value = query;
+                switchTab('antrean');
+                filterResepStatus('all');
+            } else if (!query) {
+                const resepSearch = document.getElementById('resep-search');
+                if (resepSearch) resepSearch.value = '';
+                filterResepStatus(currentResepStatus);
+            }
         }
 
         function triggerApotekSearch() {
