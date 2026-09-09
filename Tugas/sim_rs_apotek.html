@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIM RS Farmasi - Antrean Resep & Stok Inventori</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>SIM RS Farmasi - Apotek & Kasir Penjualan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -32,35 +32,50 @@
             height: 100%;
             border-radius: 99px;
         }
+        .med-cat-pill {
+            padding: 0.35rem 0.85rem;
+            border-radius: 99px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .med-cat-pill.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
+    <!-- Sidebar Navigation -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <i class="fa-solid fa-pills fa-2x" style="color: var(--secondary);"></i>
-            <h2>Farmasi RS<br><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Manajemen Apotek</span></h2>
+            <h2>Farmasi RS<br><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">RS Cendana / SaffMedic</span></h2>
         </div>
         <nav class="sidebar-nav">
             <a onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active-green"><i class="fa-solid fa-chart-pie"></i> Dashboard Farmasi</a>
             <a onclick="switchTab('antrean')" id="nav-antrean" class="nav-item"><i class="fa-solid fa-prescription-bottle-medical"></i> Antrean Resep <span class="badge badge-danger" style="margin-left:auto;">4</span></a>
-            <a onclick="switchTab('stok')" id="nav-stok" class="nav-item"><i class="fa-solid fa-boxes-stacked"></i> Stok & Inventori <span class="badge badge-warning" style="margin-left:auto;">28</span></a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-truck-medical"></i> Pengadaan Obat</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-cash-register"></i> Kasir & Penjualan</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-file-invoice"></i> Laporan Farmasi</a>
+            <a onclick="switchTab('kasir')" id="nav-kasir" class="nav-item"><i class="fa-solid fa-cash-register"></i> Kasir & Penjualan <span class="badge badge-success" style="margin-left:auto;">POS</span></a>
+            <a onclick="switchTab('stok')" id="nav-stok" class="nav-item"><i class="fa-solid fa-boxes-stacked"></i> Stok & Inventori <span class="badge badge-warning" style="margin-left:auto;" id="badge-total-obat">25</span></a>
+            <a onclick="switchTab('laporan')" id="nav-laporan" class="nav-item"><i class="fa-solid fa-file-invoice"></i> Laporan Farmasi</a>
             <div style="flex: 1;"></div>
             <a href="index.html" class="nav-item"><i class="fa-solid fa-arrow-left"></i> Kembali ke Portal</a>
             <a href="#" class="nav-item" style="color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
         </nav>
     </aside>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <main class="main-content">
         <!-- Topbar -->
         <header class="topbar">
-            <div class="search-bar" style="width: 380px;">
-                <input type="text" id="global-search" class="form-control" placeholder="Cari obat, resep, kode batch, atau pasien..." style="width: 100%; padding-left: 2.5rem; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' fill=\'%2364748b\' viewBox=\'0 0 16 16\'><path d=\'M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z\'/></svg>'); background-repeat: no-repeat; background-position: 12px center;">
+            <div class="search-bar" style="width: 420px;">
+                <input type="text" id="global-search" class="form-control" placeholder="Cari obat, resep, kode batch, atau pasien..." style="width: 100%; padding-left: 2.5rem; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' fill=\'%2364748b\' viewBox=\'0 0 16 16\'><path d=\'M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z\'/></svg>'); background-repeat: no-repeat; background-position: 12px center;" onkeyup="handleGlobalSearch(this.value)">
             </div>
             <div class="user-profile">
                 <div style="display: flex; gap: 0.75rem; align-items: center; margin-right: 0.5rem;">
@@ -74,7 +89,7 @@
             </div>
         </header>
 
-        <!-- Container -->
+        <!-- Dashboard Body Container -->
         <div class="dashboard-container">
             
             <!-- VIEW 1: DASHBOARD OVERVIEW -->
@@ -82,11 +97,11 @@
                 <div class="page-header">
                     <div>
                         <h1>Dashboard Instalasi Farmasi</h1>
-                        <p>Ringkasan pergerakan resep masuk, stok menipis, dan efisiensi dispensing obat.</p>
+                        <p>Ringkasan pergerakan resep masuk, stok menipis, dan transaksi kasir apotek.</p>
                     </div>
                     <div style="display: flex; gap: 0.75rem;">
-                        <button class="btn btn-secondary" onclick="openModal('modal-resep')"><i class="fa-solid fa-plus"></i> Buat Resep Baru</button>
-                        <button class="btn" style="background: #f1f5f9; color: var(--text-main);" onclick="openModal('modal-obat')"><i class="fa-solid fa-box"></i> Tambah Obat</button>
+                        <button class="btn btn-secondary" onclick="switchTab('kasir')"><i class="fa-solid fa-cash-register"></i> Buka Kasir Farmasi</button>
+                        <button class="btn" style="background: #f1f5f9; color: var(--text-main);" onclick="openModal('modal-resep')"><i class="fa-solid fa-plus"></i> Buat Resep Baru</button>
                     </div>
                 </div>
 
@@ -101,16 +116,16 @@
                     </div>
                     <div class="stat-card yellow">
                         <div class="stat-title">Stok Menipis (Defecta)</div>
-                        <div class="stat-value">28</div>
+                        <div class="stat-value" id="stat-defecta-count">4</div>
                         <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">
                             <i class="fa-solid fa-triangle-exclamation"></i> Perlu Surat Pesanan (SP)
                         </div>
                     </div>
                     <div class="stat-card red">
-                        <div class="stat-title">Kadaluarsa Segera (&lt; 60 Hari)</div>
-                        <div class="stat-value">9</div>
-                        <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">
-                            <i class="fa-solid fa-calendar-xmark"></i> Siapkan karantina/retur
+                        <div class="stat-title">Pendapatan Kasir Hari Ini</div>
+                        <div class="stat-value" style="font-size: 1.5rem; color: #166534;" id="stat-penjualan-kasir">Rp 4.850.000</div>
+                        <div style="color: var(--secondary-dark); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">
+                            <i class="fa-solid fa-receipt"></i> 38 Transaksi Selesai
                         </div>
                     </div>
                     <div class="stat-card">
@@ -144,7 +159,7 @@
                                     </div>
                                     <div style="text-align: right;">
                                         <div style="font-weight: 700; color: var(--secondary-dark); letter-spacing: 0.5px;">#RSP-2026-081</div>
-                                        <span class="badge badge-warning" style="margin-top: 0.5rem; display: inline-block; box-shadow: 0 2px 4px rgba(245,158,11,0.1);"><i class="fa-solid fa-spinner fa-spin"></i> Dispensing</span>
+                                        <span class="badge badge-warning" style="margin-top: 0.5rem; display: inline-block;"><i class="fa-solid fa-spinner fa-spin"></i> Dispensing</span>
                                     </div>
                                 </div>
                                 <div class="queue-steps">
@@ -167,7 +182,7 @@
                                     </div>
                                     <div style="text-align: right;">
                                         <div style="font-weight: 700; color: var(--secondary-dark); letter-spacing: 0.5px;">#RSP-2026-082</div>
-                                        <span class="badge badge-danger" style="margin-top: 0.5rem; display: inline-block; box-shadow: 0 2px 4px rgba(239,68,68,0.1);"><i class="fa-solid fa-receipt"></i> Kasir / Bayar</span>
+                                        <span class="badge badge-danger" style="margin-top: 0.5rem; display: inline-block;"><i class="fa-solid fa-receipt"></i> Kasir / Bayar</span>
                                     </div>
                                 </div>
                                 <div class="queue-steps">
@@ -176,8 +191,8 @@
                                     <div class="queue-step" title="Selesai"></div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-                                    <span style="font-size: 0.8rem; color: var(--danger); font-weight: 500;">Umum Mandiri</span>
-                                    <button class="btn" style="background: #fee2e2; color: var(--danger); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;" onclick="detailResep('RSP-2026-082')">Detail</button>
+                                    <span style="font-size: 0.8rem; color: var(--danger); font-weight: 600;">Umum Mandiri (Rp 78.500)</span>
+                                    <button class="btn" style="background: #fee2e2; color: var(--danger); padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; border-radius: 6px;" onclick="loadResepToKasir('RSP-2026-082')"><i class="fa-solid fa-cash-register"></i> Ke Kasir</button>
                                 </div>
                             </div>
                         </div>
@@ -187,51 +202,19 @@
                     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                         <div class="card" style="background: linear-gradient(to bottom left, #ffffff, #f8fafc);">
                             <div class="card-header" style="border-bottom: none; padding-bottom: 0.5rem;">
-                                <h3 class="elegant-section-title"><i class="fa-solid fa-boxes-stacked" style="color: var(--primary);"></i> Monitoring Stok</h3>
+                                <h3 class="elegant-section-title"><i class="fa-solid fa-boxes-stacked" style="color: var(--primary);"></i> Defecta Stok Kritis</h3>
                                 <a onclick="switchTab('stok')" class="btn" style="background: transparent; color: var(--secondary); font-size: 0.75rem; padding: 0;">Lihat Semua</a>
                             </div>
                             
-                            <div class="stock-list">
-                                <!-- Stock Item 1 -->
-                                <div class="stock-item">
-                                    <div class="stock-icon danger">
-                                        <i class="fa-solid fa-triangle-exclamation"></i>
-                                    </div>
-                                    <div class="stock-info">
-                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                                            <span style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">Amoxicillin 500mg</span>
-                                            <span style="font-weight: 700; color: var(--danger); background: #fee2e2; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">12 / 100</span>
-                                        </div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Sisa stok kritis. Segera re-order.</div>
-                                        <div class="progress-bar">
-                                            <div class="progress-fill danger" style="width: 12%;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Stock Item 2 -->
-                                <div class="stock-item">
-                                    <div class="stock-icon warning">
-                                        <i class="fa-solid fa-clock-rotate-left"></i>
-                                    </div>
-                                    <div class="stock-info">
-                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                                            <span style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">Ceftriaxone 1g Injeksi</span>
-                                            <span style="font-weight: 700; color: var(--warning); background: #fef3c7; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">24 Vial</span>
-                                        </div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Menipis (Batas 80 Vial)</div>
-                                        <div class="progress-bar">
-                                            <div class="progress-fill warning" style="width: 30%;"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="stock-list" id="dashboard-stock-alerts">
+                                <!-- Generated by JS -->
                             </div>
                         </div>
 
                         <div class="card" style="background: linear-gradient(135deg, var(--secondary-dark), var(--secondary)); color: white; border: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                            <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;"><i class="fa-solid fa-truck-ramp-box"></i> Penerimaan PBF Hari Ini</h4>
-                            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 1rem;">Ada 2 faktur pengiriman obat dari Kimia Farma & Anugrah Argon Medica siap verifikasi.</p>
-                            <button class="btn" style="background: white; color: var(--secondary-dark); width: 100%; font-weight: 600;"><i class="fa-solid fa-clipboard-check"></i> Verifikasi Faktur & Batch</button>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700;"><i class="fa-solid fa-cash-register"></i> Kasir Penjualan Farmasi</h4>
+                            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 1rem;">Layani penjualan obat bebas, resep dokter, serta cetak struk thermal kasir secara instan.</p>
+                            <button class="btn" style="background: white; color: var(--secondary-dark); width: 100%; font-weight: 700;" onclick="switchTab('kasir')"><i class="fa-solid fa-receipt"></i> Buka Terminal Kasir</button>
                         </div>
                     </div>
                 </div>
@@ -322,95 +305,35 @@
                                     <td>
                                         <div style="display: flex; gap: 0.5rem;">
                                             <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-081')"><i class="fa-solid fa-hand-holding-medical"></i> Siapkan</button>
-                                            <button class="btn" style="background: #f1f5f9; padding: 0.35rem 0.6rem; font-size: 0.75rem;" title="Cetak Etiket"><i class="fa-solid fa-print"></i></button>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                            <span style="font-size: 1.1rem; font-weight: 800; background: #ecfdf5; color: var(--secondary-dark); padding: 0.2rem 0.5rem; border-radius: 0.35rem;">A-15</span>
+                                            <span style="font-size: 1.1rem; font-weight: 800; background: #fee2e2; color: var(--danger); padding: 0.2rem 0.5rem; border-radius: 0.35rem;">A-18</span>
                                             <div>
-                                                <div style="font-weight: 700; color: var(--text-main);">#RSP-083</div>
-                                                <div style="font-size: 0.75rem; color: var(--text-muted);">09:35 WIB</div>
+                                                <div style="font-weight: 700; color: var(--text-main);">#RSP-082</div>
+                                                <div style="font-size: 0.75rem; color: var(--text-muted);">09:48 WIB</div>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <div style="font-weight: 600;">An. Reyhan Saputra (6 Th)</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">No. RM: 00-29-84-10</div>
+                                        <div style="font-weight: 600;">Ny. Dewi Ratnasari (29 Th)</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">No. RM: 00-31-09-54</div>
                                     </td>
                                     <td>
-                                        <div style="font-weight: 500;">Poli Anak</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">dr. Hendra, Sp.A</div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-warning">1 R/ Pulveres (15 Bungkus)</span>
-                                    </td>
-                                    <td><span class="badge badge-warning">Racikan</span></td>
-                                    <td><span class="badge badge-warning"><i class="fa-solid fa-mortar-pestle"></i> Sedang Diracek</span></td>
-                                    <td>
-                                        <div style="display: flex; gap: 0.5rem;">
-                                            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-083')"><i class="fa-solid fa-check"></i> Selesai Racik</button>
-                                            <button class="btn" style="background: #f1f5f9; padding: 0.35rem 0.6rem; font-size: 0.75rem;" title="Cetak Etiket"><i class="fa-solid fa-print"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                            <span style="font-size: 1.1rem; font-weight: 800; background: #f1f5f9; color: var(--text-muted); padding: 0.2rem 0.5rem; border-radius: 0.35rem;">B-04</span>
-                                            <div>
-                                                <div style="font-weight: 700; color: var(--text-main);">#RSP-084</div>
-                                                <div style="font-size: 0.75rem; color: var(--text-muted);">09:40 WIB</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">Ny. Hartati (54 Th)</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">No. RM: 00-11-20-44</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 500;">Rawat Inap - Melati 3</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">dr. Ratna, Sp.JP</div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-info">4 R/ Injeksi & Infus</span>
-                                    </td>
-                                    <td><span class="badge badge-success">UDD (Unit Dose)</span></td>
-                                    <td><span class="badge badge-info"><i class="fa-solid fa-user-check"></i> Skrining Farmasis</span></td>
-                                    <td>
-                                        <div style="display: flex; gap: 0.5rem;">
-                                            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="detailResep('RSP-084')"><i class="fa-solid fa-signature"></i> Verifikasi</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                            <span style="font-size: 1.1rem; font-weight: 800; background: #dcfce7; color: var(--secondary-dark); padding: 0.2rem 0.5rem; border-radius: 0.35rem;">A-12</span>
-                                            <div>
-                                                <div style="font-weight: 700; color: var(--text-main);">#RSP-079</div>
-                                                <div style="font-size: 0.75rem; color: var(--text-muted);">09:10 WIB</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">Tn. Hendro Susanto (36 Th)</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">No. RM: 00-18-49-21</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 500;">Poli Gigi</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">drg. Budi Santoso</div>
+                                        <div style="font-weight: 500;">Poli Kebidanan & Kandungan</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">dr. Ratna, Sp.OG</div>
                                     </td>
                                     <td>
                                         <span class="badge badge-info">2 R/ Obat Jadi</span>
                                     </td>
                                     <td><span class="badge badge-success">Non-Racikan</span></td>
-                                    <td><span class="badge badge-success"><i class="fa-solid fa-bullhorn"></i> Siap Dipanggil (Loket 2)</span></td>
+                                    <td><span class="badge badge-danger"><i class="fa-solid fa-receipt"></i> Kasir / Bayar</span></td>
                                     <td>
                                         <div style="display: flex; gap: 0.5rem;">
-                                            <button class="btn" style="background: var(--secondary-dark); color: white; padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="alert('Panggilan Suara Loket Farmasi: Antrean A-12 Menuju Loket 2')"><i class="fa-solid fa-volume-high"></i> Panggil</button>
+                                            <button class="btn" style="background: var(--danger); color: white; padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="loadResepToKasir('RSP-2026-082')"><i class="fa-solid fa-cash-register"></i> Bayar Kasir</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -420,7 +343,143 @@
                 </div>
             </section>
 
-            <!-- VIEW 3: STOK & INVENTORI LENGKAP -->
+            <!-- VIEW 3: KASIR & PENJUALAN FARMASI (POS CASHIER & CETAK STRUK) -->
+            <section id="view-kasir" class="section-view">
+                <div class="page-header">
+                    <div>
+                        <h1>Kasir & Penjualan Farmasi</h1>
+                        <p>Kasir Point of Sale (POS) Apotek RS Cendana / SaffMedic untuk Penjualan Resep & Bebas.</p>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <span class="badge badge-info" style="font-size: 0.85rem; padding: 0.5rem 1rem;"><i class="fa-solid fa-receipt"></i> No Nota: <strong id="pos-nota-id">TRX-20260909-001</strong></span>
+                        <button class="btn" style="background: #f1f5f9; color: var(--text-main);" onclick="resetCart()"><i class="fa-solid fa-rotate-left"></i> Reset Cart</button>
+                    </div>
+                </div>
+
+                <div class="pos-layout">
+                    <!-- Left: Catalog & Search Obat -->
+                    <div class="card" style="padding: 1.25rem;">
+                        <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+                            <input type="text" id="pos-search" class="form-control" placeholder="Cari kode/nama obat..." style="flex: 1;" onkeyup="filterPosCatalog()">
+                            <select id="pos-filter-kat" class="form-control" style="width: 180px;" onchange="filterPosCatalog()">
+                                <option value="all">Semua Kategori</option>
+                                <option value="Obat Bebas">Obat Bebas</option>
+                                <option value="Obat Bebas Terbatas">Bebas Terbatas</option>
+                                <option value="Obat Keras">Obat Keras</option>
+                                <option value="Antibiotik">Antibiotik</option>
+                                <option value="Suplemen">Suplemen & Vitamin</option>
+                            </select>
+                        </div>
+
+                        <!-- Pill Categories -->
+                        <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                            <span class="med-cat-pill active" onclick="setPosPillFilter('all', this)">Semua</span>
+                            <span class="med-cat-pill" onclick="setPosPillFilter('Obat Bebas', this)">Obat Bebas</span>
+                            <span class="med-cat-pill" onclick="setPosPillFilter('Obat Keras', this)">Obat Keras</span>
+                            <span class="med-cat-pill" onclick="setPosPillFilter('Antibiotik', this)">Antibiotik</span>
+                            <span class="med-cat-pill" onclick="setPosPillFilter('Suplemen', this)">Vitamin</span>
+                        </div>
+
+                        <!-- Load Prescription Banner -->
+                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong style="color: #166534; font-size: 0.85rem;"><i class="fa-solid fa-prescription-bottle"></i> Load Item Resep Pasien:</strong>
+                                <span style="font-size: 0.8rem; color: #15803d; margin-left: 0.5rem;">Ny. Dewi Ratnasari (#RSP-2026-082)</span>
+                            </div>
+                            <button class="btn btn-secondary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;" onclick="loadResepToKasir('RSP-2026-082')"><i class="fa-solid fa-download"></i> Ambil Resep</button>
+                        </div>
+
+                        <!-- Medication Catalog Grid -->
+                        <div class="pos-catalog-grid" id="pos-catalog-container">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Cart & Checkout -->
+                    <div class="pos-cart-box">
+                        <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
+                            <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+                                <span><i class="fa-solid fa-cart-shopping" style="color: var(--secondary);"></i> Item Belanja / Resep</span>
+                                <span class="badge badge-info" id="cart-item-count">0 Item</span>
+                            </h3>
+                        </div>
+
+                        <!-- Patient Info Section -->
+                        <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <select id="pos-tipe-pasien" class="form-control" style="font-size: 0.8rem; padding: 0.4rem;" onchange="updatePosTipePasien()">
+                                    <option value="Umum">Pasien Umum / Bebas</option>
+                                    <option value="Resep Dokter">Resep Dokter (Rawat Jalan)</option>
+                                    <option value="BPJS Kesehatan">BPJS Kesehatan (Klaim)</option>
+                                    <option value="Asuransi Swasta">Asuransi Swasta</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="pos-nama-pasien" class="form-control" placeholder="Nama Pasien / Pembeli" style="font-size: 0.8rem; padding: 0.4rem; flex: 2;" value="Pasien Umum">
+                                <input type="text" id="pos-no-rm" class="form-control" placeholder="No RM (Opsional)" style="font-size: 0.8rem; padding: 0.4rem; flex: 1;">
+                            </div>
+                        </div>
+
+                        <!-- Cart Items List -->
+                        <div class="cart-items-list" id="cart-items-container">
+                            <div style="text-align: center; color: var(--text-muted); padding: 2rem 1rem; font-size: 0.85rem;">
+                                <i class="fa-solid fa-basket-shopping fa-2x" style="margin-bottom: 0.5rem; opacity: 0.4;"></i>
+                                <p>Keranjang masih kosong.<br>Klik obat di sebelah kiri untuk menambahkan.</p>
+                            </div>
+                        </div>
+
+                        <!-- Total Calculation -->
+                        <div style="border-top: 1px dashed var(--border); padding-top: 0.75rem; margin-top: auto; display: flex; flex-direction: column; gap: 0.4rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                                <span>Subtotal</span>
+                                <span id="pos-subtotal">Rp 0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); align-items: center;">
+                                <span>Diskon / Potongan</span>
+                                <input type="number" id="pos-diskon" class="form-control" style="width: 100px; padding: 0.2rem 0.5rem; text-align: right; font-size: 0.8rem;" value="0" onchange="calculateCartTotal()" onkeyup="calculateCartTotal()">
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 1.15rem; font-weight: 800; color: var(--secondary-dark); padding-top: 0.5rem; border-top: 1px solid var(--border);">
+                                <span>Total Bayar</span>
+                                <span id="pos-total-akhir">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <!-- Payment Form -->
+                        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 0.5rem; padding: 0.85rem; margin-top: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <label style="font-weight: 700; font-size: 0.8rem; width: 110px;">Metode Bayar:</label>
+                                <select id="pos-metode-bayar" class="form-control" style="flex: 1; font-size: 0.8rem; font-weight: 600;" onchange="handleMetodeBayarChange()">
+                                    <option value="Tunai">Tunai / Cash</option>
+                                    <option value="QRIS / E-Wallet">QRIS / E-Wallet</option>
+                                    <option value="Debit / Kartu Kredit">Debit / Kartu Kredit</option>
+                                    <option value="BPJS / Asuransi (Klaim Rp 0)">BPJS / Asuransi (Klaim Rp 0)</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <label style="font-weight: 700; font-size: 0.8rem; width: 110px;">Uang Diterima:</label>
+                                <input type="number" id="pos-uang-bayar" class="form-control" placeholder="0" style="flex: 1; font-weight: 700; font-size: 0.95rem; text-align: right;" onkeyup="calculateChange()" onchange="calculateChange()">
+                            </div>
+                            <div style="display: flex; gap: 0.35rem; margin-left: 110px;">
+                                <button type="button" class="btn" style="padding: 0.15rem 0.5rem; font-size: 0.7rem; background: white; border: 1px solid #cbd5e1;" onclick="quickCash(20000)">20k</button>
+                                <button type="button" class="btn" style="padding: 0.15rem 0.5rem; font-size: 0.7rem; background: white; border: 1px solid #cbd5e1;" onclick="quickCash(50000)">50k</button>
+                                <button type="button" class="btn" style="padding: 0.15rem 0.5rem; font-size: 0.7rem; background: white; border: 1px solid #cbd5e1;" onclick="quickCash(100000)">100k</button>
+                                <button type="button" class="btn" style="padding: 0.15rem 0.5rem; font-size: 0.7rem; background: white; border: 1px solid #cbd5e1;" onclick="quickCash('exact')">Pas</button>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 700; color: #047857; margin-top: 0.25rem;">
+                                <span>Kembalian:</span>
+                                <span id="pos-kembalian">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                            <button class="btn btn-secondary" style="flex: 1; padding: 0.85rem; font-size: 0.95rem; justify-content: center; font-weight: 700;" onclick="processCheckout()"><i class="fa-solid fa-print"></i> Bayar & Cetak Struk</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 4: STOK & INVENTORI LENGKAP -->
             <section id="view-stok" class="section-view">
                 <div class="page-header">
                     <div>
@@ -435,34 +494,35 @@
 
                 <!-- Tabs Filter Obat -->
                 <div class="view-tabs">
-                    <button class="view-tab active"><i class="fa-solid fa-boxes-stacked"></i> Semua Stok (412 Item)</button>
-                    <button class="view-tab"><i class="fa-solid fa-triangle-exclamation"></i> Defecta / Menipis (28)</button>
-                    <button class="view-tab"><i class="fa-solid fa-clock"></i> Expire &lt; 6 Bulan (14)</button>
-                    <button class="view-tab"><i class="fa-solid fa-shield-halved"></i> Obat Keras & Narkotika</button>
-                    <button class="view-tab"><i class="fa-solid fa-syringe"></i> Vaksin & Rantai Dingin (Cold Chain)</button>
+                    <button class="view-tab active" onclick="filterStokTab('all', this)"><i class="fa-solid fa-boxes-stacked"></i> Semua Stok (<span id="count-stok-all">25</span> Item)</button>
+                    <button class="view-tab" onclick="filterStokTab('defecta', this)"><i class="fa-solid fa-triangle-exclamation"></i> Defecta / Menipis (<span id="count-stok-defecta">4</span>)</button>
+                    <button class="view-tab" onclick="filterStokTab('expire', this)"><i class="fa-solid fa-clock"></i> Expire &lt; 6 Bulan (<span id="count-stok-expire">3</span>)</button>
+                    <button class="view-tab" onclick="filterStokTab('keras', this)"><i class="fa-solid fa-shield-halved"></i> Obat Keras & Narkotika</button>
                 </div>
 
                 <!-- Search & Filters -->
                 <div class="card" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
                     <div class="filter-bar" style="margin-bottom: 0; align-items: center; justify-content: space-between;">
                         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                            <input type="text" class="form-control" placeholder="Cari Kode Obat, Nama Generik, Batch..." style="width: 280px;">
-                            <select class="form-control">
-                                <option>Semua Bentuk Sediaan</option>
-                                <option>Tablet / Kapsul / Strip</option>
-                                <option>Sirup / Cairan</option>
-                                <option>Injeksi / Vial / Ampul</option>
-                                <option>Salep / Krim / Tetes</option>
+                            <input type="text" id="stok-search" class="form-control" placeholder="Cari Kode Obat, Nama Generik, Batch..." style="width: 280px;" onkeyup="renderStokTable()">
+                            <select id="stok-filter-sediaan" class="form-control" onchange="renderStokTable()">
+                                <option value="all">Semua Bentuk Sediaan</option>
+                                <option value="Tablet">Tablet / Kapsul</option>
+                                <option value="Sirup">Sirup / Cairan</option>
+                                <option value="Injeksi">Injeksi / Vial</option>
+                                <option value="Salep">Salep / Tetes</option>
                             </select>
-                            <select class="form-control">
-                                <option>Lokasi Rak / Gudang</option>
-                                <option>Apotek Rawat Jalan (Depo 1)</option>
-                                <option>Depo Rawat Inap</option>
-                                <option>Gudang Farmasi Utama</option>
+                            <select id="stok-filter-lokasi" class="form-control" onchange="renderStokTable()">
+                                <option value="all">Lokasi Rak / Depo</option>
+                                <option value="Rak A-01">Rak A-01 (Depo 1)</option>
+                                <option value="Rak B-04">Rak B-04</option>
+                                <option value="Rak C-12">Rak C-12</option>
+                                <option value="Lemari Pendingin">Lemari Pendingin (Cold Chain)</option>
+                                <option value="Vault Narkotika">Vault Narkotika</option>
                             </select>
                         </div>
                         <div>
-                            <button class="btn" style="background: #f1f5f9; color: var(--text-main);"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
+                            <button class="btn" style="background: #f1f5f9; color: var(--text-main);" onclick="alert('Data stok obat berhasil di-export ke format Excel (.xlsx)!')"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
                         </div>
                     </div>
                 </div>
@@ -482,98 +542,81 @@
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="stok-table-body">
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 5: LAPORAN FARMASI -->
+            <section id="view-laporan" class="section-view">
+                <div class="page-header">
+                    <div>
+                        <h1>Laporan Farmasi & Penjualan</h1>
+                        <p>Analisis penjualan kasir, obat terlaris (Fast-Moving), serta laporan mutasi stok farmasi.</p>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn btn-secondary" onclick="alert('Laporan Rekapitulasi Farmasi Hari Ini Berhasil Di-Download (PDF)')"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card green">
+                        <div class="stat-title">Omset Tunai (Cash)</div>
+                        <div class="stat-value">Rp 2.450.000</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Omset Non-Tunai / QRIS</div>
+                        <div class="stat-value">Rp 1.600.000</div>
+                    </div>
+                    <div class="stat-card yellow">
+                        <div class="stat-title">Klaim BPJS Hari Ini</div>
+                        <div class="stat-value">Rp 800.000</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fa-solid fa-list-check" style="color: var(--secondary);"></i> Riwayat Transaksi Kasir Hari Ini</h3>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <div style="font-weight: 700; color: var(--text-main);">Amoxicillin Trihydrate 500mg</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">KODE: MED-AB-0012 | Pabrik: Kimia Farma</div>
-                                    </td>
-                                    <td>
-                                        <div>Antibiotik (Obat Keras)</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Kapsul / Strip (10x10)</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">BTX-24901</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Exp: 14 Des 2027</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 800; font-size: 1rem; color: var(--danger);">12 Strip</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Min: 50 Strip</div>
-                                    </td>
-                                    <td><span class="badge badge-danger"><i class="fa-solid fa-arrow-trend-down"></i> Defecta Kritis</span></td>
-                                    <td>Rp 8.500 / strip</td>
-                                    <td>
-                                        <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="openStokCard('Amoxicillin 500mg')"><i class="fa-solid fa-chart-line"></i> Kartu Stok</button>
-                                    </td>
+                                    <th>No. Nota</th>
+                                    <th>Jam</th>
+                                    <th>Nama Pasien</th>
+                                    <th>Metode Bayar</th>
+                                    <th>Total Transaksi</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="laporan-kasir-body">
+                                <tr>
+                                    <td><strong>TRX-20260909-001</strong></td>
+                                    <td>08:15 WIB</td>
+                                    <td>Tn. Bambang S.</td>
+                                    <td>Tunai</td>
+                                    <td>Rp 125.000</td>
+                                    <td><span class="badge badge-success">Selesai</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div style="font-weight: 700; color: var(--text-main);">Paracetamol Infus 10mg/ml 100ml</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">KODE: MED-AN-0045 | Pabrik: Sanbe Farma</div>
-                                    </td>
-                                    <td>
-                                        <div>Analgesik / Antipiretik</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Botol Infus</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">INF-88120</div>
-                                        <div style="font-size: 0.75rem; color: var(--warning); font-weight: 600;">Exp: 22 Nov 2026 (&lt; 3 Bln)</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 800; font-size: 1rem; color: var(--danger);">8 Botol</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Min: 40 Botol</div>
-                                    </td>
-                                    <td><span class="badge badge-danger"><i class="fa-solid fa-triangle-exclamation"></i> Stok Habis & Expire</span></td>
-                                    <td>Rp 42.000 / btl</td>
-                                    <td>
-                                        <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="openStokCard('Paracetamol Infus')"><i class="fa-solid fa-chart-line"></i> Kartu Stok</button>
-                                    </td>
+                                    <td><strong>TRX-20260909-002</strong></td>
+                                    <td>08:45 WIB</td>
+                                    <td>Ny. Siti Aminah</td>
+                                    <td>QRIS / E-Wallet</td>
+                                    <td>Rp 84.000</td>
+                                    <td><span class="badge badge-success">Selesai</span></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div style="font-weight: 700; color: var(--text-main);">Metformin HCl 500mg</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">KODE: MED-DM-0021 | Pabrik: Dexa Medica</div>
-                                    </td>
-                                    <td>
-                                        <div>Antidiabetik Oral</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Tablet Salut Selaput</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">DX-10924</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Exp: 10 Okt 2028</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 800; font-size: 1rem; color: var(--secondary-dark);">340 Strip</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Min: 100 Strip</div>
-                                    </td>
-                                    <td><span class="badge badge-success"><i class="fa-solid fa-check"></i> Stok Aman</span></td>
-                                    <td>Rp 4.200 / strip</td>
-                                    <td>
-                                        <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="openStokCard('Metformin 500mg')"><i class="fa-solid fa-chart-line"></i> Kartu Stok</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="font-weight: 700; color: var(--text-main);">Ceftriaxone 1g Serbuk Injeksi</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">KODE: MED-AB-0091 | Pabrik: Kalbe Farma</div>
-                                    </td>
-                                    <td>
-                                        <div>Sefalosporin Generasi III</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Vial Kering</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">KB-9941A</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Exp: 08 Jan 2028</div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 800; font-size: 1rem; color: var(--warning);">24 Vial</div>
-                                        <div style="font-size: 0.75rem; color: var(--text-muted);">Min: 60 Vial</div>
-                                    </td>
-                                    <td><span class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i> Waspada Defecta</span></td>
-                                    <td>Rp 35.000 / vial</td>
-                                    <td>
-                                        <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="openStokCard('Ceftriaxone 1g')"><i class="fa-solid fa-chart-line"></i> Kartu Stok</button>
-                                    </td>
+                                    <td><strong>TRX-20260909-003</strong></td>
+                                    <td>09:20 WIB</td>
+                                    <td>Tn. Rahmat Hidayat</td>
+                                    <td>BPJS Kesehatan</td>
+                                    <td>Rp 0 (Klaim)</td>
+                                    <td><span class="badge badge-success">Selesai</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -653,73 +696,204 @@
                 <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; margin-bottom: 1rem;">
                     <div>
                         <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Kode Obat</label>
-                        <input type="text" class="form-control" value="MED-XX-0089">
+                        <input type="text" id="new-med-kode" class="form-control" value="MED-OB-0030">
                     </div>
                     <div>
                         <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Nama Obat & Dosis</label>
-                        <input type="text" class="form-control" placeholder="Contoh: Cetirizine HCl 10mg">
+                        <input type="text" id="new-med-nama" class="form-control" placeholder="Contoh: Cetirizine HCl 10mg">
                     </div>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                     <div>
                         <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Bentuk Sediaan</label>
-                        <select class="form-control">
-                            <option>Tablet / Kapsul</option>
-                            <option>Sirup / Drop</option>
-                            <option>Injeksi / Vial</option>
-                            <option>Salep / Gel</option>
+                        <select id="new-med-bentuk" class="form-control">
+                            <option value="Tablet">Tablet / Kapsul</option>
+                            <option value="Sirup">Sirup / Drop</option>
+                            <option value="Injeksi">Injeksi / Vial</option>
+                            <option value="Salep">Salep / Gel</option>
                         </select>
                     </div>
                     <div>
                         <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Kategori Obat</label>
-                        <select class="form-control">
-                            <option>Obat Bebas (Hijau)</option>
-                            <option>Obat Bebas Terbatas (Biru)</option>
-                            <option>Obat Keras (K Merah)</option>
-                            <option>Psikotropika / Narkotika</option>
+                        <select id="new-med-kategori" class="form-control">
+                            <option value="Obat Bebas">Obat Bebas (Hijau)</option>
+                            <option value="Obat Bebas Terbatas">Obat Bebas Terbatas (Biru)</option>
+                            <option value="Obat Keras">Obat Keras (K Merah)</option>
+                            <option value="Antibiotik">Antibiotik</option>
+                            <option value="Suplemen">Suplemen & Vitamin</option>
                         </select>
                     </div>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                     <div>
-                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">No. Batch</label>
-                        <input type="text" class="form-control" placeholder="BTC-XXXX">
+                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Pabrik / Produsen</label>
+                        <input type="text" id="new-med-pabrik" class="form-control" placeholder="Kimia Farma">
                     </div>
                     <div>
-                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Tanggal Kadaluarsa</label>
-                        <input type="date" class="form-control">
+                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Stok Awal</label>
+                        <input type="number" id="new-med-stok" class="form-control" value="100">
                     </div>
                     <div>
-                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Batas Stok Min.</label>
-                        <input type="number" class="form-control" value="20">
+                        <label class="form-label" style="font-size: 0.8rem; font-weight: 600;">Harga Jual (Rp)</label>
+                        <input type="number" id="new-med-harga" class="form-control" value="12000">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn" style="background: #e2e8f0; color: var(--text-main);" onclick="closeModal('modal-obat')">Batal</button>
-                <button class="btn btn-secondary" onclick="alert('Data master obat berhasil disimpan!'); closeModal('modal-obat')"><i class="fa-solid fa-save"></i> Simpan Obat</button>
+                <button class="btn btn-secondary" onclick="saveNewMedication()"><i class="fa-solid fa-save"></i> Simpan Obat</button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC FOR NAVIGATION & INTERACTIVITY -->
+    <!-- MODAL 3: CETAK STRUK THERMAL KASIR -->
+    <div id="modal-struk" class="modal-overlay">
+        <div class="modal-box" style="max-width: 420px; background: #f8fafc;">
+            <div class="modal-header no-print">
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main);"><i class="fa-solid fa-receipt"></i> Struk Thermal Penjualan Kasir</h3>
+                <button onclick="closeModal('modal-struk')" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-muted);">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 1rem;">
+                
+                <!-- Thermal Receipt Layout -->
+                <div class="thermal-receipt" id="receipt-print-area">
+                    <div class="receipt-header">
+                        <div class="receipt-title">RS CENDANA FARMASI</div>
+                        <div style="font-size: 0.75rem;">INSTALASI FARMASI RS CENDANA</div>
+                        <div style="font-size: 0.7rem;">Jl. Kesehatan No. 45, Jakarta Selatan</div>
+                        <div style="font-size: 0.7rem;">Telp: (021) 789-0123 / SIPA: 446/2026</div>
+                    </div>
+                    
+                    <div style="font-size: 0.75rem; display: flex; justify-content: space-between;">
+                        <span>No Nota: <strong id="struk-nota">TRX-001</strong></span>
+                        <span id="struk-jam">09:50 WIB</span>
+                    </div>
+                    <div style="font-size: 0.75rem; display: flex; justify-content: space-between;">
+                        <span>Tgl: <span id="struk-tgl">09/09/2026</span></span>
+                        <span>Kasir: Apt. Rina</span>
+                    </div>
+                    <div style="font-size: 0.75rem;">Pasien: <strong id="struk-pasien">Tn. Pasien Umum</strong> (<span id="struk-tipe">Umum</span>)</div>
+                    
+                    <div class="receipt-divider"></div>
+
+                    <table>
+                        <thead>
+                            <tr style="border-bottom: 1px dashed #444;">
+                                <th style="text-align: left;">Item Obat</th>
+                                <th style="text-align: center;">Qty</th>
+                                <th class="text-right">Harga</th>
+                                <th class="text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="struk-items-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+
+                    <div class="receipt-divider"></div>
+
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Subtotal:</span>
+                        <span id="struk-subtotal">Rp 0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Diskon:</span>
+                        <span id="struk-diskon">Rp 0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem; margin-top: 0.2rem;">
+                        <span>TOTAL:</span>
+                        <span id="struk-total">Rp 0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.2rem;">
+                        <span>Bayar (<span id="struk-metode">Tunai</span>):</span>
+                        <span id="struk-bayar">Rp 0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                        <span>Kembali:</span>
+                        <span id="struk-kembali">Rp 0</span>
+                    </div>
+
+                    <div class="receipt-footer">
+                        <p style="font-weight: bold; margin-bottom: 0.2rem;">TERIMA KASIH</p>
+                        <p>Semoga Lekas Sembuh</p>
+                        <p style="font-size: 0.65rem; margin-top: 0.4rem; color: #555;">Obat yang sudah dibeli tidak dapat ditukar / dikembalikan.</p>
+                        <div style="margin-top: 0.5rem; text-align: center;">
+                            <i class="fa-solid fa-barcode fa-2x" style="letter-spacing: 4px;"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer no-print">
+                <button class="btn" style="background: #e2e8f0; color: var(--text-main);" onclick="closeModal('modal-struk')">Tutup</button>
+                <button class="btn btn-secondary" onclick="window.print()"><i class="fa-solid fa-print"></i> Cetak Struk (Printer Thermal)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC FOR DATABASE, POS CASHIER, SEARCH & NAVIGATION -->
     <script>
+        // MASTER DATABASE OBAT (INDONESIAN PHARMACY MEDICATION DATABASE)
+        let medicationDatabase = [
+            { id: 1, kode: "MED-AN-0001", nama: "Paracetamol 500mg Tablet", kategori: "Obat Bebas", bentuk: "Tablet", pabrik: "Kimia Farma", batch: "PCT-2026A", exp: "2028-05-15", stok: 450, minStok: 100, harga: 5000, lokasi: "Rak A-01", bpom: "GBL98123001A1", status: "aman" },
+            { id: 2, kode: "MED-AB-0012", nama: "Amoxicillin Trihydrate 500mg", kategori: "Antibiotik", bentuk: "Tablet", pabrik: "Kalbe Farma", batch: "BTX-24901", exp: "2027-12-14", stok: 12, minStok: 50, harga: 8500, lokasi: "Rak B-04", bpom: "GKL01112003A1", status: "defecta" },
+            { id: 3, kode: "MED-AN-0045", nama: "Paracetamol Infus 10mg/ml 100ml", kategori: "Obat Keras", bentuk: "Injeksi", pabrik: "Sanbe Farma", batch: "INF-88120", exp: "2026-11-22", stok: 8, minStok: 40, harga: 42000, lokasi: "Rak C-12", bpom: "DKL15002011A1", status: "expire" },
+            { id: 4, kode: "MED-DM-0021", nama: "Metformin HCl 500mg", kategori: "Obat Keras", bentuk: "Tablet", pabrik: "Dexa Medica", batch: "DX-10924", exp: "2028-10-10", stok: 340, minStok: 100, harga: 4200, lokasi: "Rak A-01", bpom: "GKL04050012A1", status: "aman" },
+            { id: 5, kode: "MED-AB-0091", nama: "Ceftriaxone 1g Injeksi Vial", kategori: "Antibiotik", bentuk: "Injeksi", pabrik: "Kalbe Farma", batch: "KB-9941A", exp: "2028-01-08", stok: 24, minStok: 60, harga: 35000, lokasi: "Rak C-12", bpom: "GKL12004022A1", status: "defecta" },
+            { id: 6, kode: "MED-HT-0015", nama: "Amlodipine Besylate 10mg", kategori: "Obat Keras", bentuk: "Tablet", pabrik: "Indofarma", batch: "AML-9021", exp: "2027-08-20", stok: 280, minStok: 80, harga: 6500, lokasi: "Rak A-01", bpom: "GKL08092004A1", status: "aman" },
+            { id: 7, kode: "MED-AG-0004", nama: "Omeprazole Kapsul 20mg", kategori: "Obat Keras", bentuk: "Tablet", pabrik: "Dexa Medica", batch: "OMP-7712", exp: "2028-04-11", stok: 190, minStok: 50, harga: 11000, lokasi: "Rak B-04", bpom: "GKL06044005A1", status: "aman" },
+            { id: 8, kode: "MED-AN-0088", nama: "Ibuprofen 400mg Tablet", kategori: "Obat Bebas Terbatas", bentuk: "Tablet", pabrik: "Pharos", batch: "IBU-3012", exp: "2027-09-30", stok: 310, minStok: 100, harga: 7000, lokasi: "Rak A-01", bpom: "DTL02088014A1", status: "aman" },
+            { id: 9, kode: "MED-VT-0101", nama: "Vitamin C 500mg Strip", kategori: "Suplemen", bentuk: "Tablet", pabrik: "Kimia Farma", batch: "VTC-1102", exp: "2029-01-01", stok: 500, minStok: 100, harga: 6000, lokasi: "Rak A-01", bpom: "SD051520111", status: "aman" },
+            { id: 10, kode: "MED-RS-0055", nama: "Ventolin Inhaler 100mcg", kategori: "Obat Keras", bentuk: "Sirup", pabrik: "GSK", batch: "VNT-8819", exp: "2027-03-15", stok: 15, minStok: 30, harga: 145000, lokasi: "Rak C-12", bpom: "DKI09022033A1", status: "defecta" },
+            { id: 11, kode: "MED-AB-0034", nama: "Cefadroxil 500mg Kapsul", kategori: "Antibiotik", bentuk: "Tablet", pabrik: "Kalbe Farma", batch: "CFD-2021", exp: "2028-06-18", stok: 220, minStok: 60, harga: 14000, lokasi: "Rak B-04", bpom: "GKL03022011A1", status: "aman" },
+            { id: 12, kode: "MED-AL-0007", nama: "Cetirizine HCl 10mg Tablet", kategori: "Obat Bebas Terbatas", bentuk: "Tablet", pabrik: "Darya-Varia", batch: "CTZ-9011", exp: "2028-11-05", stok: 400, minStok: 80, harga: 5500, lokasi: "Rak A-01", bpom: "GTL10044022A1", status: "aman" },
+            { id: 13, kode: "MED-AN-0077", nama: "Asam Mefenamat 500mg", kategori: "Obat Keras", bentuk: "Tablet", pabrik: "Kimia Farma", batch: "MEF-8820", exp: "2027-10-12", stok: 180, minStok: 60, harga: 8000, lokasi: "Rak A-01", bpom: "GKL02099033A1", status: "aman" },
+            { id: 14, kode: "MED-AG-0033", nama: "Lansoprazole Kapsul 30mg", kategori: "Obat Keras", bentuk: "Tablet", pabrik: "Sanbe Farma", batch: "LNS-4011", exp: "2028-02-28", stok: 130, minStok: 40, harga: 16500, lokasi: "Rak B-04", bpom: "DKL08044021A1", status: "aman" },
+            { id: 15, kode: "MED-HT-0044", nama: "Simvastatin 20mg Tablet", kategori: "Obat Keras", bentuk: "Tablet", pabrik: "Hexpharm", batch: "SMV-1029", exp: "2028-07-22", stok: 260, minStok: 80, harga: 7500, lokasi: "Rak A-01", bpom: "GKL09022019A1", status: "aman" },
+            { id: 16, kode: "MED-VT-0202", nama: "Neurobion Forte Tablet", kategori: "Suplemen", bentuk: "Tablet", pabrik: "Merck", batch: "NRB-5510", exp: "2029-03-30", stok: 350, minStok: 100, harga: 48000, lokasi: "Rak A-01", bpom: "DBL7215801216A1", status: "aman" },
+            { id: 17, kode: "MED-RS-0012", nama: "OBH Combi Batuk Sirup 100ml", kategori: "Obat Bebas", bentuk: "Sirup", pabrik: "Combiphar", batch: "OBH-9011", exp: "2027-05-10", stok: 45, minStok: 30, harga: 22000, lokasi: "Rak B-04", bpom: "DBL7204100137A1", status: "aman" },
+            { id: 18, kode: "MED-AN-0099", nama: "Ondansetron 4mg Injeksi", kategori: "Obat Keras", bentuk: "Injeksi", pabrik: "Kalbe Farma", batch: "OND-1102", exp: "2026-10-15", stok: 6, minStok: 25, harga: 28000, lokasi: "Rak C-12", bpom: "GKL11022044A1", status: "expire" },
+            { id: 19, kode: "MED-ST-0005", nama: "Dexamethasone 0.5mg Tablet", kategori: "Obat Keras", bentuk: "Tablet", pabrik: "Indofarma", batch: "DEX-7719", exp: "2028-09-09", stok: 420, minStok: 100, harga: 3000, lokasi: "Rak A-01", bpom: "GKL92088011A1", status: "aman" },
+            { id: 20, kode: "MED-AB-0088", nama: "Azithromycin 500mg Tablet", kategori: "Antibiotik", bentuk: "Tablet", pabrik: "Pharos", batch: "AZT-3321", exp: "2028-08-14", stok: 95, minStok: 40, harga: 24000, lokasi: "Rak B-04", bpom: "GKL14022099A1", status: "aman" },
+            { id: 21, kode: "MED-AG-0009", nama: "Antasida Doen Tablet Kunyah", kategori: "Obat Bebas", bentuk: "Tablet", pabrik: "Kimia Farma", batch: "ANT-8812", exp: "2029-01-20", stok: 600, minStok: 150, harga: 3500, lokasi: "Rak A-01", bpom: "GBL88123004A1", status: "aman" },
+            { id: 22, kode: "MED-SL-0011", nama: "Bioplacenton Salep 15g", kategori: "Obat Bebas Terbatas", bentuk: "Salep", pabrik: "Kalbe Farma", batch: "BIO-9011", exp: "2028-03-12", stok: 80, minStok: 30, harga: 32000, lokasi: "Rak B-04", bpom: "DTL7211601928A1", status: "aman" },
+            { id: 23, kode: "MED-CC-0001", nama: "Vaksin Hepatitis B Injeksi", kategori: "Obat Keras", bentuk: "Injeksi", pabrik: "Bio Farma", batch: "VHB-2026", exp: "2027-01-10", stok: 18, minStok: 30, harga: 120000, lokasi: "Lemari Pendingin", bpom: "GKL09022099A1", status: "defecta" },
+            { id: 24, kode: "MED-RS-0044", nama: "Ambroxol Sirup 15mg/5ml", kategori: "Obat Bebas Terbatas", bentuk: "Sirup", pabrik: "Dexa Medica", batch: "AMB-2011", exp: "2028-06-30", stok: 75, minStok: 25, harga: 11500, lokasi: "Rak B-04", bpom: "GTL04050099A1", status: "aman" },
+            { id: 25, kode: "MED-AN-0031", nama: "Allopurinol 100mg Tablet", kategori: "Obat Keras", bentuk: "Tablet", pabrik: "Hexpharm", batch: "ALP-4412", exp: "2028-11-20", stok: 290, minStok: 80, harga: 4800, lokasi: "Rak A-01", bpom: "GKL05022033A1", status: "aman" }
+        ];
+
+        // POS CART STATE
+        let posCart = [];
+        let currentPosPillCategory = 'all';
+
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStokTable();
+            renderDashboardAlerts();
+            renderPosCatalog();
+            updateTotalObatBadge();
+        });
+
+        function updateTotalObatBadge() {
+            document.getElementById('badge-total-obat').innerText = medicationDatabase.length;
+            document.getElementById('count-stok-all').innerText = medicationDatabase.length;
+            const defectaCount = medicationDatabase.filter(m => m.stok <= m.minStok).length;
+            const expireCount = medicationDatabase.filter(m => m.status === 'expire').length;
+            document.getElementById('count-stok-defecta').innerText = defectaCount;
+            document.getElementById('count-stok-expire').innerText = expireCount;
+            document.getElementById('stat-defecta-count').innerText = defectaCount;
+        }
+
+        // TAB NAVIGATION
         function switchTab(viewId) {
-            // Hide all sections
             document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
-            // Remove active classes on nav
             document.querySelectorAll('.sidebar-nav .nav-item').forEach(el => el.classList.remove('active-green'));
 
-            // Show selected
             const target = document.getElementById('view-' + viewId);
-            if (target) {
-                target.classList.add('active');
-            }
+            if (target) target.classList.add('active');
 
             const activeNav = document.getElementById('nav-' + viewId);
-            if (activeNav) {
-                activeNav.classList.add('active-green');
-            }
+            if (activeNav) activeNav.classList.add('active-green');
         }
 
         function openModal(id) {
@@ -730,17 +904,478 @@
             document.getElementById(id).classList.remove('active');
         }
 
+        // RENDER STOK TABLE DYNAMICALLY
+        function renderStokTable() {
+            const tbody = document.getElementById('stok-table-body');
+            if (!tbody) return;
+
+            const query = (document.getElementById('stok-search')?.value || '').toLowerCase();
+            const sediaanFilter = document.getElementById('stok-filter-sediaan')?.value || 'all';
+            const lokasiFilter = document.getElementById('stok-filter-lokasi')?.value || 'all';
+
+            const filtered = medicationDatabase.filter(m => {
+                const matchQuery = m.nama.toLowerCase().includes(query) || m.kode.toLowerCase().includes(query) || m.batch.toLowerCase().includes(query) || m.pabrik.toLowerCase().includes(query);
+                const matchSediaan = (sediaanFilter === 'all') || m.bentuk.toLowerCase().includes(sediaanFilter.toLowerCase());
+                const matchLokasi = (lokasiFilter === 'all') || (m.lokasi === lokasiFilter);
+                return matchQuery && matchSediaan && matchLokasi;
+            });
+
+            tbody.innerHTML = filtered.map(m => {
+                let statusBadge = '<span class="badge badge-success"><i class="fa-solid fa-check"></i> Stok Aman</span>';
+                let stokColor = 'var(--secondary-dark)';
+                if (m.stok <= m.minStok && m.status === 'expire') {
+                    statusBadge = '<span class="badge badge-danger"><i class="fa-solid fa-circle-exclamation"></i> Defecta & Expire</span>';
+                    stokColor = 'var(--danger)';
+                } else if (m.stok <= m.minStok) {
+                    statusBadge = '<span class="badge badge-danger"><i class="fa-solid fa-arrow-trend-down"></i> Defecta Kritis</span>';
+                    stokColor = 'var(--danger)';
+                } else if (m.status === 'expire') {
+                    statusBadge = '<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> Expire < 6 Bln</span>';
+                    stokColor = 'var(--warning)';
+                }
+
+                return `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700; color: var(--text-main);">${m.nama}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">KODE: ${m.kode} | BPOM: ${m.bpom}</div>
+                        </td>
+                        <td>
+                            <div>${m.kategori}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">${m.bentuk} (${m.pabrik})</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">${m.batch}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Exp: ${m.exp}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 800; font-size: 1rem; color: ${stokColor};">${m.stok} Unit</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Min: ${m.minStok} | ${m.lokasi}</div>
+                        </td>
+                        <td>${statusBadge}</td>
+                        <td style="font-weight: 700; color: var(--text-main);">Rp ${m.harga.toLocaleString('id-ID')} / unit</td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="openStokCard('${m.nama}')"><i class="fa-solid fa-chart-line"></i> Kartu Stok</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterStokTab(type, btn) {
+            document.querySelectorAll('#view-stok .view-tabs .view-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (type === 'all') {
+                renderStokTable();
+            } else if (type === 'defecta') {
+                const tbody = document.getElementById('stok-table-body');
+                const filtered = medicationDatabase.filter(m => m.stok <= m.minStok);
+                tbody.innerHTML = filtered.map(m => `
+                    <tr>
+                        <td><div style="font-weight: 700;">${m.nama}</div><div style="font-size: 0.75rem;">${m.kode}</div></td>
+                        <td>${m.kategori}</td>
+                        <td>${m.batch}</td>
+                        <td><strong style="color: var(--danger);">${m.stok} Unit</strong></td>
+                        <td><span class="badge badge-danger">Defecta</span></td>
+                        <td>Rp ${m.harga.toLocaleString('id-ID')}</td>
+                        <td><button class="btn btn-secondary" style="font-size:0.75rem;" onclick="openStokCard('${m.nama}')">Stok</button></td>
+                    </tr>
+                `).join('');
+            } else if (type === 'expire') {
+                const tbody = document.getElementById('stok-table-body');
+                const filtered = medicationDatabase.filter(m => m.status === 'expire');
+                tbody.innerHTML = filtered.map(m => `
+                    <tr>
+                        <td><div style="font-weight: 700;">${m.nama}</div><div style="font-size: 0.75rem;">${m.kode}</div></td>
+                        <td>${m.kategori}</td>
+                        <td><strong style="color: var(--warning);">${m.exp}</strong></td>
+                        <td>${m.stok} Unit</td>
+                        <td><span class="badge badge-warning">Expire Soon</span></td>
+                        <td>Rp ${m.harga.toLocaleString('id-ID')}</td>
+                        <td><button class="btn btn-secondary" style="font-size:0.75rem;" onclick="openStokCard('${m.nama}')">Stok</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // RENDER DASHBOARD ALERTS
+        function renderDashboardAlerts() {
+            const container = document.getElementById('dashboard-stock-alerts');
+            if (!container) return;
+
+            const defectaItems = medicationDatabase.filter(m => m.stok <= m.minStok).slice(0, 3);
+            container.innerHTML = defectaItems.map(m => `
+                <div class="stock-item">
+                    <div class="stock-icon danger">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="stock-info">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                            <span style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">${m.nama}</span>
+                            <span style="font-weight: 700; color: var(--danger); background: #fee2e2; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">${m.stok} / ${m.minStok}</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Sisa stok menipis. Lokasi: ${m.lokasi}.</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill danger" style="width: ${Math.min(100, Math.round((m.stok / m.minStok) * 100))}%;"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // POS CASHIER LOGIC
+        function renderPosCatalog() {
+            const container = document.getElementById('pos-catalog-container');
+            if (!container) return;
+
+            const searchVal = (document.getElementById('pos-search')?.value || '').toLowerCase();
+            const selectCat = document.getElementById('pos-filter-kat')?.value || 'all';
+
+            const filtered = medicationDatabase.filter(m => {
+                const matchSearch = m.nama.toLowerCase().includes(searchVal) || m.kode.toLowerCase().includes(searchVal);
+                const matchSelect = (selectCat === 'all') || (m.kategori.toLowerCase().includes(selectCat.toLowerCase()));
+                const matchPill = (currentPosPillCategory === 'all') || (m.kategori.toLowerCase().includes(currentPosPillCategory.toLowerCase()));
+                return matchSearch && matchSelect && matchPill;
+            });
+
+            container.innerHTML = filtered.map(m => {
+                let badgeClass = 'badge-info';
+                if (m.kategori === 'Obat Keras' || m.kategori === 'Antibiotik') badgeClass = 'badge-danger';
+                if (m.kategori === 'Obat Bebas') badgeClass = 'badge-success';
+
+                return `
+                    <div class="med-card" onclick="addToCart(${m.id})">
+                        <span class="badge ${badgeClass} med-badge">${m.kategori}</span>
+                        <div>
+                            <div class="med-title">${m.nama}</div>
+                            <div class="med-sub">${m.bentuk} &bull; Stok: <strong>${m.stok}</strong></div>
+                        </div>
+                        <div class="med-footer">
+                            <div class="med-price">Rp ${m.harga.toLocaleString('id-ID')}</div>
+                            <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" title="Tambah ke Keranjang"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterPosCatalog() {
+            renderPosCatalog();
+        }
+
+        function setPosPillFilter(cat, btn) {
+            currentPosPillCategory = cat;
+            document.querySelectorAll('.med-cat-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPosCatalog();
+        }
+
+        // CART LOGIC
+        function addToCart(medId) {
+            const med = medicationDatabase.find(m => m.id === medId);
+            if (!med) return;
+
+            if (med.stok <= 0) {
+                alert('Stok obat ' + med.nama + ' sedang kosong!');
+                return;
+            }
+
+            const existing = posCart.find(item => item.id === medId);
+            if (existing) {
+                if (existing.qty + 1 > med.stok) {
+                    alert('Jumlah melebihi stok yang tersedia (' + med.stok + ')');
+                    return;
+                }
+                existing.qty += 1;
+            } else {
+                posCart.push({
+                    id: med.id,
+                    kode: med.kode,
+                    nama: med.nama,
+                    harga: med.harga,
+                    qty: 1
+                });
+            }
+
+            renderCart();
+        }
+
+        function updateCartQty(medId, delta) {
+            const item = posCart.find(i => i.id === medId);
+            if (!item) return;
+
+            const med = medicationDatabase.find(m => m.id === medId);
+            if (item.qty + delta > med.stok) {
+                alert('Stok tidak mencukupi (Tersedia: ' + med.stok + ')');
+                return;
+            }
+
+            item.qty += delta;
+            if (item.qty <= 0) {
+                posCart = posCart.filter(i => i.id !== medId);
+            }
+            renderCart();
+        }
+
+        function removeFromCart(medId) {
+            posCart = posCart.filter(i => i.id !== medId);
+            renderCart();
+        }
+
+        function resetCart() {
+            posCart = [];
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const countBadge = document.getElementById('cart-item-count');
+            if (!container) return;
+
+            const totalItemsCount = posCart.reduce((sum, i) => sum + i.qty, 0);
+            countBadge.innerText = totalItemsCount + ' Item';
+
+            if (posCart.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted); padding: 2rem 1rem; font-size: 0.85rem;">
+                        <i class="fa-solid fa-basket-shopping fa-2x" style="margin-bottom: 0.5rem; opacity: 0.4;"></i>
+                        <p>Keranjang masih kosong.<br>Klik obat di sebelah kiri untuk menambahkan.</p>
+                    </div>
+                `;
+                calculateCartTotal();
+                return;
+            }
+
+            container.innerHTML = posCart.map(item => `
+                <div class="cart-item">
+                    <div style="flex: 1; padding-right: 0.5rem;">
+                        <div style="font-weight: 700; font-size: 0.85rem; color: var(--text-main);">${item.nama}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Rp ${item.harga.toLocaleString('id-ID')} x ${item.qty}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.35rem; margin-right: 0.5rem;">
+                        <button class="cart-qty-btn" onclick="updateCartQty(${item.id}, -1)">-</button>
+                        <span style="font-weight: 700; font-size: 0.85rem; width: 22px; text-align: center;">${item.qty}</span>
+                        <button class="cart-qty-btn" onclick="updateCartQty(${item.id}, 1)">+</button>
+                    </div>
+                    <div style="font-weight: 700; font-size: 0.85rem; color: var(--secondary-dark); width: 80px; text-align: right;">
+                        Rp ${(item.harga * item.qty).toLocaleString('id-ID')}
+                    </div>
+                    <button style="background: none; border: none; color: var(--danger); cursor: pointer; margin-left: 0.5rem; font-size: 0.85rem;" onclick="removeFromCart(${item.id})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+
+            calculateCartTotal();
+        }
+
+        function calculateCartTotal() {
+            const subtotal = posCart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+            const diskon = parseFloat(document.getElementById('pos-diskon')?.value || 0);
+            const totalAkhir = Math.max(0, subtotal - diskon);
+
+            document.getElementById('pos-subtotal').innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
+            document.getElementById('pos-total-akhir').innerText = 'Rp ' + totalAkhir.toLocaleString('id-ID');
+
+            calculateChange();
+        }
+
+        function calculateChange() {
+            const subtotal = posCart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+            const diskon = parseFloat(document.getElementById('pos-diskon')?.value || 0);
+            const totalAkhir = Math.max(0, subtotal - diskon);
+
+            const uangBayar = parseFloat(document.getElementById('pos-uang-bayar')?.value || 0);
+            const kembalian = uangBayar - totalAkhir;
+
+            const elemKembali = document.getElementById('pos-kembalian');
+            if (kembalian >= 0) {
+                elemKembali.innerText = 'Rp ' + kembalian.toLocaleString('id-ID');
+                elemKembali.style.color = '#047857';
+            } else {
+                elemKembali.innerText = 'Kurang Rp ' + Math.abs(kembalian).toLocaleString('id-ID');
+                elemKembali.style.color = 'var(--danger)';
+            }
+        }
+
+        function quickCash(val) {
+            const subtotal = posCart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+            const diskon = parseFloat(document.getElementById('pos-diskon')?.value || 0);
+            const totalAkhir = Math.max(0, subtotal - diskon);
+
+            if (val === 'exact') {
+                document.getElementById('pos-uang-bayar').value = totalAkhir;
+            } else {
+                document.getElementById('pos-uang-bayar').value = val;
+            }
+            calculateChange();
+        }
+
+        function handleMetodeBayarChange() {
+            const metode = document.getElementById('pos-metode-bayar').value;
+            const subtotal = posCart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+            const diskon = parseFloat(document.getElementById('pos-diskon')?.value || 0);
+            const totalAkhir = Math.max(0, subtotal - diskon);
+
+            if (metode.includes('BPJS') || metode.includes('Asuransi')) {
+                document.getElementById('pos-uang-bayar').value = 0;
+            } else if (metode.includes('QRIS') || metode.includes('Debit')) {
+                document.getElementById('pos-uang-bayar').value = totalAkhir;
+            }
+            calculateChange();
+        }
+
+        function loadResepToKasir(resepId) {
+            switchTab('kasir');
+            document.getElementById('pos-nama-pasien').value = 'Ny. Dewi Ratnasari';
+            document.getElementById('pos-no-rm').value = '00-31-09-54';
+            document.getElementById('pos-tipe-pasien').value = 'Resep Dokter';
+
+            // Add prescription items (Paracetamol & Cetirizine)
+            posCart = [
+                { id: 1, kode: "MED-AN-0001", nama: "Paracetamol 500mg Tablet", harga: 5000, qty: 10 },
+                { id: 12, kode: "MED-AL-0007", nama: "Cetirizine HCl 10mg Tablet", harga: 5500, qty: 5 },
+                { id: 7, kode: "MED-AG-0004", nama: "Omeprazole Kapsul 20mg", harga: 11000, qty: 1 }
+            ];
+            renderCart();
+            alert('Resep #' + resepId + ' Ny. Dewi Ratnasari berhasil dimuat ke Kasir!');
+        }
+
+        // CHECKOUT & CETAK STRUK
+        function processCheckout() {
+            if (posCart.length === 0) {
+                alert('Keranjang kasir masih kosong! Pilih obat terlebih dahulu.');
+                return;
+            }
+
+            const subtotal = posCart.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+            const diskon = parseFloat(document.getElementById('pos-diskon')?.value || 0);
+            const totalAkhir = Math.max(0, subtotal - diskon);
+            const uangBayar = parseFloat(document.getElementById('pos-uang-bayar')?.value || 0);
+            const metode = document.getElementById('pos-metode-bayar').value;
+
+            if (!metode.includes('BPJS') && uangBayar < totalAkhir) {
+                alert('Uang pembayaran masih kurang!');
+                return;
+            }
+
+            // Deduct stock in DB
+            posCart.forEach(item => {
+                const med = medicationDatabase.find(m => m.id === item.id);
+                if (med) {
+                    med.stok = Math.max(0, med.stok - item.qty);
+                }
+            });
+
+            // Update UI Struk
+            const notaId = document.getElementById('pos-nota-id').innerText;
+            const namaPasien = document.getElementById('pos-nama-pasien').value || 'Pasien Umum';
+            const tipePasien = document.getElementById('pos-tipe-pasien').value;
+            const kembalian = Math.max(0, uangBayar - totalAkhir);
+
+            document.getElementById('struk-nota').innerText = notaId;
+            document.getElementById('struk-tgl').innerText = new Date().toLocaleDateString('id-ID');
+            document.getElementById('struk-jam').innerText = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+            document.getElementById('struk-pasien').innerText = namaPasien;
+            document.getElementById('struk-tipe').innerText = tipePasien;
+
+            const strukBody = document.getElementById('struk-items-body');
+            strukBody.innerHTML = posCart.map(i => `
+                <tr>
+                    <td style="text-align: left;">${i.nama}</td>
+                    <td style="text-align: center;">${i.qty}</td>
+                    <td class="text-right">${i.harga.toLocaleString('id-ID')}</td>
+                    <td class="text-right">${(i.harga * i.qty).toLocaleString('id-ID')}</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('struk-subtotal').innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
+            document.getElementById('struk-diskon').innerText = 'Rp ' + diskon.toLocaleString('id-ID');
+            document.getElementById('struk-total').innerText = 'Rp ' + totalAkhir.toLocaleString('id-ID');
+            document.getElementById('struk-metode').innerText = metode;
+            document.getElementById('struk-bayar').innerText = 'Rp ' + uangBayar.toLocaleString('id-ID');
+            document.getElementById('struk-kembali').innerText = 'Rp ' + kembalian.toLocaleString('id-ID');
+
+            // Add entry to Laporan Table
+            const laporanBody = document.getElementById('laporan-kasir-body');
+            if (laporanBody) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${notaId}</strong></td>
+                    <td>${new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB</td>
+                    <td>${namaPasien}</td>
+                    <td>${metode}</td>
+                    <td>Rp ${totalAkhir.toLocaleString('id-ID')}</td>
+                    <td><span class="badge badge-success">Selesai</span></td>
+                `;
+                laporanBody.insertBefore(tr, laporanBody.firstChild);
+            }
+
+            // Generate new Nota ID for next transaction
+            const nextSeq = parseInt(notaId.split('-')[2]) + 1;
+            document.getElementById('pos-nota-id').innerText = 'TRX-20260909-' + String(nextSeq).padStart(3, '0');
+
+            // Update Master Tables
+            renderStokTable();
+            renderDashboardAlerts();
+            renderPosCatalog();
+            updateTotalObatBadge();
+
+            // Clear Cart & Open Struk Modal
+            posCart = [];
+            renderCart();
+            openModal('modal-struk');
+        }
+
+        // SAVE NEW MEDICATION FROM MODAL
+        function saveNewMedication() {
+            const nama = document.getElementById('new-med-nama').value;
+            if (!nama) {
+                alert('Silakan isi nama obat!');
+                return;
+            }
+
+            const newObj = {
+                id: medicationDatabase.length + 1,
+                kode: document.getElementById('new-med-kode').value || ('MED-XX-' + (medicationDatabase.length + 10)),
+                nama: nama,
+                kategori: document.getElementById('new-med-kategori').value,
+                bentuk: document.getElementById('new-med-bentuk').value,
+                pabrik: document.getElementById('new-med-pabrik').value || 'Generik',
+                batch: 'BTC-2026X',
+                exp: '2028-12-31',
+                stok: parseInt(document.getElementById('new-med-stok').value || 100),
+                minStok: 20,
+                harga: parseFloat(document.getElementById('new-med-harga').value || 10000),
+                lokasi: 'Rak A-01',
+                bpom: 'GKL' + Math.floor(100000000 + Math.random() * 900000000) + 'A1',
+                status: 'aman'
+            };
+
+            medicationDatabase.unshift(newObj);
+            renderStokTable();
+            renderPosCatalog();
+            updateTotalObatBadge();
+
+            alert('Obat ' + nama + ' berhasil ditambahkan ke database!');
+            closeModal('modal-obat');
+        }
+
+        // GLOBAL SEARCH HANDLER
+        function handleGlobalSearch(val) {
+            if (!val) return;
+            document.getElementById('stok-search').value = val;
+            document.getElementById('pos-search').value = val;
+            renderStokTable();
+            renderPosCatalog();
+        }
+
         function detailResep(id) {
             alert('Menampilkan rincian telaah resep #' + id + '\nStatus: Siap diverifikasi klinis & peracikan obat.');
         }
 
         function openStokCard(namaObat) {
-            alert('Membuka Riwayat Kartu Stok Elektronik: ' + namaObat + '\n- Masuk terakhir: 100 Unit\n- Keluar hari ini: 18 Unit\n- Sisa fisik: Terverifikasi.');
-        }
-
-        function filterResepStatus(status, btn) {
-            document.querySelectorAll('.view-tabs .view-tab').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            const med = medicationDatabase.find(m => m.nama === namaObat) || { stok: 100, minStok: 20, lokasi: 'Rak Utama' };
+            alert('Membuka Riwayat Kartu Stok Elektronik:\n- Nama Obat: ' + namaObat + '\n- Sisa Stok Physical: ' + med.stok + ' Unit\n- Batas Min (Defecta): ' + med.minStok + ' Unit\n- Lokasi Penyimpanan: ' + med.lokasi + '\n- Status Mutasi: Terverifikasi Klop.');
         }
     </script>
 </body>
