@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SATUSEHAT SDMK - Sistem Informasi Manajemen RS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-heart-pulse fa-2x" style="color: var(--primary);"></i>
+            <h2>SATUSEHAT<br><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">SDMK Dashboard</span></h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-user-doctor"></i> Profil Tenaga Medis</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-file-medical"></i> STR & SIP</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Pengembangan Kompetensi</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-building-user"></i> Fasilitas Pelayanan</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-chart-line"></i> Kinerja & Logbook</a>
+            <div style="flex: 1;"></div>
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-arrow-left"></i> Kembali ke Portal</a>
+            <a href="#" class="nav-item" style="color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="search-bar" style="width: 300px;">
+                <input type="text" class="form-control" placeholder="Cari data NIK, Nama, atau STR..." style="padding-left: 2.5rem; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' fill=\'gray\' viewBox=\'0 0 16 16\'><path d=\'M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z\'/></svg>'); background-repeat: no-repeat; background-position: 10px center;">
+            </div>
+            <div class="user-profile">
+                <i class="fa-regular fa-bell" style="font-size: 1.2rem; color: var(--text-muted); cursor: pointer;"></i>
+                <div style="text-align: right;">
+                    <div style="font-weight: 600; font-size: 0.9rem;">Dr. Rakha Okusara</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Dokter Umum</div>
+                </div>
+                <div class="avatar">RO</div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-container">
+            <div class="page-header">
+                <h1>Overview SDMK RS</h1>
+                <p>Ringkasan data Sumber Daya Manusia Kesehatan terintegrasi SATUSEHAT</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">Total Nakes Aktif</div>
+                    <div class="stat-value">342</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;"><i class="fa-solid fa-arrow-trend-up"></i> +12 bulan ini</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-title">SIP Berlaku</div>
+                    <div class="stat-value">315</div>
+                    <div style="color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">92% dari total nakes</div>
+                </div>
+                <div class="stat-card yellow">
+                    <div class="stat-title">SIP Akan Berakhir (< 3 bln)</div>
+                    <div class="stat-value">18</div>
+                    <div style="color: var(--warning); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Perlu perpanjangan segera</div>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-title">Pemenuhan SKP Kurang</div>
+                    <div class="stat-value">9</div>
+                    <div style="color: var(--danger); font-size: 0.85rem; margin-top: 0.5rem; font-weight: 500;">Pantau di portal CPD</div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <!-- Data Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Direktori Tenaga Medis (Sinkronisasi SATUSEHAT)</h3>
+                        <button class="btn btn-primary"><i class="fa-solid fa-rotate"></i> Sinkronisasi Data</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama Nakes</th>
+                                    <th>Profesi</th>
+                                    <th>No. STR</th>
+                                    <th>Status SIP</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600;">Dr. Andi Wijaya, Sp.PD</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted);">NIK: 3174XXXXXXXX0001</div>
+                                    </td>
+                                    <td>Dokter Spesialis Penyakit Dalam</td>
+                                    <td>11211002345678</td>
+                                    <td><span class="badge badge-success">Aktif</span></td>
+                                    <td><button class="btn" style="background: var(--background); color: var(--primary);">Detail</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600;">Ns. Siti Aminah, S.Kep</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted);">NIK: 3271XXXXXXXX0005</div>
+                                    </td>
+                                    <td>Perawat</td>
+                                    <td>21111002345679</td>
+                                    <td><span class="badge badge-warning">Hampir Habis</span></td>
+                                    <td><button class="btn" style="background: var(--background); color: var(--primary);">Detail</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600;">Drg. Budi Santoso</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted);">NIK: 3374XXXXXXXX0003</div>
+                                    </td>
+                                    <td>Dokter Gigi</td>
+                                    <td>12211002345680</td>
+                                    <td><span class="badge badge-success">Aktif</span></td>
+                                    <td><button class="btn" style="background: var(--background); color: var(--primary);">Detail</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600;">Apt. Rina Marlina, S.Farm</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted);">NIK: 3471XXXXXXXX0002</div>
+                                    </td>
+                                    <td>Apoteker</td>
+                                    <td>31111002345681</td>
+                                    <td><span class="badge badge-danger">Kedaluwarsa</span></td>
+                                    <td><button class="btn" style="background: var(--background); color: var(--primary);">Detail</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Info Card -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Pembaruan Terkini</h3>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--primary); margin-top: 5px;"></div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 0.9rem;">Integrasi API IHS</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Sinkronisasi data master SDMK berhasil dilakukan hari ini pukul 08:00 WIB.</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--warning); margin-top: 5px;"></div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 0.9rem;">Peringatan SIP</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">5 Perawat dan 2 Dokter membutuhkan pembaruan SIP dalam bulan ini.</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--secondary); margin-top: 5px;"></div>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 0.9rem;">Verifikasi Kompetensi</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">Data SKP untuk 12 nakes telah tervalidasi dengan sistem Plataran Sehat.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none;">
+                        <h3 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem;">Butuh Bantuan Integrasi?</h3>
+                        <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 1.5rem;">Kunjungi panduan teknis SATUSEHAT untuk dokumentasi API Endpoint dan Sandbox environment.</p>
+                        <button class="btn" style="background: white; color: var(--primary); width: 100%;">Lihat Dokumentasi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

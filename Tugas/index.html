@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal SIM RS Terpadu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="portal-container">
+        <div style="text-align: center; width: 100%;">
+            <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">Sistem Informasi Manajemen RS</h1>
+            <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 3rem;">Pilih modul untuk masuk ke sistem</p>
+
+            <div class="portal-grid">
+                <!-- SDMK Card -->
+                <a href="sim_rs_sdmk.html" class="portal-card sdmk">
+                    <div class="portal-icon">
+                        <i class="fa-solid fa-user-doctor fa-3x"></i>
+                    </div>
+                    <div>
+                        <h2>Modul SDMK (SATUSEHAT)</h2>
+                        <p>Manajemen Sumber Daya Manusia Kesehatan, SIP, STR, dan Kinerja tenaga medis terintegrasi SATUSEHAT.</p>
+                    </div>
+                    <span class="btn btn-primary" style="margin-top: auto; padding: 0.75rem 2rem;">Masuk Modul <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i></span>
+                </a>
+
+                <!-- Apotek Card -->
+                <a href="sim_rs_apotek.html" class="portal-card apotek">
+                    <div class="portal-icon">
+                        <i class="fa-solid fa-pills fa-3x"></i>
+                    </div>
+                    <div>
+                        <h2>Modul Apotek & Farmasi</h2>
+                        <p>Manajemen inventori obat, antrean resep elektronik, defekta, dan laporan farmasi rumah sakit.</p>
+                    </div>
+                    <span class="btn btn-secondary" style="margin-top: auto; padding: 0.75rem 2rem;">Masuk Modul <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i></span>
+                </a>
+            </div>
+            
+            <div style="margin-top: 3rem; color: var(--text-muted); font-size: 0.9rem;">
+                &copy; 2026 Teknologi Kedokteran - Semester 5
+            </div>
+        </div>
+    </div>
+</body>
+</html>
