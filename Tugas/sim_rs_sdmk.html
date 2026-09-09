@@ -101,6 +101,107 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .app-page.hidden {
+            display: none;
+        }
+
+        .profile-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
+        }
+
+        .medical-profile {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+        }
+
+        .medical-profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .medical-avatar {
+            width: 52px;
+            height: 52px;
+            flex: 0 0 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .medical-profile-header h2 {
+            margin-bottom: 0.25rem;
+            color: var(--text-main);
+            font-size: 1.05rem;
+        }
+
+        .medical-profile-header p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .medical-profile-body {
+            padding: 1.5rem;
+        }
+
+        .profile-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .profile-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .profile-group-title {
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .profile-data {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem 1rem;
+        }
+
+        .profile-data-item label {
+            display: block;
+            margin-bottom: 0.2rem;
+            color: var(--text-muted);
+            font-size: 0.73rem;
+        }
+
+        .profile-data-item span {
+            color: var(--text-main);
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 900px) {
+            .profile-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .profile-data {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -112,8 +213,8 @@
             <h2>SATUSEHAT<br><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">SDMK Dashboard</span></h2>
         </div>
         <nav class="sidebar-nav">
-            <a href="sim_rs_sdmk.html" class="nav-item active"><i class="fa-solid fa-house"></i> Dashboard</a>
-            <a href="sim_rs_sdmk_profil.html" class="nav-item"><i class="fa-solid fa-user-doctor"></i> Profil Tenaga Medis</a>
+            <a href="#dashboard" class="nav-item active" data-page="dashboard"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="#profil-tenaga-medis" class="nav-item" data-page="profile"><i class="fa-solid fa-user-doctor"></i> Profil Tenaga Medis</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-file-medical"></i> STR & SIP</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Pengembangan Kompetensi</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-building-user"></i> Fasilitas Pelayanan</a>
@@ -142,7 +243,7 @@
         </header>
 
         <!-- Dashboard Content -->
-        <div class="dashboard-container">
+        <div class="dashboard-container app-page" id="dashboardPage">
             <div class="page-header">
                 <h1>Overview SDMK RS</h1>
                 <p>Ringkasan data Sumber Daya Manusia Kesehatan terintegrasi SATUSEHAT</p>
@@ -275,6 +376,17 @@
                 </div>
             </div>
         </div>
+
+        <div class="dashboard-container app-page hidden" id="profilePage">
+            <div class="page-header">
+                <div>
+                    <h1>Profil Tenaga Medis</h1>
+                    <p>Data lengkap tenaga medis yang terdaftar di Rumah Sakit</p>
+                </div>
+                <button class="btn btn-primary"><i class="fa-solid fa-rotate"></i> Sinkronisasi Data</button>
+            </div>
+            <div class="profile-list" id="profileList"></div>
+        </div>
     </main>
 
     <div class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
@@ -326,6 +438,42 @@
             }
         ];
 
+        function profileField(label, value) {
+            return '<div class="profile-data-item"><label>' + label + '</label><span>' + value + '</span></div>';
+        }
+
+        function renderProfilePage() {
+            document.getElementById('profileList').innerHTML = medicalProfiles.map(function (profile) {
+                const initials = profile.name.replace(/[^A-Za-z ]/g, '').split(' ').filter(Boolean).map(function (word) {
+                    return word[0];
+                }).slice(0, 2).join('');
+
+                return '<article class="medical-profile">' +
+                    '<div class="medical-profile-header"><div class="medical-avatar">' + initials + '</div><div><h2>' + profile.name + '</h2><p>' + profile.profession + '</p></div></div>' +
+                    '<div class="medical-profile-body">' +
+                    '<div class="profile-group"><div class="profile-group-title">Data Identitas</div><div class="profile-data">' +
+                    profileField('NIK', profile.nik) + profileField('Jenis Kelamin', profile.gender) + profileField('Tempat, tanggal lahir', profile.birth) + profileField('Masa kerja', profile.experience) +
+                    '</div></div>' +
+                    '<div class="profile-group"><div class="profile-group-title">Pendidikan dan Kompetensi</div><div class="profile-data">' +
+                    profileField('Pendidikan terakhir', profile.education) + profileField('Kompetensi utama', profile.competency) +
+                    '</div></div>' +
+                    '<div class="profile-group"><div class="profile-group-title">Perizinan dan Kontak</div><div class="profile-data">' +
+                    profileField('Nomor STR', profile.str) + profileField('Nomor SIP', profile.sip) + profileField('Status SIP', profile.sipStatus) + profileField('Nomor telepon', profile.phone) + profileField('Email', profile.email) +
+                    '</div></div>' +
+                    '</div></article>';
+            }).join('');
+        }
+
+        function showPage(page) {
+            const showProfilePage = page === 'profile';
+            document.getElementById('dashboardPage').classList.toggle('hidden', showProfilePage);
+            document.getElementById('profilePage').classList.toggle('hidden', !showProfilePage);
+            document.querySelectorAll('.sidebar-nav .nav-item[data-page]').forEach(function (item) {
+                item.classList.toggle('active', item.dataset.page === page);
+            });
+            window.location.hash = showProfilePage ? 'profil-tenaga-medis' : 'dashboard';
+        }
+
         function detail(label, value) {
             return '<div class="profile-detail"><label>' + label + '</label><span>' + value + '</span></div>';
         }
@@ -362,6 +510,16 @@
         document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') closeProfile();
         });
+
+        document.querySelectorAll('.sidebar-nav .nav-item[data-page]').forEach(function (item) {
+            item.addEventListener('click', function (event) {
+                event.preventDefault();
+                showPage(item.dataset.page);
+            });
+        });
+
+        renderProfilePage();
+        showPage(window.location.hash === '#profil-tenaga-medis' ? 'profile' : 'dashboard');
     </script>
 
 </body>
