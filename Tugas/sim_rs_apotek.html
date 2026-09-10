@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -624,7 +624,19 @@
                     </div>
                 </div>
 
-                <!-- Inventory Table -->
+                <!-- Cari Obat Resmi SATU SEHAT (KFA) -->
+<div class="card" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+        <i class="fa-solid fa-satellite-dish" style="color: var(--secondary);"></i>
+        <h3 style="margin:0; font-size:0.95rem;">Cari Obat Resmi (SATU SEHAT KFA)</h3>
+    </div>
+    <div style="display:flex; gap:0.75rem;">
+        <input type="text" id="kfa-search-input" class="form-control" placeholder="Contoh: paracetamol, amoxicillin..." style="flex:1;" onkeyup="if(event.key==='Enter') searchKFA()">
+        <button class="btn btn-secondary" onclick="searchKFA()"><i class="fa-solid fa-magnifying-glass"></i> Cari</button>
+    </div>
+    <div id="kfa-search-results" style="margin-top:0.75rem; max-height:280px; overflow-y:auto;"></div>
+</div>
+<!-- Inventory Table -->
                 <div class="card">
                     <div class="table-container">
                         <table>
@@ -1729,6 +1741,52 @@
             const med = medicationDatabase.find(m => m.nama === namaObat) || { stok: 100, minStok: 20, lokasi: 'Rak Utama' };
             alert('Membuka Riwayat Kartu Stok Elektronik:\n- Nama Obat: ' + namaObat + '\n- Sisa Stok Physical: ' + med.stok + ' Unit\n- Batas Min (Defecta): ' + med.minStok + ' Unit\n- Lokasi Penyimpanan: ' + med.lokasi + '\n- Status Mutasi: Terverifikasi Klop.');
         }
-    </script>
+    async function searchKFA() {
+    const keyword = document.getElementById('kfa-search-input').value.trim();
+    const resultBox = document.getElementById('kfa-search-results');
+    if (!keyword) {
+        resultBox.innerHTML = '<p style="color: var(--text-muted); padding: 0.75rem;">Ketik nama obat dulu ya.</p>';
+        return;
+    }
+
+    resultBox.innerHTML = '<p style="color: var(--text-muted); padding: 0.75rem;"><i class="fa-solid fa-spinner fa-spin"></i> Mencari di SATU SEHAT...</p>';
+
+    try {
+        const res = await fetch('http://localhost:3000/api/obat?keyword=' + encodeURIComponent(keyword));
+        const data = await res.json();
+        const items = (data.items && data.items.data) || [];
+
+        if (items.length === 0) {
+            resultBox.innerHTML = '<p style="color: var(--text-muted); padding: 0.75rem;">Nggak ada hasil buat "' + keyword + '".</p>';
+            return;
+        }
+
+        resultBox.innerHTML = items.slice(0, 10).map(function(item) {
+            const harga = item.het_price || item.fix_price || 0;
+            const pabrik = item.manufacturer || item.registrar || 'Generik';
+            const safeName = String(item.name).replace(/'/g, "\\'");
+            const safePabrik = String(pabrik).replace(/'/g, "\\'");
+            return '<div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem; border-bottom:1px solid var(--border);">' +
+                '<div>' +
+                '<div style="font-weight:600; font-size:0.85rem;">' + item.name + '</div>' +
+                '<div style="font-size:0.75rem; color:var(--text-muted);">KFA: ' + item.kfa_code + ' &bull; ' + pabrik + '</div>' +
+                '</div>' +
+                '<button class="btn btn-secondary" style="padding:0.35rem 0.75rem; font-size:0.75rem;" onclick="useKFAResult(\'' + safeName + '\', \'' + item.kfa_code + '\', \'' + safePabrik + '\', ' + harga + ')">' +
+                '<i class="fa-solid fa-plus"></i> Pakai</button>' +
+                '</div>';
+        }).join('');
+    } catch (err) {
+        resultBox.innerHTML = '<p style="color: var(--danger);">Gagal terhubung ke backend. Pastikan server.js jalan di localhost:3000.</p>';
+    }
+}
+
+function useKFAResult(nama, kfaCode, pabrik, harga) {
+    openModal('modal-obat');
+    document.getElementById('new-med-nama').value = nama;
+    document.getElementById('new-med-kode').value = kfaCode;
+    document.getElementById('new-med-pabrik').value = pabrik;
+    if (harga) document.getElementById('new-med-harga').value = harga;
+}
+</script>
 </body>
 </html>

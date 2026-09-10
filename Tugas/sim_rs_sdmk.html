@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -356,7 +356,19 @@
                 </div>
             </div>
 
-            <!-- Live Filter Sub-bar -->
+            <!-- Cari Tenaga Medis Resmi SATUSEHAT (Practitioner) -->
+            <div class="card" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+                    <i class="fa-solid fa-satellite-dish" style="color: var(--secondary);"></i>
+                    <h3 style="margin:0; font-size:0.95rem;">Cari Tenaga Medis Resmi (SATUSEHAT)</h3>
+                </div>
+                <div style="display:flex; gap:0.75rem;">
+                    <input type="text" id="nakes-nik-input" class="form-control" placeholder="Masukkan 16 digit NIK tenaga medis..." style="flex:1;" maxlength="16" onkeyup="if(event.key==='Enter') searchNakes()">
+                    <button class="btn btn-secondary" onclick="searchNakes()"><i class="fa-solid fa-magnifying-glass"></i> Cari</button>
+                </div>
+                <div id="nakes-search-result" style="margin-top:0.75rem;"></div>
+            </div>
+<!-- Live Filter Sub-bar -->
             <div class="card" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
                 <div style="display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
                     <div style="display: flex; gap: 0.75rem; flex: 1; flex-wrap: wrap;">
@@ -1049,6 +1061,52 @@
                 showPage(item.dataset.page);
             });
         });
-    </script>
+    async function searchNakes() {
+            const nikInput = document.getElementById('nakes-nik-input');
+            const nik = nikInput.value.trim();
+            const resultBox = document.getElementById('nakes-search-result');
+
+            if (!nik) {
+                resultBox.innerHTML = '<p style="color: var(--text-muted);">Masukkan NIK atau ID Nakes dulu ya.</p>';
+                return;
+            }
+
+            const isNik = /^\d{16}$/.test(nik);
+            const queryParam = isNik ? ('nik=' + encodeURIComponent(nik)) : ('id=' + encodeURIComponent(nik));
+
+            resultBox.innerHTML = '<p style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Mencari data nakes di SATUSEHAT...</p>';
+
+            try {
+                const res = await fetch('http://localhost:3000/api/nakes?' + queryParam);
+                const data = await res.json();
+                const entries = (data.entry || []).map(function (e) { return e.resource; });
+
+                if (!entries.length) {
+                    resultBox.innerHTML = '<p style="color: var(--warning);"><i class="fa-solid fa-user-slash"></i> Tenaga medis dengan NIK ini belum terdaftar di SATUSEHAT.</p>';
+                    return;
+                }
+
+                resultBox.innerHTML = entries.map(function (p) {
+                    const nameObj = (p.name && p.name[0]) || {};
+                    const prefix = (nameObj.prefix || []).join(' ');
+                    const nama = (prefix ? prefix + ' ' : '') + (nameObj.text || '-');
+                    const identifiers = p.identifier || [];
+                    const nakesId = (identifiers.find(function (i) { return (i.system || '').indexOf('nakes-his-number') !== -1; }) || {}).value || p.id || '-';
+                    const qual = (p.qualification && p.qualification[0]) || {};
+                    const strItem = (qual.identifier && qual.identifier[0]) || {};
+                    const strNumber = strItem.value || '-';
+
+                    return '<div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem; border-bottom:1px solid var(--border);">' +
+                        '<div>' +
+                        '<div style="font-weight:600; font-size:0.85rem;">' + nama + '</div>' +
+                        '<div style="font-size:0.75rem; color:var(--text-muted);">ID Nakes SATUSEHAT: ' + nakesId + ' &bull; STR: ' + strNumber + '</div>' +
+                        '</div>' +
+                        '</div>';
+                }).join('');
+            } catch (err) {
+                resultBox.innerHTML = '<p style="color: var(--danger);">Gagal terhubung ke backend. Pastikan server.js jalan di localhost:3000.</p>';
+            }
+        }
+</script>
 </body>
 </html>

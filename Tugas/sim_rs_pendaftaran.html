@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Pasien - Sistem Informasi Manajemen RS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .patient-result-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            background: var(--surface);
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .patient-not-found {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border: 1px dashed var(--warning);
+            border-radius: 0.75rem;
+            background: #fffbeb;
+            flex-wrap: wrap;
+        }
+
+        .patient-avatar {
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 640px) {
+            .patient-result-card, .patient-not-found {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fa-solid fa-heart-pulse fa-2x" style="color: var(--primary);"></i>
+            <h2>SATUSEHAT<br><span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Pendaftaran Pasien</span></h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#cari-pasien" class="nav-item active" data-page="cari"><i class="fa-solid fa-magnifying-glass"></i> Cari Pasien (NIK)</a>
+            <div style="flex: 1;"></div>
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-arrow-left"></i> Kembali ke Portal</a>
+            <a href="#" class="nav-item" style="color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
+        </nav>
+    </aside>
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="topbar">
+            <div style="display:flex; align-items:center; gap:0.6rem; font-weight:600; color: var(--text-main);">
+                <i class="fa-solid fa-hospital-user" style="color: var(--primary);"></i> Modul Pendaftaran Pasien
+            </div>
+            <div class="user-profile">
+                <i class="fa-regular fa-bell" style="font-size: 1.2rem; color: var(--text-muted); cursor: pointer;" title="Notifikasi"></i>
+                <div style="text-align: right;">
+                    <div style="font-weight: 600; font-size: 0.9rem;">Petugas Loket</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Admin Pendaftaran</div>
+                </div>
+                <div class="avatar">PL</div>
+            </div>
+        </header>
+
+        <div class="dashboard-container app-page" id="cariPage">
+            <div class="page-header">
+                <div>
+                    <h1>Pendaftaran Pasien</h1>
+                    <p>Cari data pasien resmi terintegrasi SATUSEHAT sebelum melanjutkan pendaftaran kunjungan</p>
+                </div>
+            </div>
+
+            <!-- Search Card -->
+            <div class="card" style="padding: 1.5rem;">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+                    <i class="fa-solid fa-satellite-dish" style="color: var(--secondary);"></i>
+                    <h3 style="margin:0; font-size:1rem;">Cari Pasien Resmi (SATUSEHAT - NIK)</h3>
+                </div>
+                <div style="display:flex; gap:0.75rem;">
+                    <input type="text" id="pasien-nik-input" class="form-control" placeholder="Masukkan 16 digit NIK pasien..." style="flex:1;" maxlength="16" onkeyup="if(event.key==='Enter') searchPasien()">
+                    <button class="btn btn-primary" onclick="searchPasien()"><i class="fa-solid fa-magnifying-glass"></i> Cari</button>
+                </div>
+                <div id="pasien-search-result" style="margin-top:1.25rem;"></div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="card" style="padding: 1.25rem 1.5rem; margin-top: 1.5rem; background: #f8fafc;">
+                <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+                    <i class="fa-solid fa-circle-info" style="color: var(--primary); margin-top: 0.15rem;"></i>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">
+                        Pencarian ini terhubung langsung ke SATUSEHAT (environment sandbox). Kalau NIK belum terdaftar, pasien perlu didaftarkan sebagai pasien baru agar mendapat nomor IHS resmi - fitur pendaftaran pasien baru menyusul di tahap berikutnya.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        async function searchPasien() {
+            const nikInput = document.getElementById('pasien-nik-input');
+            const nik = nikInput.value.trim();
+            const resultBox = document.getElementById('pasien-search-result');
+
+            if (!nik) {
+                resultBox.innerHTML = '<p style="color: var(--text-muted);">Masukkan NIK dulu ya.</p>';
+                return;
+            }
+            if (!/^\d{16}$/.test(nik)) {
+                resultBox.innerHTML = '<p style="color: var(--warning);"><i class="fa-solid fa-triangle-exclamation"></i> NIK harus 16 digit angka.</p>';
+                return;
+            }
+
+            resultBox.innerHTML = '<p style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Mencari data pasien di SATUSEHAT...</p>';
+
+            try {
+                const res = await fetch('http://localhost:3000/api/pasien?nik=' + encodeURIComponent(nik));
+                const data = await res.json();
+                const entries = (data.entry || []).map(function (e) { return e.resource; });
+
+                if (!entries.length) {
+                    resultBox.innerHTML =
+                        '<div class="patient-not-found">' +
+                        '<i class="fa-solid fa-user-slash" style="font-size:1.5rem; color: var(--warning);"></i>' +
+                        '<div style="flex:1;">' +
+                        '<div style="font-weight:600;">Pasien dengan NIK ini belum terdaftar di SATUSEHAT</div>' +
+                        '<div style="font-size:0.85rem; color: var(--text-muted); margin-top:0.25rem;">Pasien perlu didaftarkan sebagai pasien baru sebelum bisa mendapat nomor IHS resmi.</div>' +
+                        '</div>' +
+                        '<button class="btn btn-secondary" onclick="alert(\'Fitur pendaftaran pasien baru menyusul di tahap berikutnya.\')"><i class="fa-solid fa-user-plus"></i> Daftarkan Baru</button>' +
+                        '</div>';
+                    return;
+                }
+
+                resultBox.innerHTML = entries.map(function (p) {
+                    const nameObj = (p.name && p.name[0]) || {};
+                    const nama = nameObj.text || [nameObj.given ? nameObj.given.join(' ') : '', nameObj.family || ''].filter(Boolean).join(' ') || '-';
+                    const identifiers = p.identifier || [];
+                    const ihs = (identifiers.find(function (i) { return (i.system || '').indexOf('ihs-number') !== -1; }) || {}).value || p.id || '-';
+                    const nikValue = (identifiers.find(function (i) { return (i.system || '').indexOf('/nik') !== -1; }) || {}).value || nik;
+                    const lahir = p.birthDate || '-';
+                    const gender = p.gender === 'male' ? 'Laki-laki' : (p.gender === 'female' ? 'Perempuan' : '-');
+                    const safeNama = nama.replace(/'/g, "\\'");
+
+                    return '<div class="patient-result-card">' +
+                        '<div class="patient-avatar">' + nama.charAt(0).toUpperCase() + '</div>' +
+                        '<div style="flex:1; min-width:200px;">' +
+                        '<div style="font-weight:700; font-size:1rem;">' + nama + '</div>' +
+                        '<div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.15rem;">NIK: ' + nikValue + ' &bull; Nomor IHS: ' + ihs + '</div>' +
+                        '<div style="font-size:0.8rem; color:var(--text-muted);">Tgl Lahir: ' + lahir + ' &bull; Jenis Kelamin: ' + gender + '</div>' +
+                        '</div>' +
+                        '<button class="btn btn-primary" onclick="alert(\'Lanjut ke pendaftaran kunjungan untuk ' + safeNama + ' menyusul di tahap berikutnya.\')"><i class="fa-solid fa-arrow-right"></i> Lanjut Daftar Kunjungan</button>' +
+                        '</div>';
+                }).join('');
+            } catch (err) {
+                resultBox.innerHTML = '<p style="color: var(--danger);">Gagal terhubung ke backend. Pastikan server.js jalan di localhost:3000.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
