@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login SIM RS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <main class="login-screen">
+        <form class="login-card" id="login-form">
+            <div class="login-brand" id="login-icon"><i class="fa-solid fa-shield-heart"></i></div>
+            <h1 id="login-title">Masuk ke SIM RS</h1>
+            <p id="login-description">Masukkan akun petugas untuk melanjutkan ke modul rumah sakit.</p>
+            <label class="login-field">Username
+                <input class="form-control" id="login-username" type="text" autocomplete="username" required autofocus>
+            </label>
+            <label class="login-field">Password
+                <input class="form-control" id="login-password" type="password" autocomplete="current-password" required>
+            </label>
+            <div class="login-error" id="login-error" role="alert"></div>
+            <button class="btn btn-primary login-submit" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Masuk ke Modul</button>
+            <div class="login-demo">Akun demo: <strong>admin</strong> / <strong>admin123</strong></div>
+            <a href="index.html" class="login-back"><i class="fa-solid fa-arrow-left"></i> Kembali ke portal</a>
+        </form>
+    </main>
+
+    <script>
+        const targetModules = {
+            apotek: {
+                page: 'sim_rs_apotek.html',
+                title: 'Masuk Farmasi RS',
+                description: 'Gunakan akun petugas untuk membuka modul apotek dan farmasi.',
+                icon: 'fa-pills',
+                buttonClass: 'btn-secondary'
+            },
+            sdmk: {
+                page: 'sim_rs_sdmk.html',
+                title: 'Masuk Modul SDMK',
+                description: 'Gunakan akun petugas untuk membuka data tenaga kesehatan.',
+                icon: 'fa-user-doctor',
+                buttonClass: 'btn-primary'
+            }
+        };
+
+        const moduleName = new URLSearchParams(window.location.search).get('module') || 'sdmk';
+        const target = targetModules[moduleName] || targetModules.sdmk;
+        const loginButton = document.querySelector('.login-submit');
+
+        document.title = target.title;
+        document.getElementById('login-title').textContent = target.title;
+        document.getElementById('login-description').textContent = target.description;
+        document.getElementById('login-icon').innerHTML = `<i class="fa-solid ${target.icon}"></i>`;
+        loginButton.classList.remove('btn-primary', 'btn-secondary');
+        loginButton.classList.add(target.buttonClass);
+
+        document.getElementById('login-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            const error = document.getElementById('login-error');
+
+            if (username === 'admin' && password === 'admin123') {
+                sessionStorage.setItem('simrs-module-login', 'true');
+                window.location.href = target.page;
+                return;
+            }
+
+            error.textContent = 'Username atau password salah.';
+        });
+    </script>
+</body>
+</html>

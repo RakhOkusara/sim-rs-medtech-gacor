@@ -7,6 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        if (sessionStorage.getItem('simrs-module-login') !== 'true') {
+            window.location.replace('login.html?module=apotek');
+        }
+    </script>
     <style>
         .sidebar-header h2 { color: var(--secondary-dark); }
         .page-header h1 {
@@ -121,7 +126,7 @@
             <a onclick="switchTab('laporan')" id="nav-laporan" class="nav-item"><i class="fa-solid fa-file-invoice"></i> Laporan Farmasi</a>
             <div style="flex: 1;"></div>
             <a href="index.html" class="nav-item"><i class="fa-solid fa-arrow-left"></i> Kembali ke Portal</a>
-            <a href="#" class="nav-item" style="color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
+            <a href="login.html?module=apotek" class="nav-item" style="color: var(--danger);" onclick="logoutModule(event)"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
         </nav>
     </aside>
 
@@ -960,6 +965,12 @@
 
     <!-- JAVASCRIPT LOGIC FOR DATABASE, POS CASHIER, SEARCH & NAVIGATION -->
     <script>
+        function logoutModule(event) {
+            event.preventDefault();
+            sessionStorage.removeItem('simrs-module-login');
+            window.location.href = 'login.html?module=apotek';
+        }
+
         // MASTER DATABASE OBAT (INDONESIAN PHARMACY MEDICATION DATABASE)
         let medicationDatabase = [
             { id: 1, kode: "MED-AN-0001", nama: "Paracetamol 500mg Tablet", kategori: "Obat Bebas", bentuk: "Tablet", pabrik: "Kimia Farma", batch: "PCT-2026A", exp: "2028-05-15", stok: 450, minStok: 100, harga: 5000, lokasi: "Rak A-01", bpom: "GBL98123001A1", status: "aman" },

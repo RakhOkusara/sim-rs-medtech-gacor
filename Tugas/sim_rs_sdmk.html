@@ -7,6 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        if (sessionStorage.getItem('simrs-module-login') !== 'true') {
+            window.location.replace('login.html?module=sdmk');
+        }
+    </script>
     <style>
         .profile-modal {
             display: none;
@@ -298,7 +303,7 @@
             <a href="#kinerja" class="nav-item" data-page="kinerja"><i class="fa-solid fa-chart-line"></i> Kinerja & Logbook</a>
             <div style="flex: 1;"></div>
             <a href="index.html" class="nav-item"><i class="fa-solid fa-arrow-left"></i> Kembali ke Portal</a>
-            <a href="#" class="nav-item" style="color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
+            <a href="login.html?module=sdmk" class="nav-item" style="color: var(--danger);" onclick="logoutModule(event)"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
         </nav>
     </aside>
 
@@ -640,6 +645,12 @@
 
     <!-- JAVASCRIPT LOGIC & COMPREHENSIVE HOSPITAL STAFF DATABASE -->
     <script>
+        function logoutModule(event) {
+            event.preventDefault();
+            sessionStorage.removeItem('simrs-module-login');
+            window.location.href = 'login.html?module=sdmk';
+        }
+
         // COMPREHENSIVE INDONESIAN HOSPITAL MEDICAL STAFF DATABASE (28 STAFF MEMBERS ACROSS ALL SPECIALTIES)
         let medicalProfiles = [
             // DOKTER SPESIALIS
