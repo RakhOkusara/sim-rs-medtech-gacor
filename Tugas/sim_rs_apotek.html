@@ -619,7 +619,7 @@
                             </select>
                         </div>
                         <div>
-                            <button class="btn" style="background: #f1f5f9; color: var(--text-main);" onclick="alert('Data stok obat berhasil di-export ke format Excel (.xlsx)!')"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
+                            <button class="btn" style="background: #f1f5f9; color: var(--text-main);" onclick="exportStokToExcel()"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
                         </div>
                     </div>
                 </div>
@@ -667,7 +667,7 @@
                         <p>Analisis penjualan kasir, obat terlaris (Fast-Moving), serta laporan mutasi stok farmasi.</p>
                     </div>
                     <div style="display: flex; gap: 0.75rem;">
-                        <button class="btn btn-secondary" onclick="alert('Laporan Rekapitulasi Farmasi Hari Ini Berhasil Di-Download (PDF)')"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+                        <button class="btn btn-secondary" onclick="downloadFarmasiReportPdf()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
                     </div>
                 </div>
 
@@ -798,7 +798,7 @@
     <div id="modal-obat" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
-                <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--secondary-dark);"><i class="fa-solid fa-box-medical"></i> Tambah Master Stok Obat</h3>
+                <h3 id="modal-obat-title" style="font-size: 1.15rem; font-weight: 700; color: var(--secondary-dark);"><i class="fa-solid fa-box-medical"></i> Tambah Master Stok Obat</h3>
                 <button onclick="closeModal('modal-obat')" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-muted);">&times;</button>
             </div>
             <div class="modal-body">
@@ -850,7 +850,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn" style="background: #e2e8f0; color: var(--text-main);" onclick="closeModal('modal-obat')">Batal</button>
-                <button class="btn btn-secondary" onclick="saveNewMedication()"><i class="fa-solid fa-save"></i> Simpan Obat</button>
+                <button id="save-medication-btn" class="btn btn-secondary" onclick="saveNewMedication()"><i class="fa-solid fa-save"></i> Simpan Obat</button>
             </div>
         </div>
     </div>
@@ -997,6 +997,7 @@
         let activePrescriptionId = null;
         let toastTimeout;
         let currentResepStatus = 'all';
+        let currentStokTab = 'all';
 
         // INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
@@ -1132,20 +1133,34 @@
         }
 
         // RENDER STOK TABLE DYNAMICALLY
-        function renderStokTable() {
-            const tbody = document.getElementById('stok-table-body');
-            if (!tbody) return;
-
+        function getFilteredMedicationData() {
             const query = (document.getElementById('stok-search')?.value || '').toLowerCase();
             const sediaanFilter = document.getElementById('stok-filter-sediaan')?.value || 'all';
             const lokasiFilter = document.getElementById('stok-filter-lokasi')?.value || 'all';
 
-            const filtered = medicationDatabase.filter(m => {
+            let filtered = medicationDatabase.filter(m => {
                 const matchQuery = m.nama.toLowerCase().includes(query) || m.kode.toLowerCase().includes(query) || m.batch.toLowerCase().includes(query) || m.pabrik.toLowerCase().includes(query);
                 const matchSediaan = (sediaanFilter === 'all') || m.bentuk.toLowerCase().includes(sediaanFilter.toLowerCase());
                 const matchLokasi = (lokasiFilter === 'all') || (m.lokasi === lokasiFilter);
                 return matchQuery && matchSediaan && matchLokasi;
             });
+
+            if (currentStokTab === 'defecta') {
+                filtered = filtered.filter(m => m.stok <= m.minStok);
+            } else if (currentStokTab === 'expire') {
+                filtered = filtered.filter(m => m.status === 'expire');
+            } else if (currentStokTab === 'keras') {
+                filtered = filtered.filter(m => m.kategori === 'Obat Keras' || m.kategori === 'Antibiotik' || m.kategori === 'Obat Bebas Terbatas');
+            }
+
+            return filtered;
+        }
+
+        function renderStokTable() {
+            const tbody = document.getElementById('stok-table-body');
+            if (!tbody) return;
+
+            const filtered = getFilteredMedicationData();
 
             tbody.innerHTML = filtered.map(m => {
                 let statusBadge = '<span class="badge badge-success"><i class="fa-solid fa-check"></i> Stok Aman</span>';
@@ -1182,7 +1197,10 @@
                         <td>${statusBadge}</td>
                         <td style="font-weight: 700; color: var(--text-main);">Rp ${m.harga.toLocaleString('id-ID')} / unit</td>
                         <td>
-                            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="openStokCard('${m.nama}')"><i class="fa-solid fa-chart-line"></i> Kartu Stok</button>
+                            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                                <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="openMedicationModal(${m.id})"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                                <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="openStokCard('${m.nama}')"><i class="fa-solid fa-chart-line"></i> Kartu Stok</button>
+                            </div>
                         </td>
                     </tr>
                 `;
@@ -1190,40 +1208,10 @@
         }
 
         function filterStokTab(type, btn) {
+            currentStokTab = type;
             document.querySelectorAll('#view-stok .view-tabs .view-tab').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
-            if (type === 'all') {
-                renderStokTable();
-            } else if (type === 'defecta') {
-                const tbody = document.getElementById('stok-table-body');
-                const filtered = medicationDatabase.filter(m => m.stok <= m.minStok);
-                tbody.innerHTML = filtered.map(m => `
-                    <tr>
-                        <td><div style="font-weight: 700;">${m.nama}</div><div style="font-size: 0.75rem;">${m.kode}</div></td>
-                        <td>${m.kategori}</td>
-                        <td>${m.batch}</td>
-                        <td><strong style="color: var(--danger);">${m.stok} Unit</strong></td>
-                        <td><span class="badge badge-danger">Defecta</span></td>
-                        <td>Rp ${m.harga.toLocaleString('id-ID')}</td>
-                        <td><button class="btn btn-secondary" style="font-size:0.75rem;" onclick="openStokCard('${m.nama}')">Stok</button></td>
-                    </tr>
-                `).join('');
-            } else if (type === 'expire') {
-                const tbody = document.getElementById('stok-table-body');
-                const filtered = medicationDatabase.filter(m => m.status === 'expire');
-                tbody.innerHTML = filtered.map(m => `
-                    <tr>
-                        <td><div style="font-weight: 700;">${m.nama}</div><div style="font-size: 0.75rem;">${m.kode}</div></td>
-                        <td>${m.kategori}</td>
-                        <td><strong style="color: var(--warning);">${m.exp}</strong></td>
-                        <td>${m.stok} Unit</td>
-                        <td><span class="badge badge-warning">Expire Soon</span></td>
-                        <td>Rp ${m.harga.toLocaleString('id-ID')}</td>
-                        <td><button class="btn btn-secondary" style="font-size:0.75rem;" onclick="openStokCard('${m.nama}')">Stok</button></td>
-                    </tr>
-                `).join('');
-            }
+            renderStokTable();
         }
 
         // RENDER DASHBOARD ALERTS
@@ -1601,38 +1589,96 @@
             resetCheckoutForm();
         }
 
+        function resetMedicationForm() {
+            const modal = document.getElementById('modal-obat');
+            modal.dataset.mode = 'create';
+            modal.dataset.medId = '';
+
+            document.getElementById('new-med-kode').value = 'MED-OB-' + String(medicationDatabase.length + 30).padStart(4, '0');
+            document.getElementById('new-med-nama').value = '';
+            document.getElementById('new-med-kategori').value = 'Obat Bebas';
+            document.getElementById('new-med-bentuk').value = 'Tablet';
+            document.getElementById('new-med-pabrik').value = '';
+            document.getElementById('new-med-stok').value = '100';
+            document.getElementById('new-med-harga').value = '12000';
+
+            document.getElementById('modal-obat-title').innerHTML = '<i class="fa-solid fa-box-medical"></i> Tambah Master Stok Obat';
+            const submitBtn = document.getElementById('save-medication-btn');
+            submitBtn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Obat';
+        }
+
+        function openMedicationModal(medId) {
+            const modal = document.getElementById('modal-obat');
+            const med = medicationDatabase.find(item => item.id === medId);
+
+            if (med) {
+                modal.dataset.mode = 'edit';
+                modal.dataset.medId = String(med.id);
+                document.getElementById('new-med-kode').value = med.kode;
+                document.getElementById('new-med-nama').value = med.nama;
+                document.getElementById('new-med-kategori').value = med.kategori;
+                document.getElementById('new-med-bentuk').value = med.bentuk;
+                document.getElementById('new-med-pabrik').value = med.pabrik;
+                document.getElementById('new-med-stok').value = med.stok;
+                document.getElementById('new-med-harga').value = med.harga;
+
+                document.getElementById('modal-obat-title').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Master Stok Obat';
+                const submitBtn = document.getElementById('save-medication-btn');
+                submitBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan';
+            } else {
+                resetMedicationForm();
+            }
+
+            openModal('modal-obat');
+        }
+
         // SAVE NEW MEDICATION FROM MODAL
         function saveNewMedication() {
-            const nama = document.getElementById('new-med-nama').value;
+            const modal = document.getElementById('modal-obat');
+            const nama = document.getElementById('new-med-nama').value.trim();
             if (!nama) {
                 alert('Silakan isi nama obat!');
                 return;
             }
 
-            const newObj = {
-                id: medicationDatabase.length + 1,
-                kode: document.getElementById('new-med-kode').value || ('MED-XX-' + (medicationDatabase.length + 10)),
+            const payload = {
+                kode: document.getElementById('new-med-kode').value.trim() || ('MED-XX-' + (medicationDatabase.length + 10)),
                 nama: nama,
                 kategori: document.getElementById('new-med-kategori').value,
                 bentuk: document.getElementById('new-med-bentuk').value,
-                pabrik: document.getElementById('new-med-pabrik').value || 'Generik',
-                batch: 'BTC-2026X',
-                exp: '2028-12-31',
-                stok: parseInt(document.getElementById('new-med-stok').value || 100),
+                pabrik: document.getElementById('new-med-pabrik').value.trim() || 'Generik',
+                stok: parseInt(document.getElementById('new-med-stok').value || 0),
                 minStok: 20,
-                harga: parseFloat(document.getElementById('new-med-harga').value || 10000),
+                harga: parseFloat(document.getElementById('new-med-harga').value || 0),
                 lokasi: 'Rak A-01',
                 bpom: 'GKL' + Math.floor(100000000 + Math.random() * 900000000) + 'A1',
                 status: 'aman'
             };
 
-            medicationDatabase.unshift(newObj);
+            if (modal.dataset.mode === 'edit' && modal.dataset.medId) {
+                const med = medicationDatabase.find(item => item.id === Number(modal.dataset.medId));
+                if (med) {
+                    Object.assign(med, payload);
+                    med.status = med.stok <= med.minStok ? 'defecta' : 'aman';
+                    showToast('Data stok dan harga obat berhasil diperbarui.');
+                }
+            } else {
+                const newObj = {
+                    id: medicationDatabase.length ? Math.max(...medicationDatabase.map(item => item.id)) + 1 : 1,
+                    ...payload,
+                    batch: 'BTC-2026X',
+                    exp: '2028-12-31'
+                };
+                medicationDatabase.unshift(newObj);
+                showToast('Obat ' + nama + ' berhasil ditambahkan ke database.');
+            }
+
             renderStokTable();
             renderPosCatalog();
+            renderDashboardAlerts();
             updateTotalObatBadge();
-
-            alert('Obat ' + nama + ' berhasil ditambahkan ke database!');
             closeModal('modal-obat');
+            resetMedicationForm();
         }
 
         // GLOBAL SEARCH HANDLER
@@ -1735,6 +1781,115 @@
             filterResepStatus(currentResepStatus);
             closeActionModal();
             showToast('Resep ' + id + ' masuk ke tahap ' + nextStage.label + '.');
+        }
+
+        function exportStokToExcel() {
+            const filtered = getFilteredMedicationData();
+            const headers = ['Kode Obat', 'Nama Obat', 'Kategori', 'Bentuk', 'Pabrik', 'No Batch', 'Expire', 'Stok Tersedia', 'Stok Minimal', 'Harga Jual (Rp)', 'Lokasi', 'Status'];
+            const rows = [headers.join(',')].concat(filtered.map(m => [
+                m.kode,
+                m.nama,
+                m.kategori,
+                m.bentuk,
+                m.pabrik,
+                m.batch,
+                m.exp,
+                m.stok,
+                m.minStok,
+                m.harga,
+                m.lokasi,
+                m.status
+            ].map(value => `"${String(value).replace(/"/g, '""')}"`).join(',')));
+
+            const csvContent = '\uFEFF' + rows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'laporan_stok_farmasi.csv';
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('File Excel/CSV stok farmasi berhasil diunduh.');
+        }
+
+        function downloadFarmasiReportPdf() {
+            const reportWindow = window.open('', '_blank', 'width=1000,height=800');
+            if (!reportWindow) {
+                alert('Pop-up diblokir. Silakan izinkan pop-up browser lalu coba lagi.');
+                return;
+            }
+
+            const transactions = document.querySelectorAll('#laporan-kasir-body tr');
+            const transactionsHtml = Array.from(transactions).map(row => row.outerHTML).join('');
+            const totalOmset = Array.from(document.querySelectorAll('#laporan-kasir-body tr')).reduce((sum, row) => {
+                const amountText = row.cells[4].textContent.replace(/[^\d]/g, '');
+                return sum + Number(amountText || 0);
+            }, 0);
+
+            reportWindow.document.write(`<!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Laporan Farmasi</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 32px; color: #0f172a; }
+                        h1 { margin-bottom: 8px; }
+                        .meta { margin-bottom: 18px; color: #475569; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+                        th, td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: left; }
+                        th { background: #f8fafc; }
+                        .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0; }
+                        .card { border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; background: #f8fafc; }
+                        .label { display: block; font-size: 12px; color: #64748b; margin-bottom: 4px; }
+                        .value { font-weight: 700; font-size: 20px; }
+                        @media print { body { padding: 0; } }
+                    </style>
+                </head>
+                <body>
+                    <h1>Laporan Farmasi & Penjualan</h1>
+                    <div class="meta">Tanggal: ${new Date().toLocaleDateString('id-ID')} | Instansi: RS Cendana / SaffMedic</div>
+
+                    <div class="summary">
+                        <div class="card">
+                            <span class="label">Omset Tunai</span>
+                            <span class="value">Rp 2.450.000</span>
+                        </div>
+                        <div class="card">
+                            <span class="label">Omset Non Tunai</span>
+                            <span class="value">Rp 1.600.000</span>
+                        </div>
+                        <div class="card">
+                            <span class="label">Klaim BPJS</span>
+                            <span class="value">Rp 800.000</span>
+                        </div>
+                    </div>
+
+                    <h3>Riwayat Transaksi Kasir Hari Ini</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No. Nota</th>
+                                <th>Jam</th>
+                                <th>Nama Pasien</th>
+                                <th>Metode Bayar</th>
+                                <th>Total Transaksi</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${transactionsHtml}
+                        </tbody>
+                    </table>
+
+                    <div class="meta" style="margin-top: 20px; font-weight: 700;">Total Omset Keseluruhan: Rp ${totalOmset.toLocaleString('id-ID')}</div>
+                </body>
+                </html>`);
+            reportWindow.document.close();
+            setTimeout(() => {
+                reportWindow.focus();
+                reportWindow.print();
+                reportWindow.close();
+            }, 400);
+            showToast('Laporan farmasi sedang dipersiapkan untuk PDF.');
         }
 
         function openStokCard(namaObat) {
