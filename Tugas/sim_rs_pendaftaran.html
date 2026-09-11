@@ -105,18 +105,89 @@
                 <div id="pasien-search-result" style="margin-top:1.25rem;"></div>
             </div>
 
+            <!-- Manual Simulasi Input -->
+            <div class="card" style="padding: 1.5rem; margin-top: 1.5rem; background: linear-gradient(135deg, #eef8ff, #f8fafc); border: 1px solid #bfdbfe;">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+                    <i class="fa-solid fa-user-plus" style="color: var(--secondary-dark);"></i>
+                    <h3 style="margin:0; font-size:1rem;">Mode Simulasi Pasien Baru (Manual)</h3>
+                </div>
+                <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                    <input type="text" id="manual-pasien-nama" class="form-control" placeholder="Nama pasien manual (simulasi)" style="flex:1; min-width:220px;">
+                    <input type="text" id="manual-pasien-rm" class="form-control" placeholder="RM (opsional)" style="width: 180px;" maxlength="16">
+                    <button class="btn btn-secondary" onclick="openApotekFromManualInput()"><i class="fa-solid fa-arrow-right"></i> Masukkan ke Apotek</button>
+                </div>
+            </div>
+
             <!-- Info Card -->
             <div class="card" style="padding: 1.25rem 1.5rem; margin-top: 1.5rem; background: #f8fafc;">
                 <div style="display:flex; gap:0.75rem; align-items:flex-start;">
                     <i class="fa-solid fa-circle-info" style="color: var(--primary); margin-top: 0.15rem;"></i>
                     <div style="font-size: 0.85rem; color: var(--text-muted);">
-                        Pencarian ini terhubung langsung ke SATUSEHAT (environment sandbox). Kalau NIK belum terdaftar, pasien perlu didaftarkan sebagai pasien baru agar mendapat nomor IHS resmi - fitur pendaftaran pasien baru menyusul di tahap berikutnya.
+                        Pencarian ini terhubung langsung ke SATUSEHAT (environment sandbox). Jika ingin simulasi cepat, kamu juga bisa mengisi nama pasien secara manual di mode simulasi di bawah ini tanpa harus terdaftar di SATUSEHAT terlebih dahulu.
                     </div>
                 </div>
             </div>
         </div>
     </main>
     <script>
+        function storePatientToSharedState(nama, rm, sourceType) {
+            const sharedState = JSON.parse(localStorage.getItem('simrs-shared-state-v1') || '{}');
+            const safeNama = String(nama || '').trim() || 'Pasien Baru';
+            const safeRm = String(rm || '').trim() || '00-00-00-00';
+
+            sharedState.pendingPrescription = {
+                patientName: safeNama,
+                rm: safeRm,
+                doctor: 'dr. Andi Wijaya, Sp.PD',
+                recipeType: 'Non-Racikan (Obat Jadi)'
+            };
+
+            sharedState.rmePatients = Array.isArray(sharedState.rmePatients) ? sharedState.rmePatients : [];
+            const existingPatientIndex = sharedState.rmePatients.findIndex(function (patient) {
+                return String(patient.rm || '').toLowerCase() === safeRm.toLowerCase();
+            });
+
+            const patientRecord = {
+                rm: safeRm,
+                nama: safeNama,
+                keluhan: sourceType === 'manual'
+                    ? 'Pendaftaran pasien simulasi manual tanpa SATUSEHAT. Data pasien berhasil masuk ke rekam medis elektronik.'
+                    : 'Pendaftaran pasien otomatis dari SATUSEHAT. Pasien telah masuk ke sistem rekam medis elektronik.',
+                status: 'menunggu obat',
+                dokter: 'dr. Andi Wijaya, Sp.PD',
+                unit: sourceType === 'manual' ? 'Pendaftaran Manual (Simulasi)' : 'Poliklinik Pendaftaran',
+                tanggal: new Date().toISOString()
+            };
+
+            if (existingPatientIndex >= 0) {
+                sharedState.rmePatients[existingPatientIndex] = patientRecord;
+            } else {
+                sharedState.rmePatients.unshift(patientRecord);
+            }
+
+            localStorage.setItem('simrs-shared-state-v1', JSON.stringify(sharedState));
+        }
+
+        function openApotekFromPendaftaran(nama, rm) {
+            storePatientToSharedState(nama, rm, 'satusehat');
+            sessionStorage.setItem('simrs-module-login', 'true');
+            window.location.href = 'sim_rs_apotek.html';
+        }
+
+        function openApotekFromManualInput() {
+            const manualNama = document.getElementById('manual-pasien-nama')?.value.trim();
+            const manualRm = document.getElementById('manual-pasien-rm')?.value.trim();
+
+            if (!manualNama) {
+                alert('Silakan isi nama pasien dulu agar simulasi pendaftaran bisa diproses.');
+                return;
+            }
+
+            storePatientToSharedState(manualNama, manualRm, 'manual');
+            sessionStorage.setItem('simrs-module-login', 'true');
+            window.location.href = 'sim_rs_apotek.html';
+        }
+
         async function searchPasien() {
             const nikInput = document.getElementById('pasien-nik-input');
             const nik = nikInput.value.trim();
@@ -144,9 +215,9 @@
                         '<i class="fa-solid fa-user-slash" style="font-size:1.5rem; color: var(--warning);"></i>' +
                         '<div style="flex:1;">' +
                         '<div style="font-weight:600;">Pasien dengan NIK ini belum terdaftar di SATUSEHAT</div>' +
-                        '<div style="font-size:0.85rem; color: var(--text-muted); margin-top:0.25rem;">Pasien perlu didaftarkan sebagai pasien baru sebelum bisa mendapat nomor IHS resmi.</div>' +
+                        '<div style="font-size:0.85rem; color: var(--text-muted); margin-top:0.25rem;">Untuk simulasi cepat, kamu bisa langsung isi nama pasien manual di mode simulasi di bawah ini dan lanjutkan ke Apotek.</div>' +
                         '</div>' +
-                        '<button class="btn btn-secondary" onclick="alert(\'Fitur pendaftaran pasien baru menyusul di tahap berikutnya.\')"><i class="fa-solid fa-user-plus"></i> Daftarkan Baru</button>' +
+                        '<button class="btn btn-secondary" onclick="document.getElementById(\'manual-pasien-nama\').focus()"><i class="fa-solid fa-user-plus"></i> Input Manual</button>' +
                         '</div>';
                     return;
                 }
@@ -168,7 +239,7 @@
                         '<div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.15rem;">NIK: ' + nikValue + ' &bull; Nomor IHS: ' + ihs + '</div>' +
                         '<div style="font-size:0.8rem; color:var(--text-muted);">Tgl Lahir: ' + lahir + ' &bull; Jenis Kelamin: ' + gender + '</div>' +
                         '</div>' +
-                        '<button class="btn btn-primary" onclick="alert(\'Lanjut ke pendaftaran kunjungan untuk ' + safeNama + ' menyusul di tahap berikutnya.\')"><i class="fa-solid fa-arrow-right"></i> Lanjut Daftar Kunjungan</button>' +
+                        '<button class="btn btn-primary" onclick="openApotekFromPendaftaran(\'' + safeNama + '\', \'' + nikValue + '\')"><i class="fa-solid fa-arrow-right"></i> Lanjut ke Apotek</button>' +
                         '</div>';
                 }).join('');
             } catch (err) {

@@ -645,6 +645,31 @@
 
     <!-- JAVASCRIPT LOGIC & COMPREHENSIVE HOSPITAL STAFF DATABASE -->
     <script>
+        function openApotekFromSdmk(nama) {
+            const sharedState = JSON.parse(localStorage.getItem('simrs-shared-state-v1') || '{}');
+            sharedState.pendingPrescription = {
+                patientName: 'Pasien Baru',
+                rm: '00-00-00-00',
+                doctor: nama,
+                recipeType: 'Non-Racikan (Obat Jadi)'
+            };
+            sharedState.rmePatients = Array.isArray(sharedState.rmePatients) ? sharedState.rmePatients : [];
+
+            sharedState.rmePatients.unshift({
+                rm: '00-00-00-00',
+                nama: 'Pasien Baru',
+                keluhan: 'Pasien diproses oleh SDMK dan siap diteruskan ke farmasi.',
+                status: 'menunggu obat',
+                dokter: nama,
+                unit: 'Unit SDMK',
+                tanggal: new Date().toISOString()
+            });
+
+            localStorage.setItem('simrs-shared-state-v1', JSON.stringify(sharedState));
+            sessionStorage.setItem('simrs-module-login', 'true');
+            window.location.href = 'sim_rs_apotek.html';
+        }
+
         function logoutModule(event) {
             event.preventDefault();
             sessionStorage.removeItem('simrs-module-login');
@@ -694,6 +719,8 @@
 
         // INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
+            attachDashboardStatActions();
+            attachFacilityStatActions();
             renderDashboardMedicalTable();
             renderProfilePage();
             renderStrsipTable();
@@ -712,6 +739,121 @@
             document.getElementById('stat-sip-aktif').innerText = aktif;
             document.getElementById('stat-sip-warning').innerText = warning;
             document.getElementById('stat-sip-danger').innerText = danger;
+        }
+
+        function attachDashboardStatActions() {
+            const cards = document.querySelectorAll('#dashboardPage .stat-card');
+            const targets = ['profile', 'strsip', 'strsip', 'strsip'];
+
+            cards.forEach(function (card, index) {
+                const target = targets[index] || 'dashboard';
+                card.style.cursor = 'pointer';
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+
+                card.addEventListener('click', function () {
+                    showPage(target);
+                });
+
+                card.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        showPage(target);
+                    }
+                });
+            });
+        }
+
+        function attachFacilityStatActions() {
+            const cards = document.querySelectorAll('.facility-stat');
+            cards.forEach(function (card) {
+                card.style.cursor = 'pointer';
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+
+                card.addEventListener('click', function () {
+                    openFacilityDetail(card);
+                });
+
+                card.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openFacilityDetail(card);
+                    }
+                });
+            });
+        }
+
+        function openFacilityDetail(card) {
+            const unit = card.dataset.unit || 'Unit Pelayanan';
+            const readiness = card.dataset.readiness || '100%';
+            const desc = card.dataset.desc || '-';
+            const details = card.dataset.details || '-';
+
+            const body = '<section class="profile-section"><h3>Detail Unit Pelayanan</h3><div class="profile-details">' +
+                detail('Unit', unit) +
+                detail('Kesiapan Operasional', readiness) +
+                detail('Deskripsi Singkat', desc) +
+                detail('Fasilitas Utama', details) +
+                '</div></section>' +
+                '<div class="profile-section" style="display:flex; justify-content:flex-end; margin-top:1rem;">' +
+                '<button class="btn btn-primary" type="button" onclick="closeActionModal()">Tutup</button>' +
+                '</div>';
+            openActionModal('Detail ' + unit, 'Rincian kesiapan unit layanan RS Cendana', body);
+        }
+
+        function openFacilityOverviewModal() {
+            const cards = Array.from(document.querySelectorAll('.facility-stat'));
+            const body = '<section class="profile-section"><h3>Daftar Unit Pelayanan</h3><div class="profile-details">' +
+                cards.map(function (card) {
+                    const unit = card.dataset.unit || 'Unit Pelayanan';
+                    const readiness = card.dataset.readiness || '100%';
+                    return detail(unit, readiness + ' &bull; ' + (card.dataset.desc || '-'));
+                }).join('') +
+                '</div></section>' +
+                '<div class="profile-section" style="display:flex; justify-content:flex-end; margin-top:1rem;">' +
+                '<button class="btn btn-primary" type="button" onclick="closeActionModal()">Tutup</button>' +
+                '</div>';
+            openActionModal('Detail Unit Pelayanan RS', 'Evaluasi kesiapan operasional unit medis', body);
+        }
+
+        function openActivityLogbookModal() {
+            const body = '<form id="activityLogbookForm" class="profile-section" onsubmit="event.preventDefault(); submitActivityLogbook(); return false;">' +
+                '<div class="profile-details" style="grid-template-columns:1fr 1fr;">' +
+                '<div class="profile-detail"><label>Tanggal Kegiatan</label><input class="form-control" name="date" type="date" required /></div>' +
+                '<div class="profile-detail"><label>Nama Nakes</label><input class="form-control" name="name" placeholder="contoh: dr. Andi Wijaya, Sp.PD" required /></div>' +
+                '<div class="profile-detail" style="grid-column:1 / -1;"><label>Kegiatan Pelayanan</label><input class="form-control" name="activity" placeholder="contoh: Visite pasien rawat inap / Tindakan medis / Supervisi" required /></div>' +
+                '<div class="profile-detail" style="grid-column:1 / -1;"><label>Hasil / Status</label><input class="form-control" name="status" placeholder="contoh: Selesai & Verified / Terekam / Berlangsung" required /></div>' +
+                '</div>' +
+                '<div class="profile-section" style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">' +
+                '<button type="button" class="btn btn-secondary" onclick="closeActionModal()">Batal</button>' +
+                '<button type="submit" class="btn btn-primary">Simpan Logbook</button>' +
+                '</div>' +
+                '</form>';
+            openActionModal('Catat Logbook Kinerja', 'Tambah aktivitas pelayanan terbaru SDMK', body);
+        }
+
+        function submitActivityLogbook() {
+            const form = document.getElementById('activityLogbookForm');
+            if (!form) return;
+
+            const formData = new FormData(form);
+            const date = formData.get('date');
+            const name = formData.get('name') || 'Nakes';
+            const activity = formData.get('activity') || 'Kegiatan pelayanan';
+            const status = formData.get('status') || 'Terekam';
+
+            const tableBody = document.getElementById('activityTable')?.querySelector('tbody');
+            if (tableBody) {
+                const row = document.createElement('tr');
+                const formattedDate = date ? new Date(date + 'T00:00:00').toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Hari ini';
+                const badgeClass = status.toLowerCase().includes('verified') || status.toLowerCase().includes('selesai') ? 'badge-success' : status.toLowerCase().includes('berlangsung') ? 'badge-warning' : 'badge-info';
+                row.innerHTML = '<td>' + escapeHtml(formattedDate) + '</td><td>' + escapeHtml(name) + '</td><td>' + escapeHtml(activity) + '</td><td><span class="badge ' + badgeClass + '">' + escapeHtml(status) + '</span></td>';
+                tableBody.prepend(row);
+            }
+
+            closeActionModal();
+            alert('Logbook berhasil ditambahkan!');
         }
 
         // GLOBAL SEARCH LOGIC FOR ALL PAGES IN SDMK
@@ -1053,9 +1195,30 @@
                 });
             }
 
+            const docValidationButton = event.target.closest('.open-doc-validation-btn');
+            if (docValidationButton) {
+                openValidationModal({
+                    name: 'Multi Dokumen Nakes',
+                    type: 'STR & SIP',
+                    number: 'Review semua dokumen aktif',
+                    status: 'Perlu verifikasi legalitas',
+                    files: 'Scan STR, SIP, KTP, Surat Rekomendasi OP'
+                });
+            }
+
             const trainingButton = event.target.closest('.open-training-btn');
             if (trainingButton) {
                 openTrainingModal();
+            }
+
+            const activityButton = event.target.closest('.open-activity-btn');
+            if (activityButton) {
+                openActivityLogbookModal();
+            }
+
+            const facilityButton = event.target.closest('.open-facility-btn');
+            if (facilityButton) {
+                openFacilityOverviewModal();
             }
         });
 
@@ -1063,6 +1226,11 @@
             if (event.target.id === 'medicalProfileForm') {
                 event.preventDefault();
                 saveMedicalProfile(event.target);
+            }
+
+            if (event.target.id === 'activityLogbookForm') {
+                event.preventDefault();
+                submitActivityLogbook();
             }
         });
 
@@ -1106,12 +1274,14 @@
                     const qual = (p.qualification && p.qualification[0]) || {};
                     const strItem = (qual.identifier && qual.identifier[0]) || {};
                     const strNumber = strItem.value || '-';
+                    const safeNama = nama.replace(/'/g, "\\'");
 
-                    return '<div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem; border-bottom:1px solid var(--border);">' +
+                    return '<div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem; padding:0.75rem; border-bottom:1px solid var(--border);">' +
                         '<div>' +
                         '<div style="font-weight:600; font-size:0.85rem;">' + nama + '</div>' +
                         '<div style="font-size:0.75rem; color:var(--text-muted);">ID Nakes SATUSEHAT: ' + nakesId + ' &bull; STR: ' + strNumber + '</div>' +
                         '</div>' +
+                        '<button class="btn btn-secondary" style="padding:0.45rem 0.75rem; font-size:0.75rem;" onclick="openApotekFromSdmk(\'' + safeNama + '\')"><i class="fa-solid fa-arrow-right"></i> Gunakan di Apotek</button>' +
                         '</div>';
                 }).join('');
             } catch (err) {
